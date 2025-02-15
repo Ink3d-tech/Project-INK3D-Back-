@@ -25,6 +25,21 @@ export class User {
   @Column()
   name: string;
 
+  @Column({ type: 'int' })
+  phone: number;
+
+  @Column()
+  address: string;
+
+  @Column()
+  city: string;
+
+  @Column()
+  country: string;
+
+  @Column()
+  bio: string;
+
   @Column({ type: 'enum', enum: ['admin', 'user', 'mod'], default: 'user' })
   role: string;
 
@@ -33,6 +48,16 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: ['admin', 'mod', 'user'],
+    default: 'user',
+  })
+  isAdmin: string;
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
