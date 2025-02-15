@@ -2,17 +2,65 @@ import { Controller, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
+  @Post('signup')
+  @ApiOperation({ summary: 'Sign up user' })
+  @ApiBody({
+    type: CreateUserDto,
+    description: 'User data to be created',
+    examples: {
+      'user.signup': {
+        value: {
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: '123456789',
+          confirmPassword: '123456789',
+          phone: 123456789,
+          address: '123 Main St',
+          city: 'Anytown',
+          country: 'USA',
+          bio: 'Lorem ipsum dolor sit amet',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'User created successfully',
+    example: {
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: 123456789,
+      address: '123 Main St',
+      city: 'Anytown',
+      country: 'USA',
+      bio: 'Lorem ipsum dolor sit amet',
+    },
+  })
   signUp(@Body() createAuthDto: CreateUserDto) {
     return this.authService.signUp(createAuthDto);
   }
 
-  @Post('login')
+  @Post('signin')
+  @ApiOperation({ summary: 'Sign in user' })
+  @ApiBody({
+    type: LoginUserDto,
+    description: 'User data to be created',
+    examples: {
+      'user.signup': {
+        value: {
+          email: 'john@example.com',
+          password: '123456789',
+        },
+      },
+    },
+  })
   signIn(@Body() credentials: LoginUserDto) {
     return this.authService.signIn(credentials.email, credentials.password);
   }

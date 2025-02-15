@@ -1,26 +1,56 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
+import { Not, Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async getAllUsers(page: number, limit: number, search?: string) {
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.orders', 'orders')
+      .leftJoinAndSelect('user.favorites', 'favorites');
+
+    if (search && search.trim() !== '') {
+      queryBuilder.where(
+        `(user.name ILIKE :search OR user.email ILIKE :search OR user.address ILIKE :search OR user.city ILIKE :search OR user.country ILIKE :search OR user.bio ILIKE :search)`,
+        { search: `%${search}%` },
+      );
+    }
+
+    queryBuilder.skip(page * limit).take(limit);
+
+    const [users, total] = await queryBuilder.getManyAndCount();
+
+    const allUsers = users.map((user) => {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    });
+
+    return { allUsers, total };
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async getUserById(id: string) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      relations: ['orders', 'favorites'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+  async updateUser() {}
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+  async deActivate() {}
 }
