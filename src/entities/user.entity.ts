@@ -7,9 +7,11 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
+  ManyToOne,
 } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from './product.entity';
+import { Reviews } from './reviews.entity';
 
 @Entity()
 export class User {
@@ -58,6 +60,9 @@ export class User {
     default: 'user',
   })
   isAdmin: string;
+
+  @ManyToOne(() => User, (user) => user.reviews)
+  reviews: Reviews;
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
