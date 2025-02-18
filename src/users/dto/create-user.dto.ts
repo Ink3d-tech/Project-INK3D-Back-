@@ -8,7 +8,7 @@ import {
   IsInt,
   Validate,
 } from 'class-validator';
-import { MatchPassword } from 'src/decorators/match-password';
+import { MatchPassword } from 'src/decorators/match-password.decorator';
 
 export class CreateUserDto {
   @IsEmail()
