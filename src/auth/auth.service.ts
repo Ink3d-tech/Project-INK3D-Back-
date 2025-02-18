@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/user.entity.js';
+import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -25,9 +25,9 @@ export class AuthService {
       throw new BadRequestException('Email already in use');
     }
 
-    const hashedPassord = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
 
-    const newUser = { ...user, password: hashedPassord };
+    const newUser = { ...user, password: hashedPassword };
     if (!newUser) {
       throw new NotFoundException('User not found');
     }
@@ -48,5 +48,10 @@ export class AuthService {
 
     const token = this.jwtService.sign(payload);
     return { token, message: 'User logged in successfully' };
+  }
+
+  async generateJwt(user: User): Promise<string> {
+    const payload = { userId: user.id, email: user.email };
+    return this.jwtService.sign(payload);
   }
 }
