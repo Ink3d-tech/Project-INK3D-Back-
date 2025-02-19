@@ -40,6 +40,7 @@ export class AuthGuard implements CanActivate {
         user.role = ['admin'];
       } else if (user.role === 'mod') {
         user.role = ['mod'];
+
       } else {
         user.role = ['user'];
       }

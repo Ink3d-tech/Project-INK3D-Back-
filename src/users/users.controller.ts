@@ -61,6 +61,7 @@ export class UsersController {
   }
 
   @ApiBearerAuth()
+
   @AllowOwnerOrRole(Role.Admin)
   @ApiOperation({ summary: 'Get user by id' })
   @ApiParam({

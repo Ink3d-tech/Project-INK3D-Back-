@@ -165,4 +165,4 @@ export class UsersService {
 
     return deletedUser;
   }
-}
+
