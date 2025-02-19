@@ -3,10 +3,16 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
+import googleOauthConfg from 'src/config/google-oauth.confg';
+import { ConfigModule } from '@nestjs/config';
+import { GoogleStrategy } from 'src/strategy/google.strategy';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    ConfigModule.forFeature(googleOauthConfg),
+  ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, GoogleStrategy],
 })
 export class AuthModule {}
