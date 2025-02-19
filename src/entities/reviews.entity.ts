@@ -1,14 +1,13 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
-import { Product } from './product.entity';
 
 @Entity()
 export class Reviews {
-  @PrimaryGeneratedColumn('uuid')
+  @Column()
   id: number;
 
-  @ManyToOne(() => Product, (product) => product.reviews)
-  product: string;
+  @Column()
+  title: string;
 
   @Column()
   description: string;

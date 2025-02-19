@@ -30,17 +30,15 @@ export class AuthGuard implements CanActivate {
 
     try {
       const user = this.jwtService.verify(token, { secret });
+      console.log(user);
 
       // Convertir exp y iat a fechas para validación
       user.exp = new Date(user.exp * 1000);
       user.iat = new Date(user.iat * 1000);
 
-      // Asignar roles basado en enum role
-      if (user.role === 'admin') {
+      // Asignar roles basado en isAdmin
+      if (user.isAdmin) {
         user.role = ['admin'];
-      } else if (user.role === 'mod') {
-        user.role = ['mod'];
-
       } else {
         user.role = ['user'];
       }

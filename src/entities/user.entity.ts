@@ -54,6 +54,13 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({
+    type: 'enum',
+    enum: ['admin', 'mod', 'user'],
+    default: 'user',
+  })
+  isAdmin: string;
+
   @ManyToOne(() => User, (user) => user.reviews)
   reviews: Reviews;
 
