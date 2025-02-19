@@ -1,10 +1,11 @@
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
 export class Reviews {
-  @Column()
-  id: number;
+  @PrimaryGeneratedColumn('uuid') // 🔥 Asegura que haya una clave primaria
+  id: string;
+
 
   @Column()
   title: string;
