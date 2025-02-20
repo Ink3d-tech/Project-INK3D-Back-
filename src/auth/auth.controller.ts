@@ -51,7 +51,7 @@ export class AuthController {
       bio: 'Lorem ipsum dolor sit amet',
     },
   })
-  signUp(@Body() createAuthDto: CreateUserDto) {
+  async signUp(@Body() createAuthDto: CreateUserDto) {
     return this.authService.signUp(createAuthDto);
   }
 
@@ -68,7 +68,7 @@ export class AuthController {
       },
     },
   })
-  signIn(@Body() credentials: LoginUserDto) {
+  async signIn(@Body() credentials: LoginUserDto) {
     return this.authService.signIn(credentials.email, credentials.password);
   }
 
