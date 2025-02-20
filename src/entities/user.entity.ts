@@ -27,19 +27,19 @@ export class User {
   @Column()
   name: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', nullable: true })
   phone: number;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   city: string;
 
-  @Column()
+  @Column({ nullable: true })
   country: string;
 
-  @Column()
+  @Column({ nullable: true })
   bio: string;
 
   @Column({ type: 'enum', enum: ['admin', 'user', 'mod'], default: 'user' })
