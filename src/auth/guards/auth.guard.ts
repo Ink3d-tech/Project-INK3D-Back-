@@ -31,11 +31,9 @@ export class AuthGuard implements CanActivate {
     try {
       const user = this.jwtService.verify(token, { secret });
 
-      // Convertir exp y iat a fechas para validación
       user.exp = new Date(user.exp * 1000);
       user.iat = new Date(user.iat * 1000);
 
-      // Asignar roles basado en enum role
       if (user.role === 'admin') {
         user.role = ['admin'];
       } else if (user.role === 'mod') {
@@ -57,7 +55,6 @@ export class AuthGuard implements CanActivate {
       if (error.name === 'JsonWebTokenError') {
         throw new UnauthorizedException('Invalid token');
       }
-      // Error genérico para otros casos
       throw new UnauthorizedException('Unexpected error: ' + error.message);
     }
   }

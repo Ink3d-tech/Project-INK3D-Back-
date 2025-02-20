@@ -11,6 +11,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { JwtModule } from '@nestjs/jwt';
     NotificationsModule,
     PaymentMethodsModule,
     AuthModule,
+    FileUploadModule,
   ],
   controllers: [],
   providers: [],

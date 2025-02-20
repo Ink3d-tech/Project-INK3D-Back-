@@ -21,7 +21,6 @@ export class AuthController {
   @Post('signup')
   @ApiOperation({ summary: 'Sign up user' })
   @ApiBody({
-    type: CreateUserDto,
     description: 'User data to be created',
     examples: {
       'user.signup': {
@@ -59,7 +58,6 @@ export class AuthController {
   @Post('signin')
   @ApiOperation({ summary: 'Sign in user' })
   @ApiBody({
-    type: LoginUserDto,
     description: 'User data to be created',
     examples: {
       'user.signup': {

@@ -59,4 +59,7 @@ export class Product {
 
   @OneToMany(() => Reviews, (reviews) => reviews.product)
   reviews: Reviews[];
+
+  @Column({ default: true })
+  isActive: boolean;
 }
