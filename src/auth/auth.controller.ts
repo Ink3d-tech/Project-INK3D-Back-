@@ -80,6 +80,8 @@ export class AuthController {
   @Get('google/callback')
   async googleCallback(@Req() req, @Res() res) {
     const response = await this.authService.signInWithGoogle(req.user);
-    res.redirect(`http://localhost:3000/?token=${response.access_token}`);
+    res.redirect(
+      `https://project-ink3d-back-1.onrender.com//?token=${response.access_token}`,
+    );
   }
 }
