@@ -51,7 +51,7 @@ export class AuthController {
       bio: 'Lorem ipsum dolor sit amet',
     },
   })
-  signUp(@Body() createAuthDto: CreateUserDto) {
+  async signUp(@Body() createAuthDto: CreateUserDto) {
     return this.authService.signUp(createAuthDto);
   }
 
@@ -68,7 +68,7 @@ export class AuthController {
       },
     },
   })
-  signIn(@Body() credentials: LoginUserDto) {
+  async signIn(@Body() credentials: LoginUserDto) {
     return this.authService.signIn(credentials.email, credentials.password);
   }
 
@@ -81,7 +81,7 @@ export class AuthController {
   async googleCallback(@Req() req, @Res() res) {
     const response = await this.authService.signInWithGoogle(req.user);
     res.redirect(
-      `https://project-ink3d-back-1.onrender.com//?token=${response.access_token}`,
+      `https://project-ink3d-back-1.onrender.com/?token=${response.access_token}`,
     );
   }
 }
