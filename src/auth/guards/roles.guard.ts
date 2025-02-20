@@ -25,36 +25,37 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    const userIdFromParams = request.params.id;
-
-    console.log('RolesGuard - Request User:', user);
-    console.log('RolesGuard - Params ID:', userIdFromParams);
-    console.log('RolesGuard - Required Role:', requiredRole);
-    console.log('RolesGuard - OwnerOrRole:', ownerOrRole);
+    // const userIdFromParams = request.params.id;
+    // console.log('USER FROM PARAMS', userIdFromParams);
 
     if (!user) {
-      throw new ForbiddenException('No tienes acceso a este recurso.');
+      throw new ForbiddenException(
+        'You do not have permission to access this resource!',
+      );
     }
 
     if (requiredRole) {
-      if (user.role !== requiredRole) {
-        throw new ForbiddenException('Acceso restringido.');
+      if (!user.role.includes(requiredRole)) {
+        throw new ForbiddenException('Access denied.');
       }
       return true;
     }
 
     if (ownerOrRole) {
-      if (user.role === Role.Admin) {
-        return true;
+      if (!user.role.includes(ownerOrRole)) {
+        throw new ForbiddenException(
+          'You are not authorized to access this resource!',
+        );
       }
-      if (userIdFromParams && user.userId === userIdFromParams) {
-        return true;
-      }
-      throw new ForbiddenException(
-        'No tienes permiso para realizar esta acción.',
-      );
+      return true;
+      // if (userIdFromParams && user.userId === userIdFromParams) {
+      //   console.log('RolesGuard - User is owner', user.userId);
+      //   console.log('RolesGuard - User from params', userIdFromParams);
+
+      //   return true;
+      // }
     }
 
-    throw new ForbiddenException('Acceso no autorizado.');
+    throw new ForbiddenException('Unaurhorized.');
   }
 }

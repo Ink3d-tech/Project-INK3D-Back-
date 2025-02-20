@@ -67,10 +67,8 @@ export class AuthService {
   async signInWithGoogle(profile: any): Promise<{ access_token: string }> {
     const { email, name } = profile;
 
-    // Buscar usuario por email
     let user = await this.userRepository.findOne({ where: { email } });
 
-    // Si no existe, lo creamos con un flag isGoogleUser (sin contraseña)
     if (!user) {
       user = this.userRepository.create({
         email,
@@ -81,7 +79,6 @@ export class AuthService {
       await this.userRepository.save(user);
     }
 
-    // Generar el token JWT
     const payload = { userId: user.id, email: user.email, role: user.role };
     const access_token = this.jwtService.sign(payload);
 
