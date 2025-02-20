@@ -25,11 +25,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsInt()
   phone?: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   address?: string;
 
