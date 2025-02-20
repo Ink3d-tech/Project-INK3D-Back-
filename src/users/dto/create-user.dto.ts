@@ -27,23 +27,23 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsInt()
-  phone: number;
+  phone?: number;
 
   @IsNotEmpty()
   @IsString()
-  address: string;
+  address?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  city: string;
+  city?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  country: string;
+  country?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  bio: string;
+  bio?: string;
 
   @IsOptional()
   @IsString()
