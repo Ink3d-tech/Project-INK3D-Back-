@@ -9,8 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
 import { Product } from './product.entity';
+import { User } from './user.entity';
 
 @Entity('orders')
 export class Order {
@@ -34,8 +34,9 @@ export class Order {
   updatedAt: Date;
 
   @ManyToMany(() => Product)
-  @JoinTable({
-    name: 'order_products',
-  })
+  @JoinTable({ name: 'order_products' })
   products: Product[];
+
+  @Column('jsonb', { nullable: false })
+  productDetails: { productId: string; quantity: number; price: number }[];
 }
