@@ -14,12 +14,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import googleOauthConfg from './config/google-oauth.config';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [typeorm,googleOauthConfg],
+      load: [typeorm, googleOauthConfg],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -28,11 +27,10 @@ import googleOauthConfg from './config/google-oauth.config';
     JwtModule.registerAsync({
       global: true,
       inject: [ConfigService],
-      useFactory: (config: ConfigService)=> ({
-      secret: config.get<string>('JWT_SECRET'),
-      signOptions: { expiresIn: '1d' },
-     
-    }),
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
     }),
     UsersModule,
     ProductsModule,
@@ -43,6 +41,7 @@ import googleOauthConfg from './config/google-oauth.config';
     PaymentMethodsModule,
     AuthModule,
     FileUploadModule,
+    OrdersModule,
   ],
   controllers: [],
   providers: [],
