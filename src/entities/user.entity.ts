@@ -28,28 +28,23 @@ export class User {
 
   @Column({ type: 'int', nullable: true }) // ✅ Permitir NULL
   phone?: number;
-  @Column({ type: 'int', nullable: true })
-  phone: number;
+  
 
-  @Column({ nullable: true })
-  address: string;
+ 
   @Column({ nullable: true }) // ✅ Permitir NULL
   address?: string;
 
-  @Column({ nullable: true })
-  city: string;
+ 
   @Column({ nullable: true }) // ✅ Permitir NULL
   city?: string;
 
-  @Column({ nullable: true })
-  country: string;
+ 
   @Column({ nullable: true }) // ✅ Permitir NULL
   country?: string;
 
   @Column({ nullable: true }) // ✅ Permitir NULL
   bio?: string;
-  @Column({ nullable: true })
-  bio: string;
+ 
 
   @Column({ type: 'enum', enum: ['admin', 'user', 'mod'], default: 'user' })
   role: string;

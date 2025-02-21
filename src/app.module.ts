@@ -12,14 +12,15 @@ import typeorm from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { FileUploadModule } from './file-upload/file-upload.module';
-import googleOauthConfg from './config/google-oauth.config';
+import googleOauthConfig from './config/google-oauth.config';
+
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [typeorm,googleOauthConfg],
+      load: [typeorm,googleOauthConfig],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
