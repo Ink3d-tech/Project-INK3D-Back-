@@ -58,9 +58,9 @@ export class AuthController {
   @Post('signin')
   @ApiOperation({ summary: 'Sign in user' })
   @ApiBody({
-    description: 'User data to be created',
+    description: 'User credentials for login',
     examples: {
-      'user.signup': {
+      'user.signin': { // <- Cambio aquí
         value: {
           email: 'john@example.com',
           password: '123456789',
@@ -79,9 +79,12 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
   async googleCallback(@Req() req, @Res() res) {
-    const response = await this.authService.signInWithGoogle(req.user);
-    res.redirect(
-      `https://project-ink3d-back-1.onrender.com//?token=${response.access_token}`,
-    );
+    try {
+      const response = await this.authService.signInWithGoogle(req.user);
+      res.redirect(`http://localhost:3000/dashboard?token=${response.access_token}`);
+    } catch (error) {
+      console.error('Google login error:', error);
+      res.redirect('http://localhost:3000/error'); // Manejo de error
+    }
   }
 }

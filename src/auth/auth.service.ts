@@ -1,15 +1,15 @@
+
 import {
   BadRequestException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +17,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
+    private configService: ConfigService, 
   ) {}
 
   async signUp(user: Partial<User>) {
@@ -27,14 +28,13 @@ export class AuthService {
       throw new BadRequestException('Email already in use');
     }
 
-    const hashedPassord = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser = this.userRepository.create({
+      ...user,
+      password: hashedPassword,
+    });
 
-    const newUser = { ...user, password: hashedPassord };
-    if (!newUser) {
-      throw new NotFoundException('User not found');
-    }
-    const savedUser = await this.userRepository.save(newUser);
-    return savedUser;
+    return await this.userRepository.save(newUser);
   }
 
   async signIn(email: string, password: string) {
@@ -42,26 +42,19 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const passwordMatch = await bcrypt.compare(password, user.password);
 
+    const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const payload = { userId: user.id, email: user.email, role: user.role };
 
-    const token = this.jwtService.sign(payload, { expiresIn: '1d' });
+    const payload = { userId: user.id, email: user.email, role: user.role };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'), // Usa la clave secreta
+      expiresIn: '1d',
+    });
 
     return { token, message: 'User logged in successfully' };
-  }
-
-  async validateGoogleUser(googleUser: CreateUserDto) {
-    const user = await this.userRepository.findOne({
-      where: { email: googleUser.email },
-    });
-    if (user) {
-      return user;
-    }
-    return await this.signUp(googleUser);
   }
 
   async signInWithGoogle(profile: any): Promise<{ access_token: string }> {
@@ -73,14 +66,18 @@ export class AuthService {
       user = this.userRepository.create({
         email,
         name,
-        password: 'isGoogleUser!',
         role: 'user',
       });
-      await this.userRepository.save(user);
+
+      user = await this.userRepository.save(user);
     }
 
     const payload = { userId: user.id, email: user.email, role: user.role };
-    const access_token = this.jwtService.sign(payload);
+
+    const access_token = this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('JWT_SECRET'), 
+      expiresIn: '1d',
+    });
 
     return { access_token };
   }

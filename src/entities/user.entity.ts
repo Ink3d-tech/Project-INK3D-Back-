@@ -7,7 +7,6 @@ import {
   OneToMany,
   ManyToMany,
   JoinTable,
-  ManyToOne,
 } from 'typeorm';
 import { Order } from './order.entity';
 import { Product } from './product.entity';
@@ -21,26 +20,26 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
-  password: string;
+  @Column({ nullable: true }) // ✅ Permitir NULL para usuarios de Google
+  password?: string;
 
   @Column()
   name: string;
 
-  @Column({ type: 'int' })
-  phone: number;
+  @Column({ type: 'int', nullable: true }) // ✅ Permitir NULL
+  phone?: number;
 
-  @Column()
-  address: string;
+  @Column({ nullable: true }) // ✅ Permitir NULL
+  address?: string;
 
-  @Column()
-  city: string;
+  @Column({ nullable: true }) // ✅ Permitir NULL
+  city?: string;
 
-  @Column()
-  country: string;
+  @Column({ nullable: true }) // ✅ Permitir NULL
+  country?: string;
 
-  @Column()
-  bio: string;
+  @Column({ nullable: true }) // ✅ Permitir NULL
+  bio?: string;
 
   @Column({ type: 'enum', enum: ['admin', 'user', 'mod'], default: 'user' })
   role: string;
@@ -51,11 +50,11 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ default: true })
+  @Column({ default: true }) // ✅ Asegurar que los usuarios sean activos por defecto
   isActive: boolean;
 
-  @ManyToOne(() => User, (user) => user.reviews)
-  reviews: Reviews;
+  @OneToMany(() => Reviews, (review) => review.user) // ✅ Corregir relación
+  reviews: Reviews[];
 
   @OneToMany(() => Order, (order) => order.user)
   orders: Order[];
