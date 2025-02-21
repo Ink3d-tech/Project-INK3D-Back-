@@ -35,12 +35,12 @@ export class PaymentMethodsService {
           })),
           external_reference: orderId,
           back_urls: {
-            success: 'https://tu-sitio.com/success',
-            failure: 'https://tu-sitio.com/failure',
-            pending: 'https://tu-sitio.com/pending',
+            success: this.configService.get<string>('MERCADOPAGO_SUCCESS_URL'),
+            failure: this.configService.get<string>('MERCADOPAGO_FAILURE_URL'),
+            pending: this.configService.get<string>('MERCADOPAGO_PENDING_URL'),
           },
           auto_return: 'approved',
-          notification_url: 'https://tu-sitio.com/api/payment-methods/webhook', 
+          notification_url: this.configService.get<string>('MERCADOPAGO_WEBHOOK_URL'),
         },
       };
       const response = await this.mercadoPagoPreference.create(preference);
