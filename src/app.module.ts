@@ -12,21 +12,27 @@ import typeorm from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import googleOauthConfg from './config/google-oauth.config';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [typeorm],
+      load: [typeorm,googleOauthConfg],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => config.get('typeorm'),
     }),
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: process.env.JWT_SECRET,
+      inject: [ConfigService],
+      useFactory: (config: ConfigService)=> ({
+      secret: config.get<string>('JWT_SECRET'),
       signOptions: { expiresIn: '1d' },
+     
+    }),
     }),
     UsersModule,
     ProductsModule,

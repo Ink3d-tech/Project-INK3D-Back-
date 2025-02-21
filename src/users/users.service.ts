@@ -115,16 +115,12 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    const hashedOldPassword = await bcrypt.hash(
-      changePasswordDto.oldPassword,
-      10,
-    );
-    console.log(hashedOldPassword);
-
     const compareOldPassword = await bcrypt.compare(
-      hashedOldPassword,
+      changePasswordDto.oldPassword,
       user.password,
     );
+    console.log(compareOldPassword);
+
     if (!compareOldPassword) {
       throw new NotFoundException('Old password is incorrect');
     }
@@ -133,17 +129,6 @@ export class UsersService {
       changePasswordDto.newPassword,
       10,
     );
-    const comparedHashedPassword = await bcrypt.compare(
-      hashedNewPassword,
-      hashedOldPassword,
-    );
-    console.log('COMPARED HASHED PASSWORD:', comparedHashedPassword);
-
-    if (comparedHashedPassword) {
-      throw new BadRequestException(
-        'New password must be different from old password',
-      );
-    }
 
     const updatedUser = await this.userRepository.save({
       ...user,

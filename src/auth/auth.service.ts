@@ -17,7 +17,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
-    private configService: ConfigService, 
+    private configService: ConfigService, // Agregamos ConfigService
   ) {}
 
   async signUp(user: Partial<User>) {
@@ -75,7 +75,7 @@ export class AuthService {
     const payload = { userId: user.id, email: user.email, role: user.role };
 
     const access_token = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_SECRET'), 
+      secret: this.configService.get<string>('JWT_SECRET'), // Se asegura de usar la clave secreta
       expiresIn: '1d',
     });
 
