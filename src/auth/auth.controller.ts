@@ -83,7 +83,7 @@ export class AuthController {
   async googleCallback(@Req() req, @Res() res) {
     try {
       const response = await this.authService.signInWithGoogle(req.user);
-      return res.redirect(`https://www.youtube.com/?token=${response.access_token}`);
+      return res.redirect(`https://www.youtube.com/watch?v=xRQnJyP77tY/?token=${response.access_token}`);
     } catch (error) {
       console.error('Google login error:', error);
       return res.redirect('https://www.youtube.com/?error=auth_failed');
