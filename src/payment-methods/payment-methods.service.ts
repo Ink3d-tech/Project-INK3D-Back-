@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 
@@ -54,8 +54,11 @@ export class PaymentMethodsService {
         payment_url: response.init_point,
       };
     } catch (error) {
-      console.error('Error creando el pago en Mercado Pago:', error);
-      throw new Error('Unable to create payment in Mercado Pago');
+      console.error(
+        'An error occurred while creating the payment in Mercado Pago:',
+        error,
+      );
+      throw new BadRequestException('Unable to create payment in Mercado Pago');
     }
   }
 
@@ -75,7 +78,7 @@ export class PaymentMethodsService {
       return { message: 'Notification recieved but not processed' };
     } catch (error) {
       console.error('Payment notificarion error:', error);
-      throw new Error('Payment notificarion error');
+      throw new BadRequestException('Payment notificarion error');
     }
   }
 }

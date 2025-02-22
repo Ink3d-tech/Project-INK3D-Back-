@@ -27,6 +27,9 @@ export class Order {
   @Column('decimal')
   totalPrice: number;
 
+  @Column({ type: 'enum', enum: ['USD', 'ARS', 'COP', 'CLP'], default: 'USD' })
+  currency: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
