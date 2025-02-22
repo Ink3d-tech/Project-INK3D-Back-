@@ -4,7 +4,7 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Order } from '../entities/order.entity';
 import { Product } from '../entities/product.entity';
@@ -17,7 +17,7 @@ export class OrdersService {
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
-    @InjectRepository(DataSource)
+    @InjectDataSource()
     private readonly dataSource: DataSource,
   ) {}
 
@@ -40,7 +40,7 @@ export class OrdersService {
     return order;
   }
 
-  async addOrder(createOrderDto: CreateOrderDto) {
+  async addOrder(createOrderDto: CreateOrderDto): Promise<Order> {
     const { userId, products } = createOrderDto;
 
     if (!Array.isArray(products) || products.length < 1) {
