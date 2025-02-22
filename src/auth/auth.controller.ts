@@ -72,12 +72,12 @@ export class AuthController {
     return this.authService.signIn(credentials.email, credentials.password);
   }
 
-  @UseGuards(GoogleAuthGuard)
-  @Get('google/login')
-  async googleLogin() {
-    return { message: 'Redirecting to Google login...' };
-  }
-  
+@UseGuards(GoogleAuthGuard)
+@Get('google')
+async googleLogin() {
+  return { message: 'Redirecting to Google login...' };
+}
+
   
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
