@@ -74,17 +74,20 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('google/login')
-  googleLogin() {}
-
+  async googleLogin() {
+    return { message: 'Redirecting to Google login...' };
+  }
+  
+  
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
-  async googleCallback(@Req() req, @Res() res) {
+  async googleCallback(@Req() req) {
     try {
       const response = await this.authService.signInWithGoogle(req.user);
-      res.redirect(`http://localhost:3000/dashboard?token=${response.access_token}`);
+      return response; // Devuelve el token directamente en la respuesta
     } catch (error) {
       console.error('Google login error:', error);
-      res.redirect('http://localhost:3000/error'); // Manejo de error
+      throw new Error('Error en la autenticación con Google');
     }
   }
 }

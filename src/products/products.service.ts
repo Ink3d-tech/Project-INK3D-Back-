@@ -60,7 +60,7 @@ export class ProductsService {
 
   async updateProduct(
     id: string,
-    productData: Partial<CreateProductDto>,
+    productData: Partial <CreateProductDto>,
   ): Promise<Product> {
     const product = await this.productRepository.findOne({ where: { id } });
     if (!product) {

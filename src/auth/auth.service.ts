@@ -1,4 +1,3 @@
-
 import {
   BadRequestException,
   Injectable,
@@ -17,7 +16,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
-    private configService: ConfigService, // Agregamos ConfigService
+    private configService: ConfigService,
   ) {}
 
   async signUp(user: Partial<User>) {
@@ -48,13 +47,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { userId: user.id, email: user.email, role: user.role };
-    const token = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_SECRET'), // Usa la clave secreta
-      expiresIn: '1d',
-    });
-
-    return { token, message: 'User logged in successfully' };
+    return this.generateJwtToken(user);
   }
 
   async signInWithGoogle(profile: any): Promise<{ access_token: string }> {
@@ -72,10 +65,14 @@ export class AuthService {
       user = await this.userRepository.save(user);
     }
 
+    return this.generateJwtToken(user);
+  }
+
+  private generateJwtToken(user: User): { access_token: string } {
     const payload = { userId: user.id, email: user.email, role: user.role };
 
     const access_token = this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('JWT_SECRET'), // Se asegura de usar la clave secreta
+      secret: this.configService.get<string>('JWT_SECRET'),
       expiresIn: '1d',
     });
 
