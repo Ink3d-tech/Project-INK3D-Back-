@@ -11,6 +11,7 @@ import { Product } from '../entities/product.entity';
 import { User } from '../entities/user.entity';
 import { EditOrderDto, UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { Discounts } from 'src/entities/discounts.entity';
 
 @Injectable()
 export class OrdersService {
@@ -23,14 +24,14 @@ export class OrdersService {
 
   async getAllOrders(): Promise<Order[]> {
     return this.ordersRepository.find({
-      relations: ['user', 'products'],
+      relations: ['user'],
     });
   }
 
   async getOrderById(id: string): Promise<Order | null> {
     const order = await this.ordersRepository.findOne({
       where: { id },
-      relations: ['user', 'products'],
+      relations: ['user'],
     });
 
     if (!order) {
@@ -54,19 +55,22 @@ export class OrdersService {
     try {
       const user = await queryRunner.manager.findOne(User, {
         where: { id: userId },
+        relations: ['discounts'],
       });
+
       if (!user) {
         throw new NotFoundException('User not found.');
       }
 
       let total = 0;
-      const productDetails = [];
+      const orderDetails = [];
       const updatedProducts: Product[] = [];
 
       for (const item of products) {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: item.id },
         });
+
         if (!product) {
           throw new NotFoundException(`Product with ID ${item.id} not found.`);
         }
@@ -80,7 +84,7 @@ export class OrdersService {
         product.stock -= item.quantity;
         updatedProducts.push(product);
 
-        productDetails.push({
+        orderDetails.push({
           productId: product.id,
           quantity: item.quantity,
           priceAtPurchase: product.price,
@@ -89,15 +93,25 @@ export class OrdersService {
         total += Number(product.price) * item.quantity;
       }
 
+      // Buscar un descuento activo del usuario
+      const discount = user.discounts.find((d) => d.status === 'active');
+
+      if (discount) {
+        total -= Number(discount.amount);
+        discount.status = 'used';
+        discount.isUsed = true;
+        await queryRunner.manager.save(Discounts, discount);
+      }
+
       const order = queryRunner.manager.create(Order, {
         user,
         status: 'pending',
-        totalPrice: total,
-        productDetails,
+        totalPrice: total > 0 ? total : 0, // Evitar valores negativos
+        orderDetails,
+        discount: discount || null,
       });
 
       await queryRunner.manager.save(Order, order);
-      // Guardar todos los productos actualizados para persistir el nuevo stock
       await queryRunner.manager.save(Product, updatedProducts);
 
       await queryRunner.commitTransaction();
@@ -120,7 +134,7 @@ export class OrdersService {
     await queryRunner.startTransaction();
 
     try {
-      // Obtenemos la orden; productDetails es un campo JSON, así que no es una relación en sí.
+      // Obtenemos la orden; orderDetails es un campo JSON, así que no es una relación en sí.
       const order = await queryRunner.manager.findOne(Order, {
         where: { id: orderId },
       });
@@ -130,7 +144,7 @@ export class OrdersService {
 
       // Por ejemplo, si el estado cambia a "deleted", restauramos el stock.
       if (status === 'deleted') {
-        for (const detail of order.productDetails) {
+        for (const detail of order.orderDetails) {
           const product = await queryRunner.manager.findOne(Product, {
             where: { id: detail.productId },
           });
@@ -174,7 +188,7 @@ export class OrdersService {
         );
       }
 
-      for (const detail of order.productDetails) {
+      for (const detail of order.orderDetails) {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: detail.productId },
         });
@@ -217,7 +231,7 @@ export class OrdersService {
       }
 
       let totalPrice = 0;
-      const productDetails = [];
+      const orderDetails = [];
       const updatedProducts: Product[] = [];
 
       for (const item of editOrderDto.products) {
@@ -228,7 +242,7 @@ export class OrdersService {
           throw new ForbiddenException('Stock insuficiente para el producto');
         }
         totalPrice += product.price * item.quantity;
-        productDetails.push({
+        orderDetails.push({
           productId: product.id,
           quantity: item.quantity,
           priceAtPurchase: product.price,
@@ -241,7 +255,7 @@ export class OrdersService {
         updatedProducts.push(product);
       }
 
-      order.productDetails = productDetails;
+      order.orderDetails = orderDetails;
       order.totalPrice = totalPrice;
 
       await queryRunner.manager.save(Order, order);

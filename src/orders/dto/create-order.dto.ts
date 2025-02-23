@@ -5,7 +5,14 @@ export class CreateOrderDto {
   @IsNotEmpty()
   userId: string;
 
+  @IsString()
+  @IsNotEmpty()
+  currency: string;
+
   @IsArray()
   @IsNotEmpty()
   products: { id: string; quantity: number }[];
+
+  @IsNotEmpty()
+  orderDetails: { productId: string; quantity: number; price: number }[];
 }

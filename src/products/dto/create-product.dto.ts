@@ -5,43 +5,57 @@ import {
   IsOptional,
   Min,
   IsPositive,
-  IsUUID,
+  IsEnum,
+  Length,
+  IsInt,
+  IsUrl,
+  IsNotEmpty,
 } from 'class-validator';
+import { Category } from 'src/entities/category.entity';
+
+enum Sizes {
+  XS = 'XS',
+  S = 'S',
+  M = 'M',
+  L = 'L',
+  XL = 'XL',
+  XXL = 'XXL',
+}
 
 export class CreateProductDto {
-  @ApiProperty({
-    example: 'Laptop Gamer',
-    description: 'Product name',
-  })
+  @ApiProperty({ example: 'Camiseta Negra', description: 'Product name' })
   @IsString()
+  @Length(1, 255)
   name: string;
 
   @ApiProperty({
-    example: 'Laptop de alta gama para gaming',
+    example: 'Camiseta negra de algodón 100%',
     description: 'Product description',
   })
   @IsString()
   description: string;
 
-  @ApiProperty({ example: 1500.99, description: 'Product price' })
-  @IsNumber()
+  @ApiProperty({ example: 25.99, description: 'Product price' })
+  @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
   price: number;
 
-  @ApiProperty({ example: 10, description: 'Available stock' })
-  @IsNumber()
+  @ApiProperty({ example: 50, description: 'Available stock' })
+  @IsInt()
   @Min(0)
   stock: number;
 
   @ApiProperty({
-    example: 'https://imagen.com/laptop.jpg',
+    example: 'https://imagen.com/camiseta.jpg',
     description: 'Image URL',
   })
   @IsString()
+  @IsUrl()
+  @Length(1, 500)
   image: string;
 
   @ApiProperty({ example: 5, description: 'Discount' })
-  @IsNumber()
+  @IsInt()
   @Min(0)
   @IsOptional()
   discount?: number;
@@ -50,6 +64,16 @@ export class CreateProductDto {
     example: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
     description: 'Category ID of the product',
   })
-  @IsUUID()
-  categoryId: string;
+  @IsNotEmpty()
+  category: Category;
+
+  @ApiProperty({
+    example: 'M',
+    description: 'Size of the product',
+    enum: Sizes,
+    required: false,
+  })
+  @IsEnum(Sizes)
+  @IsOptional()
+  size?: string;
 }

@@ -12,6 +12,7 @@ import {
 import { Order } from './order.entity';
 import { Product } from './product.entity';
 import { Reviews } from './reviews.entity';
+import { Discounts } from './discounts.entity';
 
 @Entity()
 export class User {
@@ -64,5 +65,11 @@ export class User {
   @JoinTable({
     name: 'favorites',
   })
+  @OneToMany(() => Discounts, (discount) => discount.userId)
+  @JoinTable({
+    name: 'discounts',
+  })
+  discounts: Discounts[];
+
   favorites: Product[];
 }
