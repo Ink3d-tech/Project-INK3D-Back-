@@ -43,8 +43,13 @@
     "cloudinary": "^1.32.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+<<<<<<< HEAD
     "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.7.0",
+=======
+    "mercadopago": "^2.3.0",
+    "multer-storage-cloudinary": "^4.0.0",
+>>>>>>> aaa0d488f8e722660ad105f48c6c21aa070c76d8
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.3",
