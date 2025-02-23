@@ -7,30 +7,33 @@ import {
   ManyToOne,
   ManyToMany,
   OneToMany,
+  Check,
 } from 'typeorm';
 import { Category } from './category.entity';
-import { Order } from './order.entity';
 import { User } from './user.entity';
 import { Reviews } from './reviews.entity';
 
 @Entity()
+@Check('price >= 0')
+@Check('stock >= 0')
+@Check('discount >= 0')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255, unique: true })
   name: string;
 
-  @Column('text')
+  @Column({ type: 'text' })
   description: string;
 
-  @Column('decimal')
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @Column('int')
+  @Column({ type: 'int', default: 0 })
   stock: number;
 
-  @Column()
+  @Column({ type: 'varchar', length: 500 })
   image: string;
 
   @CreateDateColumn()
@@ -39,12 +42,15 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({ type: 'int', default: 0, nullable: true })
+  discount: number;
+
   @Column({
-    type: 'int',
-    default: 0,
+    type: 'enum',
+    enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     nullable: true,
   })
-  discount: number;
+  size: string;
 
   @ManyToMany(() => User, (user) => user.favorites)
   favoritedBy: User[];
@@ -54,12 +60,9 @@ export class Product {
   })
   category: Category;
 
-  @ManyToMany(() => Order, (order) => order.products)
-  orders: Order[];
-
   @OneToMany(() => Reviews, (reviews) => reviews.product)
   reviews: Reviews[];
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 }
