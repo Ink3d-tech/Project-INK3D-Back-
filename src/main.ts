@@ -2,11 +2,17 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
+// import { SeederService } from './seeds/seeder.service';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // const seederService = app.get(SeederService);
+
+  // await seederService.seed();
+  // await app.close();
 
   app.enableCors({
     origin: '*', // Permitir el frontend

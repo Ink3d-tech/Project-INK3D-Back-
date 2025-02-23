@@ -9,7 +9,6 @@ import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -54,7 +53,7 @@ export class AuthService {
     return { token, message: 'User logged in successfully' };
   }
 
-  async validateGoogleUser(googleUser: CreateUserDto) {
+  async validateGoogleUser(googleUser: Partial<User>) {
     const user = await this.userRepository.findOne({
       where: { email: googleUser.email },
     });

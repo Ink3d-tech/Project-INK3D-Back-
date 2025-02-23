@@ -27,8 +27,8 @@ export class AuthController {
         value: {
           name: 'John Doe',
           email: 'john@example.com',
-          password: '123456789',
-          confirmPassword: '123456789',
+          password: 'JOhn2025!#',
+          confirmPassword: 'JOhn2025!#',
           phone: 123456789,
           address: '123 Main St',
           city: 'Anytown',
@@ -63,7 +63,7 @@ export class AuthController {
       'user.signup': {
         value: {
           email: 'john@example.com',
-          password: '123456789',
+          password: 'JOhn2025!#',
         },
       },
     },
@@ -80,8 +80,6 @@ export class AuthController {
   @Get('google/callback')
   async googleCallback(@Req() req, @Res() res) {
     const response = await this.authService.signInWithGoogle(req.user);
-    res.redirect(
-      `https://project-ink3d-back-1.onrender.com/?token=${response.access_token}`,
-    );
+    res.redirect(`http://localhost:3000/api?token=${response.access_token}`);
   }
 }
