@@ -10,7 +10,13 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { LoginUserDto } from 'src/users/dto/login-user.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiOAuth2,
+} from '@nestjs/swagger';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 
 @ApiTags('Users')
@@ -38,19 +44,6 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({
-    status: 201,
-    description: 'User created successfully',
-    example: {
-      name: 'John Doe',
-      email: 'john@example.com',
-      phone: 123456789,
-      address: '123 Main St',
-      city: 'Anytown',
-      country: 'USA',
-      bio: 'Lorem ipsum dolor sit amet',
-    },
-  })
   async signUp(@Body() createAuthDto: CreateUserDto) {
     return this.authService.signUp(createAuthDto);
   }
@@ -74,16 +67,20 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('google')
+  @ApiOperation({ summary: 'Login with Google' })
+  @ApiOAuth2(['profile', 'email'])
   async googleLogin() {
     return { message: 'Redirecting to Google login...' };
   }
 
   @UseGuards(GoogleAuthGuard)
   @Get('google/callback')
+  @ApiOperation({ summary: 'Google callback' })
+  @ApiResponse({ status: 302, description: 'Redirects after login' })
   async googleCallback(@Req() req, @Res() res) {
     try {
       const response = await this.authService.signInWithGoogle(req.user);
-      return res.redirect(`https://www.youtube.com/watch?v=xRQnJyP77tY/?token=${response.access_token}`);
+      return res.redirect(`https://www.youtube.com/?token=${response.access_token}`);
     } catch (error) {
       console.error('Google login error:', error);
       return res.redirect('https://www.youtube.com/?error=auth_failed');
