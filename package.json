@@ -34,23 +34,14 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^8.1.1",
     "@nestjs/typeorm": "^11.0.0",
-<<<<<<< HEAD
-=======
-    "@types/cors": "^2.8.17",
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
     "@types/dotenv": "^8.2.3",
     "bcrypt": "^5.1.1",
     "buffer-to-stream": "^1.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cloudinary": "^1.32.0",
-<<<<<<< HEAD
-    "dotenv": "^16.4.7",
-=======
-    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "mercadopago": "^2.3.0",
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
     "multer-storage-cloudinary": "^4.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",

@@ -5,10 +5,6 @@ import {
   IsOptional,
   Min,
   IsPositive,
-<<<<<<< HEAD
-} from 'class-validator';
-
-=======
   IsUUID,
   IsEnum,
   Length,
@@ -25,7 +21,6 @@ enum Sizes {
   XXL = 'XXL',
 }
 
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
 export class UpdateProductDto {
   @ApiProperty({
     example: 'Laptop Gamer',
@@ -33,10 +28,7 @@ export class UpdateProductDto {
     required: false,
   })
   @IsString()
-<<<<<<< HEAD
-=======
   @Length(1, 255)
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
   @IsOptional()
   name?: string;
 
@@ -54,11 +46,7 @@ export class UpdateProductDto {
     description: 'Product price',
     required: false,
   })
-<<<<<<< HEAD
-  @IsNumber()
-=======
   @IsNumber({ maxDecimalPlaces: 2 })
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
   @IsPositive()
   @IsOptional()
   price?: number;
@@ -68,12 +56,6 @@ export class UpdateProductDto {
     description: 'Available stock',
     required: false,
   })
-<<<<<<< HEAD
-  @IsNumber()
-  @Min(0)
-  @IsOptional()
-  stock?: number;
-=======
   @IsInt()
   @Min(0)
   @IsOptional()
@@ -114,5 +96,4 @@ export class UpdateProductDto {
   @IsEnum(Sizes)
   @IsOptional()
   size?: Sizes;
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
 }

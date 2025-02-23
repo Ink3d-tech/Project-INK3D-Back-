@@ -1,29 +1,3 @@
-<<<<<<< HEAD
-import { Injectable } from '@nestjs/common';
-import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
-import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto';
-
-@Injectable()
-export class PaymentMethodsService {
-  create(createPaymentMethodDto: CreatePaymentMethodDto) {
-    return 'This action adds a new paymentMethod';
-  }
-
-  findAll() {
-    return `This action returns all paymentMethods`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} paymentMethod`;
-  }
-
-  update(id: number, updatePaymentMethodDto: UpdatePaymentMethodDto) {
-    return `This action updates a #${id} paymentMethod`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} paymentMethod`;
-=======
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
@@ -106,6 +80,5 @@ export class PaymentMethodsService {
       console.error('Payment notificarion error:', error);
       throw new BadRequestException('Payment notificarion error');
     }
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
   }
 }

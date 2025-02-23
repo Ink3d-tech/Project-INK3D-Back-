@@ -25,10 +25,6 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-<<<<<<< HEAD
-import { Roles } from 'src/decorators/roles.decorator';
-=======
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
 import { Role } from 'src/roles.enum';
 import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 
@@ -127,11 +123,7 @@ export class ProductsController {
   @ApiResponse({ status: 404, description: 'Product not found' })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-<<<<<<< HEAD
-    @Body() productData: Partial<Product>,
-=======
     @Body() productData: UpdateProductDto,
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
   ): Promise<Product> {
     return this.productsService.updateProduct(id, productData);
   }
@@ -156,11 +148,7 @@ export class ProductsController {
   async deactivateProduct(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<Product> {
-<<<<<<< HEAD
-    return this.productsService.DeActivevateProduct(id);
-=======
     return this.productsService.deactivateProduct(id);
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
   }
 
   @Patch(':id/activate')
@@ -173,10 +161,6 @@ export class ProductsController {
   async activateProduct(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<Product> {
-<<<<<<< HEAD
-    return this.productsService.ActivevateProduct(id);
-=======
     return this.productsService.activateProduct(id);
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
   }
 }

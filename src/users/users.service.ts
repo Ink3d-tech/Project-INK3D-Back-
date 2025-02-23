@@ -1,13 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-<<<<<<< HEAD
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-=======
 import { Injectable, NotFoundException } from '@nestjs/common';
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
@@ -119,25 +111,12 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-<<<<<<< HEAD
-    const hashedOldPassword = await bcrypt.hash(
-      changePasswordDto.oldPassword,
-      10,
-    );
-    console.log(hashedOldPassword);
-
-    const compareOldPassword = await bcrypt.compare(
-      hashedOldPassword,
-      user.password,
-    );
-=======
     const compareOldPassword = await bcrypt.compare(
       changePasswordDto.oldPassword,
       user.password,
     );
     console.log(compareOldPassword);
 
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
     if (!compareOldPassword) {
       throw new NotFoundException('Old password is incorrect');
     }
@@ -146,20 +125,6 @@ export class UsersService {
       changePasswordDto.newPassword,
       10,
     );
-<<<<<<< HEAD
-    const comparedHashedPassword = await bcrypt.compare(
-      hashedNewPassword,
-      hashedOldPassword,
-    );
-    console.log('COMPARED HASHED PASSWORD:', comparedHashedPassword);
-
-    if (comparedHashedPassword) {
-      throw new BadRequestException(
-        'New password must be different from old password',
-      );
-    }
-=======
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
 
     const updatedUser = await this.userRepository.save({
       ...user,

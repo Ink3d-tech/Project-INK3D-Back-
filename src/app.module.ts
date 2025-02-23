@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Module } from '@nestjs/common';
-=======
 import { Module, OnModuleInit } from '@nestjs/common';
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
@@ -15,17 +11,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-<<<<<<< HEAD
-import { FileUploadModule } from './file-upload/file-upload.module';
-import googleOauthConfg from './config/google-oauth.config';
-
-
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [typeorm,googleOauthConfg],
-=======
 import googleOauthConfg from './config/google-oauth.config';
 import { SeederModule } from './seeds/seeder.module';
 import { SeederService } from './seeds/seeder.service';
@@ -41,7 +26,6 @@ import { Discounts } from './entities/discounts.entity';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm, googleOauthConfg],
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -50,18 +34,10 @@ import { Discounts } from './entities/discounts.entity';
     JwtModule.registerAsync({
       global: true,
       inject: [ConfigService],
-<<<<<<< HEAD
-      useFactory: (config: ConfigService)=> ({
-      secret: config.get<string>('JWT_SECRET'),
-      signOptions: { expiresIn: '1d' },
-     
-    }),
-=======
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '1d' },
       }),
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
     }),
     UsersModule,
     ProductsModule,
@@ -71,14 +47,6 @@ import { Discounts } from './entities/discounts.entity';
     NotificationsModule,
     PaymentMethodsModule,
     AuthModule,
-<<<<<<< HEAD
-    FileUploadModule,
-  ],
-  controllers: [],
-  providers: [],
-})
-export class AppModule {}
-=======
     SeederModule,
   ],
   providers: [SeederService],
@@ -90,4 +58,3 @@ export class AppModule implements OnModuleInit {
     await this.seederService.seed();
   }
 }
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd

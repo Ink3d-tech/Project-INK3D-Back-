@@ -1,29 +1,3 @@
-<<<<<<< HEAD
-import { Injectable } from '@nestjs/common';
-import { CreateDiscountDto } from './dto/create-discount.dto';
-import { UpdateDiscountDto } from './dto/update-discount.dto';
-
-@Injectable()
-export class DiscountsService {
-  create(createDiscountDto: CreateDiscountDto) {
-    return 'This action adds a new discount';
-  }
-
-  findAll() {
-    return `This action returns all discounts`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} discount`;
-  }
-
-  update(id: number, updateDiscountDto: UpdateDiscountDto) {
-    return `This action updates a #${id} discount`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} discount`;
-=======
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -84,6 +58,5 @@ export class DiscountsService {
   async remove(id: string): Promise<void> {
     const discount = await this.findOne(id); // Verifica que el descuento exista
     await this.discountsRepository.remove(discount); // Elimina el descuento
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
   }
 }

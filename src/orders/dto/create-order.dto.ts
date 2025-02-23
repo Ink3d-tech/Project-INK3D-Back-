@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-export class CreateOrderDto {}
-=======
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateOrderDto {
@@ -19,4 +16,3 @@ export class CreateOrderDto {
   @IsNotEmpty()
   orderDetails: { productId: string; quantity: number; price: number }[];
 }
->>>>>>> 2baa812c150905268d252a5ee328485f5a2e10fd
