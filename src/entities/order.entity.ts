@@ -3,14 +3,11 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Product } from './product.entity';
 
 @Entity('orders')
 export class Order {
@@ -24,8 +21,11 @@ export class Order {
   @Column()
   status: string;
 
-  @Column('decimal')
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalPrice: number;
+
+  @Column({ type: 'enum', enum: ['USD', 'ARS', 'COP', 'CLP'], default: 'USD' })
+  currency: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -33,9 +33,6 @@ export class Order {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(() => Product)
-  @JoinTable({
-    name: 'order_products',
-  })
-  products: Product[];
+  @Column('jsonb', { nullable: false })
+  orderDetails: { productId: string; quantity: number; price: number }[];
 }

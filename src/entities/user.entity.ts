@@ -11,6 +11,8 @@ import {
 import { Order } from './order.entity';
 import { Product } from './product.entity';
 import { Reviews } from './reviews.entity';
+import { Discounts } from './discounts.entity';
+
 
 @Entity()
 export class User {
@@ -20,8 +22,8 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ nullable: true }) // ✅ Permitir NULL para usuarios de Google
-  password?: string;
+  @Column()
+  password: string;
 
   @Column()
   name: string;
@@ -68,5 +70,11 @@ export class User {
   @JoinTable({
     name: 'favorites',
   })
+  @OneToMany(() => Discounts, (discount) => discount.userId)
+  @JoinTable({
+    name: 'discounts',
+  })
+  discounts: Discounts[];
+
   favorites: Product[];
 }

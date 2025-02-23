@@ -1,11 +1,11 @@
-// src/users/dto/create-user.dto.ts
 import {
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   MinLength,
-  IsInt,
   Validate,
 } from 'class-validator';
 import { MatchPassword } from 'src/decorators/match-password.decorator';
@@ -16,6 +16,18 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @MinLength(6)
+  @Matches(/^(?=.*[A-Z])/, {
+    message: 'Password must contain at least one uppercase letter',
+  })
+  @Matches(/^(?=.*[a-z])/, {
+    message: 'Password must contain at least one lowercase letter',
+  })
+  @Matches(/^(?=.*\d)/, {
+    message: 'Password must contain at least one number',
+  })
+  @Matches(/^(?=.*[!@#$%^&*(),.?":{}|<>])/, {
+    message: 'Password must contain at least one special character',
+  })
   password: string;
 
   @IsNotEmpty()
@@ -47,5 +59,5 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  role?: string;
+  role?: string; // Se maneja desde el front-end
 }

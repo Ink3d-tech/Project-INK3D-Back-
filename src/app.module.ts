@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
@@ -11,16 +11,21 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import { FileUploadModule } from './file-upload/file-upload.module';
-import googleOauthConfig from './config/google-oauth.config';
-
-
+import googleOauthConfg from './config/google-oauth.config';
+import { SeederModule } from './seeds/seeder.module';
+import { SeederService } from './seeds/seeder.service';
+import { Product } from './entities/product.entity';
+import { Category } from './entities/category.entity';
+import { User } from './entities/user.entity';
+import { Order } from './entities/order.entity';
+import { Discounts } from './entities/discounts.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([Product, Category, User, Order, Discounts]),
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [typeorm,googleOauthConfig],
+      load: [typeorm, googleOauthConfg],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -29,11 +34,10 @@ import googleOauthConfig from './config/google-oauth.config';
     JwtModule.registerAsync({
       global: true,
       inject: [ConfigService],
-      useFactory: (config: ConfigService)=> ({
-      secret: config.get<string>('JWT_SECRET'),
-      signOptions: { expiresIn: '1d' },
-     
-    }),
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
     }),
     UsersModule,
     ProductsModule,
@@ -43,9 +47,14 @@ import googleOauthConfig from './config/google-oauth.config';
     NotificationsModule,
     PaymentMethodsModule,
     AuthModule,
-    FileUploadModule,
+    SeederModule,
   ],
-  controllers: [],
-  providers: [],
+  providers: [SeederService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly seederService: SeederService) {}
+
+  async onModuleInit() {
+    await this.seederService.seed();
+  }
+}

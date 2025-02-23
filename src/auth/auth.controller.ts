@@ -33,8 +33,8 @@ export class AuthController {
         value: {
           name: 'John Doe',
           email: 'john@example.com',
-          password: '123456789',
-          confirmPassword: '123456789',
+          password: 'JOhn2025!#',
+          confirmPassword: 'JOhn2025!#',
           phone: 123456789,
           address: '123 Main St',
           city: 'Anytown',
