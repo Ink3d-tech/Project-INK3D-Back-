@@ -97,7 +97,8 @@ export class OrdersService {
       const discount = user.discounts.find((d) => d.status === 'active');
 
       if (discount) {
-        total -= Number(discount.amount);
+        total *= 1 - Number(discount.amount) / 100;
+
         discount.status = 'used';
         discount.isUsed = true;
         await queryRunner.manager.save(Discounts, discount);
