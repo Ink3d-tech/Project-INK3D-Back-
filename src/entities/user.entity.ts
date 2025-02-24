@@ -71,5 +71,9 @@ export class User {
   })
   discounts: Discounts[];
 
+  @ManyToMany(() => Product, (product) => product.favoritedBy)
+  @JoinTable({
+    name: 'favorites',
+  })
   favorites: Product[];
 }
