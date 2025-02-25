@@ -5,6 +5,7 @@ import { Product } from 'src/entities/product.entity';
 import { Category } from 'src/entities/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { StockMovementsService } from 'src/stock-movements/stock-movements.service';
 
 @Injectable()
 export class ProductsService {
@@ -13,6 +14,7 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private readonly stockMovementsService: StockMovementsService,
   ) {}
 
   async findAll(): Promise<Product[]> {
@@ -66,6 +68,9 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
+    let stockChange = 0;
+
+    // Validar y asignar nueva categoría si es necesario
     if (productData.category) {
       const category = await this.categoryRepository.findOne({
         where: { id: productData.category },
@@ -78,17 +83,29 @@ export class ProductsService {
       product.category = category;
     }
 
+    // Calcular cambio en el stock
+    if (
+      productData.stock !== undefined &&
+      productData.stock !== product.stock
+    ) {
+      stockChange = productData.stock - product.stock;
+    }
+
     Object.assign(product, productData);
 
-    return this.productRepository.save(product);
-  }
+    const updatedProduct = await this.productRepository.save(product);
 
-  async delete(id: string): Promise<void> {
-    const result = await this.productRepository.delete(id);
-
-    if (result.affected === 0) {
-      throw new NotFoundException('Product not found');
+    // Registrar movimiento de stock si hubo un cambio
+    if (stockChange !== 0) {
+      await this.stockMovementsService.createStockMovement({
+        productId: updatedProduct.id,
+        quantity: Math.abs(stockChange), // Siempre positivo
+        type: 'manual_adjustment', // Ajuste manual de stock
+        reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
+      });
     }
+
+    return updatedProduct;
   }
 
   async deactivateProduct(id: string): Promise<Product> {
@@ -109,5 +126,13 @@ export class ProductsService {
     }
     product.isActive = true;
     return this.productRepository.save(product);
+  }
+
+  async delete(id: string): Promise<void> {
+    const result = await this.productRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Product not found');
+    }
   }
 }

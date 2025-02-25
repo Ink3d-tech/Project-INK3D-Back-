@@ -19,10 +19,19 @@ import { Category } from './entities/category.entity';
 import { User } from './entities/user.entity';
 import { Order } from './entities/order.entity';
 import { Discounts } from './entities/discounts.entity';
+import { StockMovementsModule } from './stock-movements/stock-movements.module';
+import { StockMovements } from './entities/stock-movement.entiy';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Product, Category, User, Order, Discounts]),
+    TypeOrmModule.forFeature([
+      Product,
+      Category,
+      User,
+      Order,
+      Discounts,
+      StockMovements,
+    ]),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [typeorm, googleOauthConfg],
@@ -48,6 +57,7 @@ import { Discounts } from './entities/discounts.entity';
     PaymentMethodsModule,
     AuthModule,
     SeederModule,
+    StockMovementsModule,
   ],
   providers: [SeederService],
 })
