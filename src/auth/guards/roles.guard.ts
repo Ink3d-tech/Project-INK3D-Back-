@@ -48,6 +48,12 @@ export class RolesGuard implements CanActivate {
         );
       }
       return true;
+      // if (userIdFromParams && user.userId === userIdFromParams) {
+      //   console.log('RolesGuard - User is owner', user.userId);
+      //   console.log('RolesGuard - User from params', userIdFromParams);
+
+      //   return true;
+      // }
     }
 
     throw new ForbiddenException('Unaurhorized.');

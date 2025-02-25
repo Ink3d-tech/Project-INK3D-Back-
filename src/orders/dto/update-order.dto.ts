@@ -1,11 +1,4 @@
-import { IsIn, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateOrderDto } from './create-order.dto';
 
-export class UpdateOrderDto {
-  @IsString()
-  @IsIn(['pending', 'shipped', 'delivered', 'cancelled'])
-  status: string;
-}
-
-export class EditOrderDto {
-  products: { productId: string; quantity: number; price: number }[];
-}
+export class UpdateOrderDto extends PartialType(CreateOrderDto) {}
