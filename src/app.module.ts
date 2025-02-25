@@ -4,7 +4,6 @@ import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
 import { CategoriesModule } from './categories/categories.module';
 import { DiscountsModule } from './discounts/discounts.module';
-import { NotificationsModule } from './notifications/notifications.module';
 import { PaymentMethodsModule } from './payment-methods/payment-methods.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -22,6 +21,8 @@ import { Discounts } from './entities/discounts.entity';
 import { StockMovementsModule } from './stock-movements/stock-movements.module';
 import { StockMovements } from './entities/stock-movement.entiy';
 import { NodemailerModule } from './nodemailer/nodemailer.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
+import { CloudinaryConfig } from './config/cloudinary';
 
 @Module({
   imports: [
@@ -54,14 +55,14 @@ import { NodemailerModule } from './nodemailer/nodemailer.module';
     OrdersModule,
     CategoriesModule,
     DiscountsModule,
-    NotificationsModule,
     PaymentMethodsModule,
     AuthModule,
     SeederModule,
     StockMovementsModule,
     NodemailerModule,
+    FileUploadModule,
   ],
-  providers: [SeederService],
+  providers: [SeederService, CloudinaryConfig],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
