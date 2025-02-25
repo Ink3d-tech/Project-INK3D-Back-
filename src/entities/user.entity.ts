@@ -76,4 +76,7 @@ export class User {
     name: 'favorites',
   })
   favorites: Product[];
+
+  @Column({ nullable: true })
+  image: string;
 }
