@@ -12,6 +12,7 @@ import { User } from '../entities/user.entity';
 import { EditOrderDto, UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Discounts } from 'src/entities/discounts.entity';
+import { StockMovements } from 'src/entities/stock-movement.entiy';
 
 @Injectable()
 export class OrdersService {
@@ -84,6 +85,13 @@ export class OrdersService {
         product.stock -= item.quantity;
         updatedProducts.push(product);
 
+        const stockMovement = queryRunner.manager.create(StockMovements, {
+          product,
+          quantity: -item.quantity, // Se resta porque es una venta
+          type: 'order_creation',
+        });
+        await queryRunner.manager.save(StockMovements, stockMovement);
+
         orderDetails.push({
           productId: product.id,
           quantity: item.quantity,
@@ -152,6 +160,13 @@ export class OrdersService {
           if (product) {
             product.stock += detail.quantity;
             await queryRunner.manager.save(Product, product);
+
+            const stockMovement = queryRunner.manager.create(StockMovements, {
+              product,
+              quantity: detail.quantity, // Se suma porque se devuelve stock
+              type: 'order_cancellation',
+            });
+            await queryRunner.manager.save(StockMovements, stockMovement);
           }
         }
       }
@@ -196,6 +211,13 @@ export class OrdersService {
         if (product) {
           product.stock += detail.quantity;
           await queryRunner.manager.save(Product, product);
+
+          const stockMovement = queryRunner.manager.create(StockMovements, {
+            product,
+            quantity: detail.quantity, // Se suma porque se devuelve stock
+            type: 'order_cancellation',
+          });
+          await queryRunner.manager.save(StockMovements, stockMovement);
         }
       }
 

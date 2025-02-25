@@ -6,6 +6,7 @@ import { Category } from 'src/entities/category.entity';
 import { User } from 'src/entities/user.entity';
 import { Order } from 'src/entities/order.entity';
 import * as bcrypt from 'bcrypt';
+import { StockMovements } from 'src/entities/stock-movement.entiy';
 
 async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
@@ -23,9 +24,13 @@ export class SeederService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Order)
     private readonly orderRepository: Repository<Order>,
+    @InjectRepository(StockMovements)
+    private readonly stockMovementRepository: Repository<StockMovements>,
   ) {}
 
   async seed() {
+    console.log('🚀 Iniciando Seed...');
+
     /** 🔹 1️⃣ Crear Categorías */
     const categoryNames = ['Ropa', 'Calzado', 'Accesorios'];
     const createdCategories: Category[] = await Promise.all(
@@ -79,17 +84,14 @@ export class SeederService {
     userMap.set('ana', createdUsers[1]);
 
     /** 🔹 3️⃣ Crear Productos */
-    const existingProducts = await this.productRepository.find();
+    let existingProducts = await this.productRepository.find();
     if (existingProducts.length === 0) {
-      // Solo insertar si no hay productos
       const products: Partial<Product>[] = [
         {
           name: 'Camiseta Negra',
           description: 'Camiseta negra de algodón 100%',
           price: 19.99,
           stock: 50,
-          image: 'https://example.com/camiseta-negra.jpg',
-          discount: 10,
           category: categoryMap.get('ropa'),
           size: 'M',
           isActive: true,
@@ -99,8 +101,6 @@ export class SeederService {
           description: 'Pantalón jeans azul de mezclilla',
           price: 39.99,
           stock: 30,
-          image: 'https://example.com/jeans-azul.jpg',
-          discount: 5,
           category: categoryMap.get('ropa'),
           size: 'L',
           isActive: true,
@@ -110,20 +110,18 @@ export class SeederService {
           description: 'Zapatillas deportivas para correr',
           price: 59.99,
           stock: 20,
-          image: 'https://example.com/zapatillas.jpg',
-          discount: 15,
           category: categoryMap.get('calzado'),
           size: 'XL',
           isActive: true,
         },
       ];
       await this.productRepository.save(products);
+      existingProducts = await this.productRepository.find();
     }
 
     /** 🔹 4️⃣ Crear Órdenes */
     const existingOrders = await this.orderRepository.find();
     if (existingOrders.length === 0) {
-      // Evitar duplicados
       const orders = [
         {
           user: userMap.get('juan'),
@@ -160,8 +158,40 @@ export class SeederService {
       await this.orderRepository.save(orders);
     }
 
+    /** 🔹 5️⃣ Crear Movimientos de Stock */
+    const existingStockMovements = await this.stockMovementRepository.find();
+    if (existingStockMovements.length === 0) {
+      const stockMovements: Partial<StockMovements>[] = [
+        {
+          product: existingProducts[0],
+          quantity: 50,
+          type: 'manual_adjustment',
+          reason: 'Initial stock',
+        },
+        {
+          product: existingProducts[1],
+          quantity: 30,
+          type: 'manual_adjustment',
+          reason: 'Initial stock',
+        },
+        {
+          product: existingProducts[2],
+          quantity: 20,
+          type: 'manual_adjustment',
+          reason: 'Initial stock',
+        },
+        {
+          product: existingProducts[0],
+          quantity: 5,
+          type: 'manual_adjustment',
+          reason: 'Initial stock',
+        },
+      ];
+      await this.stockMovementRepository.save(stockMovements);
+    }
+
     console.log(
-      '✅ Seed de categorías, productos, usuarios y órdenes completado.',
+      '✅ Seed de categorías, productos, usuarios, órdenes y movimientos de stock completado.',
     );
   }
 }
