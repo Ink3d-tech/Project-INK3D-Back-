@@ -21,6 +21,7 @@ import { Order } from './entities/order.entity';
 import { Discounts } from './entities/discounts.entity';
 import { StockMovementsModule } from './stock-movements/stock-movements.module';
 import { StockMovements } from './entities/stock-movement.entiy';
+import { NodemailerModule } from './nodemailer/nodemailer.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { StockMovements } from './entities/stock-movement.entiy';
     AuthModule,
     SeederModule,
     StockMovementsModule,
+    NodemailerModule,
   ],
   providers: [SeederService],
 })
