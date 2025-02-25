@@ -25,6 +25,7 @@
     "migration:show": "npm run typeorm -- -d ./src/config/typeorm.ts migration:show"
   },
   "dependencies": {
+    "@google-cloud/vertexai": "^1.9.3",
     "@huggingface/inference": "^3.3.6",
     "@nestjs/axios": "^4.0.0",
     "@nestjs/common": "^10.4.15",

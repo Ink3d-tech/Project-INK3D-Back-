@@ -14,6 +14,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import googleOauthConfg from './config/google-oauth.config';
 import { Chatbot} from './chatbot/chatbot'; 
+import { MagazineModule } from './magazine/magazine.module';
+import { User } from './entities/user.entity';
 
 
 @Module({
@@ -34,6 +36,7 @@ import { Chatbot} from './chatbot/chatbot';
         signOptions: { expiresIn: '1d' },
       }),
     }),
+    TypeOrmModule.forFeature([User]),
     UsersModule,
     ProductsModule,
     OrdersModule,
@@ -44,7 +47,7 @@ import { Chatbot} from './chatbot/chatbot';
     AuthModule,
     FileUploadModule,
     OrdersModule,
-    // ChatbotModule,
+    MagazineModule,
   ],
   controllers: [],
   providers: [Chatbot], 

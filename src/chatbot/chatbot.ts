@@ -1,77 +1,94 @@
-import { WebSocketGateway, WebSocketServer, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
+import { 
+  WebSocketGateway, 
+  WebSocketServer, 
+  SubscribeMessage, 
+  MessageBody, 
+  ConnectedSocket 
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { HfInference } from '@huggingface/inference';
+import { VertexAI, GenerativeModel } from '@google-cloud/vertexai';
+import * as dotenv from 'dotenv';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity'; 
 
-@WebSocketGateway()
+dotenv.config();
+
+@WebSocketGateway({ cors: { origin: '*' } }) 
 export class Chatbot {
   @WebSocketServer()
   server: Server;
 
-  private hf = new HfInference(process.env.HUGGINGFACE_TOKEN);
+  private model: GenerativeModel;
+
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>
+  ) {
+    const vertexAI = new VertexAI({
+      project: process.env.GOOGLE_CLOUD_PROJECT_ID,
+      location: process.env.GOOGLE_CLOUD_REGION,
+    });
+
+    this.model = vertexAI.getGenerativeModel({ model: 'gemini-pro' });
+  }
 
   private readonly systemContext = `
-  You are a friendly and knowledgeable Chatbot for the INK3D e-commerce platform, which specializes in Asian fashion.
-  INK3D offers a unique shopping experience with a dynamic catalog of clothing and accessories inspired by the latest Asian fashion trends.
-  The platform not only allows users to shop for the latest fashion pieces but also provides a community space for sharing trends, opinions, and styling tips.
-  In addition to the store, there is a magazine section where users can read about the latest fashion news, trends, and lifestyle updates from the world of Asian fashion.
-  You help users navigate the store, answer product questions, provide fashion advice, recommend styling options, and inform them about ongoing offers, sales, and new arrivals.
-  Always remain friendly, professional, and helpful. Your goal is to provide the best shopping experience and assist customers in discovering new trends and ideas in the world of Asian fashion.
-  The conversations will mostly be in Spanish, so please be prepared to respond accordingly. 
-  You should assist users by providing relevant product information, guiding them through the shopping process, and offering helpful advice based on their preferences and the latest fashion trends.
-  Always be courteous, supportive, and clear in your responses.
+  Eres un chatbot llamdado INK3D, eres amigable y experto en un ecommerce basado en al web de INK3D, una tienda en línea especializada en moda asiática.
+  La pagina tambien cuenta con una sección para magazine donde se publican las ultimas tendencias de la moda y se puede interactuar en el chat. 
+  Tu objetivo es ayudar a los usuarios con información relevante y concreta.
+
+  📍 **Información de INK3D**:
+  - 🛍️ Catálogo: Moda asiática, ropa, accesorios y más.
+  - 📖 Revista: Últimas tendencias y consejos de moda.
+  - 🚚 Envíos: Internacionales y nacionales con entrega en 3-7 días hábiles.
+
+  **Reglas del chatbot:**
+  1️⃣ Responde de manera **breve y clara** (máximo 2-3 oraciones).
+  2️⃣ Si el usuario pregunta sobre productos, recomiéndale visitar el catálogo en el sitio web.
+  3️⃣ Si el usuario pregunta sobre la revista, envíale el enlace directo.
+  4️⃣ Si no sabes la respuesta, di: "Puedes contactarnos para más información."
   `;
 
   @SubscribeMessage('message')
   async handleMessage(
-    @MessageBody() data: { userMessage: string, conversationHistory?: { text: string; sender: string }[] },
+    @MessageBody() data: { userMessage: string, userId?: number, conversationHistory?: { text: string; sender: string }[] },
     @ConnectedSocket() socket: Socket
   ): Promise<void> {
     try {
+      let userName = "Usuario"; 
+
+      if (data.userId) {
+        const user = await this.userRepository.findOne({ where: { id: data.userId as any } });
+        if (user) {
+          userName = user.name; 
+        }
+      }
+
       const recentHistory = data.conversationHistory?.slice(-5).map(msg => 
-        `${msg.sender === 'bot' ? 'Chatbot' : 'User'}: ${msg.text}`
+        `${msg.sender === 'bot' ? 'Chatbot' : userName}: ${msg.text}`
       ).join('\n') || '';
 
       const prompt = `
-      ${this.systemContext}
+        ${this.systemContext}
+        === Historial de conversación ===
+        ${recentHistory}
 
-      === Conversation History ===
-      ${recentHistory}
+        ${userName}: ${data.userMessage}
+        Chatbot:`;
 
-      User: ${data.userMessage}
-      Chatbot:`;
-
-      const respuesta = await this.hf.textGeneration({
-        model: 'HuggingFaceH4/zephyr-7b-beta',
-        inputs: prompt,
-        parameters: { 
-          max_new_tokens: 100, 
-          return_full_text: false,
-          temperature: 0.7,
-          top_p: 0.9, 
-          stop_sequences: ["\nUser:", "\nChatbot:", "Usuario:", "Chatbot:", "### Usuario pregunta:"], 
-        }
+      const result = await this.model.generateContent({
+        contents: [{ role: "user", parts: [{ text: prompt }] }]
       });
 
-      let botResponse = respuesta.generated_text.trim();
-
-      botResponse = botResponse.split(/(\.|!|\?)\s+/)[0];
-
-      const stopSequences = ["\nUser:", "\nChatbot:", "Usuario:", "Chatbot:"];
-      stopSequences.forEach(stop => {
-        if (botResponse.includes(stop)) {
-          botResponse = botResponse.split(stop)[0].trim();
-        }
-      });
-
-      if (!botResponse || botResponse.length < 3) {
-        botResponse = "Lo siento, no entendí tu pregunta. ¿Podrías reformularla?";
-      }
+      const response = await result.response;
+      let botResponse = response?.candidates?.[0]?.content?.parts?.[0]?.text || 
+                        "Lo siento, no entendí tu pregunta. ¿Podrías reformularla?";
 
       this.server.to(socket.id).emit('bot-response', { text: botResponse });
 
     } catch (error) {
-      console.error('Error al comunicarse con Hugging Face:', error);
-      this.server.to(socket.id).emit('bot-response', { text: "Lo siento, ocurrió un problema." });
+      console.error('Error al comunicarse con Gemini:', error);
+      this.server.to(socket.id).emit('bot-response', { text: "Lo siento, ocurrió un problema técnico." });
     }
   }
 }
