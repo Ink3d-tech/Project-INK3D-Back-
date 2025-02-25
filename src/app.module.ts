@@ -12,9 +12,8 @@ import typeorm from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { FileUploadModule } from './file-upload/file-upload.module';
-import { ChatbotModule } from './chatbot/chatbot.module';
 import googleOauthConfg from './config/google-oauth.config';
-import { ChatbotGateway } from './chatbot/chatbot.gateway'; 
+import { Chatbot} from './chatbot/chatbot'; 
 
 
 @Module({
@@ -45,9 +44,9 @@ import { ChatbotGateway } from './chatbot/chatbot.gateway';
     AuthModule,
     FileUploadModule,
     OrdersModule,
-    ChatbotModule,
+    // ChatbotModule,
   ],
   controllers: [],
-  providers: [ChatbotGateway], 
+  providers: [Chatbot], 
 })
 export class AppModule {}
