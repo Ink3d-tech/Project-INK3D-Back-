@@ -1,4 +1,6 @@
+
 import { Module, OnModuleInit } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
@@ -10,7 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from './config/typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
-import googleOauthConfg from './config/google-oauth.config';
+import googleOauthConfig from './config/google-oauth.config';
 import { SeederModule } from './seeds/seeder.module';
 import { SeederService } from './seeds/seeder.service';
 import { Product } from './entities/product.entity';
@@ -23,6 +25,8 @@ import { StockMovements } from './entities/stock-movement.entiy';
 import { NodemailerModule } from './nodemailer/nodemailer.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { CloudinaryConfig } from './config/cloudinary';
+import { Chatbot } from './chatbot/chatbot';
+import { WebSocketAdapter } from './websocket.adapter';
 
 @Module({
   imports: [
@@ -36,7 +40,7 @@ import { CloudinaryConfig } from './config/cloudinary';
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [typeorm, googleOauthConfg],
+      load: [typeorm, googleOauthConfig],
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -62,7 +66,17 @@ import { CloudinaryConfig } from './config/cloudinary';
     NodemailerModule,
     FileUploadModule,
   ],
-  providers: [SeederService, CloudinaryConfig],
+  providers: [
+    SeederService,
+    CloudinaryConfig,
+    Chatbot,
+    {
+      provide: WebSocketAdapter,
+      useFactory: (configService: ConfigService) => new WebSocketAdapter(configService),
+      inject: [ConfigService],
+    },
+  ],
+  exports: [WebSocketAdapter],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
