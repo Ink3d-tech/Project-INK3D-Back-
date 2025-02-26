@@ -2,14 +2,18 @@ import { Controller, Post, Body, Req } from '@nestjs/common';
 import { PaymentMethodsService } from './payment-methods.service';
 import { Product } from '../entities/product.entity';
 import { Request } from 'express';
+<<<<<<< HEAD
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { PaymentMethodDto } from './dto/payment-method.dto';
+=======
+>>>>>>> origin/chatbot_h4
 
 @Controller('payment-methods')
 export class PaymentMethodsController {
   constructor(private readonly paymentMethodsService: PaymentMethodsService) {}
 
   @Post('create')
+<<<<<<< HEAD
   @ApiOperation({ summary: 'Crear un pago' })
   @ApiBody({
     type: PaymentMethodDto,
@@ -38,6 +42,8 @@ export class PaymentMethodsController {
       },
     },
   })
+=======
+>>>>>>> origin/chatbot_h4
   createPayment(
     @Body()
     data: {
