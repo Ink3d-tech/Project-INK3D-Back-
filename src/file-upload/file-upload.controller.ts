@@ -17,6 +17,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiConsumes,
+  ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -28,6 +29,60 @@ import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 @Controller('file')
 export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Upload image' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Image uploaded',
+  })
+  @ApiResponse({
+    status: 400,
+    example: {
+      message: 'Validation failed',
+      error: 'Bad Request',
+      statusCode: 400,
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    example: {
+      message: 'Invalid token',
+      error: 'Unauthorized',
+      statusCode: 401,
+    },
+  })
+  @ApiResponse({
+    status: 403,
+    example: {
+      message: 'You do not have permission to access this resource!',
+      error: 'Forbidden',
+      statusCode: 403,
+    },
+  })
+  @ApiResponse({
+    status: 404,
+    example: {
+      message: 'Product not found',
+      error: 'Not Found',
+      statusCode: 404,
+    },
+  })
+  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+    return this.fileUploadService.uploadImage(file);
+  }
 
   @ApiTags('Products')
   @Post('uploadImage/:productId')

@@ -15,6 +15,12 @@ export class FileUploadService {
     private usersRepository: Repository<User>,
   ) {}
 
+  async uploadImage(file: Express.Multer.File) {
+    const uploadImage = await this.fileUploadRepository.uploadImage(file);
+
+    return uploadImage;
+  }
+
   async uploadProductImage(file: Express.Multer.File, productId: string) {
     const product = await this.productsRepository.findOneBy({ id: productId });
 
