@@ -38,7 +38,6 @@ export class PaymentMethodsController {
       },
     },
   })
-
   createPayment(
     @Body()
     data: {
