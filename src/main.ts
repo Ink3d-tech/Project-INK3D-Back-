@@ -14,11 +14,15 @@ async function bootstrap() {
   app.useWebSocketAdapter(webSocketAdapter);
 
   app.enableCors({
-    origin: configService.get<string>('CLIENT_URL', 'http://localhost:3000'),
+    origin: configService
+      .get<string>('CLIENT_URL', 'http://localhost:3000')
+      .replace(/^CLIENT_URL=/, '') 
+      .split(','), 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
+  
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('The INK3D Project')
