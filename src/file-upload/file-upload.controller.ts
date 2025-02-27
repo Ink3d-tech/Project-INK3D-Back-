@@ -33,6 +33,7 @@ export class FileUploadController {
   @Post()
   @ApiOperation({ summary: 'Upload image' })
   @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
   @ApiBody({
     schema: {
       type: 'object',
@@ -145,7 +146,7 @@ export class FileUploadController {
         validators: [
           new MaxFileSizeValidator({
             maxSize: 600000,
-            message: 'File must be maximum 200kb',
+            message: 'File must be maximum 600kb',
           }),
           new FileTypeValidator({
             fileType: /(jpg|jpeg|png|webp)$/,

@@ -18,7 +18,7 @@ export class FileUploadService {
   async uploadImage(file: Express.Multer.File) {
     const uploadImage = await this.fileUploadRepository.uploadImage(file);
 
-    return uploadImage;
+    return uploadImage.secure_url;
   }
 
   async uploadProductImage(file: Express.Multer.File, productId: string) {

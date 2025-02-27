@@ -1,6 +1,4 @@
-
 import { Module, OnModuleInit } from '@nestjs/common';
-import { INestApplication } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
@@ -72,7 +70,8 @@ import { WebSocketAdapter } from './websocket.adapter';
     Chatbot,
     {
       provide: WebSocketAdapter,
-      useFactory: (configService: ConfigService) => new WebSocketAdapter(configService),
+      useFactory: (configService: ConfigService) =>
+        new WebSocketAdapter(configService),
       inject: [ConfigService],
     },
   ],

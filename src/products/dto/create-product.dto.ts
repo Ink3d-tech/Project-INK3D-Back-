@@ -24,6 +24,7 @@ enum Sizes {
 
 export class CreateProductDto {
   @ApiProperty({ example: 'Camiseta Negra', description: 'Product name' })
+  @IsNotEmpty()
   @IsString()
   @Length(1, 255)
   name: string;
@@ -32,15 +33,18 @@ export class CreateProductDto {
     example: 'Camiseta negra de algodón 100%',
     description: 'Product description',
   })
+  @IsNotEmpty()
   @IsString()
   description: string;
 
   @ApiProperty({ example: 25.99, description: 'Product price' })
+  @IsNotEmpty()
   @IsNumber({ maxDecimalPlaces: 2 })
   @IsPositive()
   price: number;
 
   @ApiProperty({ example: 50, description: 'Available stock' })
+  @IsNotEmpty()
   @IsInt()
   @Min(0)
   stock: number;
@@ -49,6 +53,7 @@ export class CreateProductDto {
     example: 'https://imagen.com/camiseta.jpg',
     description: 'Image URL',
   })
+  @IsNotEmpty()
   @IsString()
   @IsUrl()
   @Length(1, 500)
@@ -64,6 +69,7 @@ export class CreateProductDto {
     example: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
     description: 'Category ID of the product',
   })
+  @IsNotEmpty()
   @IsNotEmpty()
   category: Category;
 
