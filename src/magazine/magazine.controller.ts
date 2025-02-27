@@ -19,8 +19,6 @@ import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 import { Role } from 'src/roles.enum';
 
 
-
-
 @ApiTags('Magazine')
 
 @Controller('api/magazine')
@@ -31,7 +29,11 @@ export class MagazineController {
   @Post()
   @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Crea un nuevo artículo' })
-  @ApiResponse({ status: 201, description: 'Artículo creado con éxito', type: Magazine })
+  @ApiResponse({
+    status: 201,
+    description: 'Artículo creado con éxito',
+    type: Magazine,
+  })
   create(@Body() createMagazineDto: CreateMagazineDto): Promise<Magazine> {
     return this.magazineService.create(createMagazineDto);
   }
@@ -41,14 +43,22 @@ export class MagazineController {
   @UseGuards(AuthGuard, RolesGuard)
  
   @ApiOperation({ summary: 'Obtiene todos los artículos' })
-  @ApiResponse({ status: 200, description: 'Lista de artículos', type: [Magazine] })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de artículos',
+    type: [Magazine],
+  })
   findAll(): Promise<Magazine[]> {
     return this.magazineService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Obtiene un artículo por ID' })
-  @ApiResponse({ status: 200, description: 'Artículo encontrado', type: Magazine })
+  @ApiResponse({
+    status: 200,
+    description: 'Artículo encontrado',
+    type: Magazine,
+  })
   findOne(@Param('id') id: number): Promise<Magazine> {
     return this.magazineService.findOne(id);
   }
@@ -56,8 +66,15 @@ export class MagazineController {
   @Put(':id')
   @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Edita un artículo' })
-  @ApiResponse({ status: 200, description: 'Artículo actualizado', type: Magazine })
-  update(@Param('id') id: number, @Body() updateMagazineDto: UpdateMagazineDto): Promise<Magazine> {
+  @ApiResponse({
+    status: 200,
+    description: 'Artículo actualizado',
+    type: Magazine,
+  })
+  update(
+    @Param('id') id: number,
+    @Body() updateMagazineDto: UpdateMagazineDto,
+  ): Promise<Magazine> {
     return this.magazineService.update(id, updateMagazineDto);
   }
 
