@@ -8,7 +8,6 @@ import {
   IsEnum,
   Length,
   IsInt,
-  IsUrl,
   IsNotEmpty,
 } from 'class-validator';
 import { Category } from 'src/entities/category.entity';
@@ -54,10 +53,7 @@ export class CreateProductDto {
     description: 'Image URL',
   })
   @IsNotEmpty()
-  @IsString()
-  @IsUrl()
-  @Length(1, 500)
-  image: string;
+  image: string[];
 
   @ApiProperty({ example: 5, description: 'Discount' })
   @IsInt()
