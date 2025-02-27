@@ -6,6 +6,7 @@ import { User } from 'src/entities/user.entity';
 import googleOauthConfg from 'src/config/google-oauth.config';
 import { ConfigModule } from '@nestjs/config';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { GoogleStrategy } from './strategies/google.strategy';
     ConfigModule.forFeature(googleOauthConfg),
   ],
   controllers: [AuthController],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthService, GoogleStrategy, NodeMailerService],
 })
 export class AuthModule {}

@@ -12,6 +12,7 @@ import {
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Reviews } from './reviews.entity';
+import { StockMovements } from './stock-movement.entiy';
 
 @Entity()
 @Check('price >= 0')
@@ -33,7 +34,7 @@ export class Product {
   @Column({ type: 'int', default: 0 })
   stock: number;
 
-  @Column({ type: 'varchar', length: 500 })
+  @Column({ type: 'varchar', length: 500, nullable: true })
   image: string;
 
   @CreateDateColumn()
@@ -65,4 +66,7 @@ export class Product {
 
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
+
+  @OneToMany(() => StockMovements, (stockMovements) => stockMovements.product)
+  stockMovements: StockMovements[];
 }
