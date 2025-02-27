@@ -25,6 +25,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { CloudinaryConfig } from './config/cloudinary';
 import { Chatbot } from './chatbot/chatbot';
 import { WebSocketAdapter } from './websocket.adapter';
+import { MagazineModule } from './magazine/magazine.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { WebSocketAdapter } from './websocket.adapter';
     StockMovementsModule,
     NodemailerModule,
     FileUploadModule,
+    MagazineModule,
   ],
   providers: [
     SeederService,
