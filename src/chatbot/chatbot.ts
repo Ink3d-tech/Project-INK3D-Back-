@@ -1,20 +1,21 @@
-import { 
-  WebSocketGateway, 
-  WebSocketServer, 
-  SubscribeMessage, 
-  MessageBody, 
-  ConnectedSocket 
+/* eslint-disable prefer-const */
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { VertexAI, GenerativeModel } from '@google-cloud/vertexai';
 import * as dotenv from 'dotenv';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../entities/user.entity'; 
+import { User } from '../entities/user.entity';
 
 dotenv.config();
 
-@WebSocketGateway({ cors: { origin: '*' } }) 
+@WebSocketGateway({ cors: { origin: '*' } })
 export class Chatbot {
   @WebSocketServer()
   server: Server;
@@ -22,7 +23,7 @@ export class Chatbot {
   private model: GenerativeModel;
 
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {
     const vertexAI = new VertexAI({
       project: process.env.GOOGLE_CLOUD_PROJECT_ID,
@@ -51,22 +52,34 @@ export class Chatbot {
 
   @SubscribeMessage('message')
   async handleMessage(
-    @MessageBody() data: { userMessage: string, userId?: number, conversationHistory?: { text: string; sender: string }[] },
-    @ConnectedSocket() socket: Socket
+    @MessageBody()
+    data: {
+      userMessage: string;
+      userId?: number;
+      conversationHistory?: { text: string; sender: string }[];
+    },
+    @ConnectedSocket() socket: Socket,
   ): Promise<void> {
     try {
-      let userName = "Usuario"; 
+      let userName = 'Usuario';
 
       if (data.userId) {
-        const user = await this.userRepository.findOne({ where: { id: data.userId as any } });
+        const user = await this.userRepository.findOne({
+          where: { id: data.userId as any },
+        });
         if (user) {
-          userName = user.name; 
+          userName = user.name;
         }
       }
 
-      const recentHistory = data.conversationHistory?.slice(-5).map(msg => 
-        `${msg.sender === 'bot' ? 'Chatbot' : userName}: ${msg.text}`
-      ).join('\n') || '';
+      const recentHistory =
+        data.conversationHistory
+          ?.slice(-5)
+          .map(
+            (msg) =>
+              `${msg.sender === 'bot' ? 'Chatbot' : userName}: ${msg.text}`,
+          )
+          .join('\n') || '';
 
       const prompt = `
         ${this.systemContext}
@@ -77,18 +90,20 @@ export class Chatbot {
         Chatbot:`;
 
       const result = await this.model.generateContent({
-        contents: [{ role: "user", parts: [{ text: prompt }] }]
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
       });
 
       const response = await result.response;
-      let botResponse = response?.candidates?.[0]?.content?.parts?.[0]?.text || 
-                        "Lo siento, no entendí tu pregunta. ¿Podrías reformularla?";
+      let botResponse =
+        response?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        'Lo siento, no entendí tu pregunta. ¿Podrías reformularla?';
 
       this.server.to(socket.id).emit('bot-response', { text: botResponse });
-
     } catch (error) {
       console.error('Error al comunicarse con Gemini:', error);
-      this.server.to(socket.id).emit('bot-response', { text: "Lo siento, ocurrió un problema técnico." });
+      this.server.to(socket.id).emit('bot-response', {
+        text: 'Lo siento, ocurrió un problema técnico.',
+      });
     }
   }
 }

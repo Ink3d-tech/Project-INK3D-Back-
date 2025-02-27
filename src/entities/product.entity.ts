@@ -34,8 +34,8 @@ export class Product {
   @Column({ type: 'int', default: 0 })
   stock: number;
 
-  @Column({ type: 'varchar', length: 500, nullable: true })
-  image: string;
+  @Column('jsonb', { nullable: true })
+  image: string[];
 
   @CreateDateColumn()
   createdAt: Date;

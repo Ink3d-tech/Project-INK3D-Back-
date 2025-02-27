@@ -1,4 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Magazine {
@@ -15,7 +20,7 @@ export class Magazine {
   image: string;
 
   @Column()
-  author: string; 
+  author: string;
 
   @CreateDateColumn()
   createdAt: Date;

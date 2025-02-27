@@ -18,7 +18,7 @@ export class FileUploadService {
   async uploadImage(file: Express.Multer.File) {
     const uploadImage = await this.fileUploadRepository.uploadImage(file);
 
-    return uploadImage;
+    return uploadImage.secure_url;
   }
 
   async uploadProductImage(file: Express.Multer.File, productId: string) {
@@ -30,7 +30,7 @@ export class FileUploadService {
     const uploadImage = await this.fileUploadRepository.uploadImage(file);
 
     await this.productsRepository.update(product.id, {
-      image: uploadImage.secure_url,
+      image: [uploadImage.secure_url],
     });
 
     return await this.productsRepository.findOneBy({ id: productId });

@@ -73,7 +73,7 @@ export class ProductsService {
     // Validar y asignar nueva categoría si es necesario
     if (productData.category) {
       const category = await this.categoryRepository.findOne({
-        where: { id: productData.category },
+        where: { id: productData.category[0].id },
       });
 
       if (!category) {

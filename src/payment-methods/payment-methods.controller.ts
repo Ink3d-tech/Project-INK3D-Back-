@@ -1,15 +1,22 @@
-import { Controller, Post, Body, Req } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { PaymentMethodsService } from './payment-methods.service';
 import { Product } from '../entities/product.entity';
 import { Request } from 'express';
-import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { PaymentMethodDto } from './dto/payment-method.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
+import { Role } from 'src/roles.enum';
 
 @Controller('payment-methods')
 export class PaymentMethodsController {
   constructor(private readonly paymentMethodsService: PaymentMethodsService) {}
 
   @Post('create')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.User) // O Role.Admin si solo los admins pueden crear pagos
   @ApiOperation({ summary: 'Crear un pago' })
   @ApiBody({
     type: PaymentMethodDto,

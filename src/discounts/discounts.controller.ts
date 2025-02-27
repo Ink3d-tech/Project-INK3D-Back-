@@ -6,17 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { DiscountsService } from './discounts.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
 import { UpdateDiscountDto } from './dto/update-discount.dto';
-import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation } from '@nestjs/swagger';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { AuthGuard } from '@nestjs/passport';
+import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
+import { Role } from 'src/roles.enum';
 
 @Controller('discounts')
 export class DiscountsController {
   constructor(private readonly discountsService: DiscountsService) {}
 
   @Post()
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard, RolesGuard)
+    @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Create a new discount' })
   @ApiBody({
     type: CreateDiscountDto,

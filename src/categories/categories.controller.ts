@@ -7,6 +7,7 @@ import {
   Body,
   Param,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 
 import { Category } from 'src/entities/category.entity';
@@ -14,14 +15,20 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiHideProperty,
   ApiOperation,
   ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
+import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
+import { Role } from 'src/roles.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('categories')
+@UseGuards(AuthGuard, RolesGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
@@ -71,6 +78,8 @@ export class CategoriesController {
   }
 
   @Post()
+   @ApiBearerAuth()
+    @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Create a category' })
   @ApiBody({
     type: CreateCategoryDto,

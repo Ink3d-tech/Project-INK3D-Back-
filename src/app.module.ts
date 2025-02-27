@@ -1,6 +1,4 @@
-
 import { Module, OnModuleInit } from '@nestjs/common';
-import { INestApplication } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
@@ -27,6 +25,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { CloudinaryConfig } from './config/cloudinary';
 import { Chatbot } from './chatbot/chatbot';
 import { WebSocketAdapter } from './websocket.adapter';
+import { MagazineModule } from './magazine/magazine.module';
 
 @Module({
   imports: [
@@ -65,6 +64,7 @@ import { WebSocketAdapter } from './websocket.adapter';
     StockMovementsModule,
     NodemailerModule,
     FileUploadModule,
+    MagazineModule,
   ],
   providers: [
     SeederService,
@@ -72,7 +72,8 @@ import { WebSocketAdapter } from './websocket.adapter';
     Chatbot,
     {
       provide: WebSocketAdapter,
-      useFactory: (configService: ConfigService) => new WebSocketAdapter(configService),
+      useFactory: (configService: ConfigService) =>
+        new WebSocketAdapter(configService),
       inject: [ConfigService],
     },
   ],
