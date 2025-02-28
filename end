@@ -1,0 +1,111 @@
+* [33md350bc2[m[33m ([m[1;31morigin/variantes-de-productos[m[33m)[m primer intento entidades dto, crud products, con ProductCombination
+[31m|[m * [33m3496279[m[33m ([m[1;31morigin/magazinev1[m[33m)[m rutas desprotegidas
+[31m|[m [32m|[m *   [33m9ddc24d[m[33m ([m[1;31morigin/magazine[m[33m)[m Resuelto merge entre main y chatbot_h4
+[31m|[m [32m|[m [33m|[m[34m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m *   [33m38b90f8[m[33m ([m[1;31morigin/rama-render[m[33m)[m resolviendo conflictos
+[31m|[m [32m|[m [33m|[m [34m|[m [35m|[m[36m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m * [36m|[m [33m5ce0b72[m resolviendo conflictos
+[31m|[m [32m|[m [33m|[m [34m|[m * [36m|[m [33m6f48b6d[m resolviendo conflictos
+[31m|[m [32m|[m [33m|[m [34m|[m * [36m|[m [33m618495a[m resolviendo conflictos
+[31m|[m [32m|[m [33m|[m [34m|[m * [36m|[m [33me8c6446[m resolviendo conflictos
+[31m|[m [32m|[m [33m|[m [34m|[m * [36m|[m   [33m3eed5d1[m resolviendo conflictos
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m[1;32m\[m [36m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m * [36m|[m [33m2fea97a[m CRUD orders . MercadoPago testing
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m * [36m|[m [33m82471a1[m Mercado Pago - CRUD Orders TEST PENDING
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m * [36m|[m   [33m6dbd3e7[m Merge pull request #26 from Ink3d-tech/CRUD-orders
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m [1;33m|[m[1;34m\[m [36m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m [1;33m|[m * [36m|[m [33m0a3710a[m CRUD orders for test
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m [1;33m|[m * [36m|[m [33m473d2ec[m actualizado CRUD orders con manejo de stock avanzado, discount, TEST PENDING
+[31m|[m [32m|[m [33m|[m [34m|[m [1;31m|[m [1;33m|[m * [36m|[m [33mc40c414[m CRUD Orders + endpoints + swagger
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m [33m38913a8[m cambios en el authController y el main
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m [33m4761b83[m configuracion para render
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m [33m2cdd25c[m configuracion para render
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m [33mc307e1e[m configuracion para render
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m [33mfe2a0d8[m configuracion para render
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m [33m79e531e[m implementacion de auth google
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m [33me73d849[m creacion de la rama render
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;33m|[m [1;34m|[m [36m|[m   [33m5061209[m Guardando cambios locales antes de revertir
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m[1;34m\[m [1;33m\[m [1;34m\[m [36m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [1;34m|[m [1;33m|[m[1;34m/[m [36m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [1;34m|[m[1;34m/[m[1;33m|[m [36m|[m   
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m * [1;33m|[m [36m|[m [33me7f2378[m Merge pull request #25 from Ink3d-tech/Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m[1;33m\[m[1;33m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m * [36m|[m   [33m23ffa30[m Merge pull request #24 from Ink3d-tech/feature-OAuth20
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m [33m|[m[34m\[m [36m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m [33m|[m * [36m|[m [33m6c7d76d[m swagger para CRUD categories
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m * [33m|[m [34m|[m [36m|[m [33mfc96b49[m Merge pull request #23 from Ink3d-tech/Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m[33m\[m[33m|[m [34m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m * [34m|[m [36m|[m [33m1389879[m Merge pull request #22 from Ink3d-tech/feature-OAuth20
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m [1;31m|[m[34m\[m[34m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m [1;31m|[m * [36m|[m [33m79fa065[m corregidos errores en register, login y change-password. camibos en entidad y dto user
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m * [1;31m|[m [1;32m|[m [36m|[m [33mb61fda1[m Merge pull request #21 from Ink3d-tech/Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [1;33m|[m[1;31m\[m[1;31m|[m [1;32m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [1;33m|[m * [1;32m|[m [36m|[m [33me819d6b[m Merge pull request #20 from Ink3d-tech/feature-OAuth20
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [1;33m|[m [1;35m|[m[1;32m\[m[1;32m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [1;33m|[m [1;35m|[m * [36m|[m [33m3cc5479[m CORS para habilitar conexion del FRONT
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m * [1;35m|[m [1;36m|[m [36m|[m [33mad2db38[m Merge pull request #19 from Ink3d-tech/Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m[1;35m\[m[1;35m|[m [1;36m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m * [1;36m|[m [36m|[m [33ma7b44c3[m Merge pull request #18 from Ink3d-tech/feature-OAuth20
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m [33m|[m[1;36m\[m[1;36m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [31m|[m [33m|[m * [36m|[m [33m64cf1e4[m CreateUserDto campos opcionales
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m * [33m|[m [34m|[m [36m|[m [33m8e57ce8[m Merge pull request #17 from Ink3d-tech/Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m[33m\[m[33m|[m [34m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m * [34m|[m [36m|[m [33m3be38fd[m Merge pull request #16 from Ink3d-tech/feature-OAuth20
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m [1;31m|[m[34m\[m[34m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m [1;31m|[m * [36m|[m [33mf88ec88[m ajustes auth conroller
+[31m|[m [32m|[m [33m|[m [34m|[m [1;35m|[m [35m|[m [1;31m|[m * [36m|[m [33m6cb60a6[m callback fixed OAuth20
+[31m|[m [32m|[m [33m|[m [34m|[m * [35m|[m [1;31m|[m [1;32m|[m [36m|[m [33mbac9418[m cambio en variables de entorno
+[31m|[m [32m|[m [33m|[m [34m|[m [35m|[m[35m/[m [1;31m/[m [1;32m/[m [36m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;31m|[m [1;32m|[m [36m|[m [33me5fa8fe[m modificacion de la url de google
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;31m|[m [1;32m|[m [36m|[m [33m2507d65[m modificacion de la url de google
+[31m|[m [32m|[m [33m|[m [34m|[m * [1;31m|[m [1;32m|[m [36m|[m   [33mb1ce2ad[m Merge pull request #15 from Ink3d-tech/Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m[1;34m\[m [1;31m\[m [1;32m\[m [36m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m * [33m4f4994e[m[33m ([m[1;31morigin/test-mercado-pago[m[33m, [m[1;31morigin/mercado-pago[m[33m)[m Mercado Pago Funcional
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m * [33me816711[m Implementación de método de pago Mercado Pago
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [33m573c9fd[m[33m ([m[1;31morigin/creacion-de-facturas[m[33m)[m cambios main
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [33ma68f8fe[m creación de PDF
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [33m8476210[m[33m ([m[1;31morigin/cloudinary[m[33m)[m actualizacion cloudinary
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [33ma980115[m Subiendo Cloudinary actualizado
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m[1;35m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [33mfdc8e02[m[33m ([m[1;31morigin/products-cart[m[33m)[m Eliminando .env.development del control de versiones
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [33mdb93254[m configuracion de env
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [33m30ba618[m CRUD products, endpoints, cloudinary
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m * [33ma384c09[m[33m ([m[1;31morigin/revert-5-Develope[m[33m)[m Revert "INITIAL-DEVELOPE-COMMIT"
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m * [33maa2f756[m Merge pull request #5 from Ink3d-tech/Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m[31m/[m[34m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m *   [33mf09f724[m Merge branch 'main' into Develope
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m [35m|[m[31m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m [35m|[m[31m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [31m|[m[31m/[m[35m|[m   
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [35m|[m   [33mfc4252f[m Merge pull request #4 from Ink3d-tech/CRUD-users
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [1;31m|[m[1;32m\[m [35m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [1;31m|[m [1;32m|[m *   [33mff9e112[m Merge pull request #6 from Ink3d-tech/products-cart
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [1;31m|[m [1;32m|[m [1;33m|[m[1;31m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [1;31m|[m [1;32m|[m[1;31m_[m[1;33m|[m[1;31m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m [1;31m|[m[1;31m/[m[1;32m|[m [1;33m|[m   
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [1;32m|[m [1;33m|[m [33me5d50ab[m hgola
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m * [1;32m|[m [1;33m|[m [33m53973fe[m bienvenido
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m[1;35m/[m [1;32m/[m [1;33m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m * [1;32m|[m [1;33m|[m   [33m6c6af2a[m Merge pull request #1 from Ink3d-tech/feautre-configuracion-inicial-y-primeras-dependencias
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m[1;36m\[m [1;32m\[m [1;33m\[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m o [1;32m|[m [1;33m|[m [33m5b21f91[m[33m ([m[1;31morigin/feautre-configuracion-inicial-y-primeras-dependencias[m[33m)[m set up, dependencias, entidades, rolesguard, singUp y singIn
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;35m|[m[1;35m/[m [1;32m/[m [1;33m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m o [1;32m/[m [1;33m/[m [33m48d55b7[m Initial commit
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m  [1;32m/[m [1;33m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;32m|[m o [33m6cb0bc1[m INITIAL-DEVELOPE-COMMIT
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m [1;32m|[m[1;32m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m [1;31m|[m [1;32m|[m [36m|[m o [33m3e4e14a[m[33m ([m[1;31morigin/CRUD-users[m[33m)[m UPDATE CRUD USERS (reviews entity)
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m o [1;32m|[m [36m|[m [33m2990365[m modificacion del modulo strategy
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;34m|[m[1;34m/[m [1;32m/[m [36m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m o [1;32m/[m [36m/[m [33m2e1a5fc[m Merge pull request #14 from Ink3d-tech/feature-OAuth20
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m[1;33m/[m[1;32m|[m [1;32m|[m [36m|[m 
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m [1;32m|[m[1;32m/[m [36m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m o [36m/[m [33m1dded3d[m google callback fixed on user.cotroller
+[31m|[m [32m|[m [33m|[m [34m|[m [1;33m|[m[1;33m/[m [36m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m o [36m/[m [33m54581ec[m File-upload cloudinary, endpoints y rutas protegidas, CRUD USERS, PRODUCTS, CATEGORIES V.0.1.0
+[31m|[m [32m|[m [33m|[m [34m|[m  [36m/[m  
+[31m|[m [32m|[m [33m|[m [34m|[m o [33m2baa812[m Merge pull request #28 from Ink3d-tech/feature-SEEDERS
+[31m|[m [32m|[m [33m|[m o [33m90edc68[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #25 from Ink3d-tech/Develope
+[31m|[m [32m|[m o [33m4066425[m chatbot Funcional con zephyr-7b-beta
+[31m|[m o [33m7ee6370[m[33m ([m[1;31morigin/Develope[m[33m, [m[1;32mvalidar-admin[m[33m, [m[1;32mDevelope[m[33m)[m se soluciono conflicto con magazine.controller
+o [33mdc056d8[m image fixed para recibir multiples imagenes, ajustes a product.service y file-upload.service
