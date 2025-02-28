@@ -5,12 +5,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from 'src/entities/product.entity';
 import { Category } from 'src/entities/category.entity';
 import { StockMovements } from 'src/entities/stock-movement.entiy';
-import { StockMovementsModule } from 'src/stock-movements/stock-movements.module';
+import { ProductCombination } from 'src/entities/product-combination.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Product, Category, StockMovements]),
-    StockMovementsModule,
+    TypeOrmModule.forFeature([
+      Product,
+      Category,
+      StockMovements,
+      ProductCombination,
+    ]),
   ],
   providers: [ProductsService],
   controllers: [ProductsController],

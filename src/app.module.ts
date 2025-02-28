@@ -25,6 +25,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { CloudinaryConfig } from './config/cloudinary';
 import { Chatbot } from './chatbot/chatbot';
 import { WebSocketAdapter } from './websocket.adapter';
+import { ProductCombination } from './entities/product-combination.entity';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { WebSocketAdapter } from './websocket.adapter';
       Order,
       Discounts,
       StockMovements,
+      ProductCombination,
     ]),
     ConfigModule.forRoot({
       isGlobal: true,

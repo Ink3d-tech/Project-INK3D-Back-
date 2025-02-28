@@ -10,10 +10,17 @@ import { ProductsService } from 'src/products/products.service';
 import { StockMovementsService } from 'src/stock-movements/stock-movements.service';
 import { StockMovements } from 'src/entities/stock-movement.entiy';
 import { User } from 'src/entities/user.entity';
+import { ProductCombination } from 'src/entities/product-combination.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Product, Category, StockMovements, User]),
+    TypeOrmModule.forFeature([
+      Product,
+      Category,
+      StockMovements,
+      User,
+      ProductCombination,
+    ]),
   ],
   controllers: [FileUploadController],
   providers: [

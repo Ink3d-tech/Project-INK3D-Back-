@@ -13,6 +13,7 @@ import { EditOrderDto, UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Discounts } from 'src/entities/discounts.entity';
 import { StockMovements } from 'src/entities/stock-movement.entiy';
+import { ProductCombination } from 'src/entities/product-combination.entity';
 
 @Injectable()
 export class OrdersService {
@@ -46,7 +47,9 @@ export class OrdersService {
     const { userId, products } = createOrderDto;
 
     if (!Array.isArray(products) || products.length < 1) {
-      throw new BadRequestException('Cart must contain at least one product.');
+      throw new BadRequestException(
+        'El carrito debe contener al menos un producto.',
+      );
     }
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -60,53 +63,50 @@ export class OrdersService {
       });
 
       if (!user) {
-        throw new NotFoundException('User not found.');
+        throw new NotFoundException('Usuario no encontrado.');
       }
 
       let total = 0;
       const orderDetails = [];
-      const updatedProducts: Product[] = [];
+      const updatedCombinations: ProductCombination[] = [];
 
       for (const item of products) {
-        const product = await queryRunner.manager.findOne(Product, {
-          where: { id: item.id },
-        });
+        const combination = await queryRunner.manager.findOne(
+          ProductCombination,
+          {
+            where: { id: item.id },
+            relations: ['product'],
+          },
+        );
 
-        if (!product) {
-          throw new NotFoundException(`Product with ID ${item.id} not found.`);
+        if (!combination) {
+          throw new NotFoundException(
+            `Combinación de producto con ID ${item.id} no encontrada.`,
+          );
         }
-        if (product.stock < item.quantity) {
+        if (combination.stock < item.quantity) {
           throw new BadRequestException(
-            `Product ${product.name} stock is insufficient.`,
+            `Stock insuficiente para ${combination.product.name} - ${combination.color}, ${combination.size}.`,
           );
         }
 
-        // Actualiza el stock y guarda el objeto actualizado
-        product.stock -= item.quantity;
-        updatedProducts.push(product);
-
-        const stockMovement = queryRunner.manager.create(StockMovements, {
-          product,
-          quantity: -item.quantity, // Se resta porque es una venta
-          type: 'order_creation',
-        });
-        await queryRunner.manager.save(StockMovements, stockMovement);
+        // Actualiza el stock
+        combination.stock -= item.quantity;
+        updatedCombinations.push(combination);
 
         orderDetails.push({
-          productId: product.id,
+          combinationId: combination.id,
           quantity: item.quantity,
-          priceAtPurchase: product.price,
+          priceAtPurchase: combination.product.price,
         });
 
-        total += Number(product.price) * item.quantity;
+        total += Number(combination.product.price) * item.quantity;
       }
 
-      // Buscar un descuento activo del usuario
+      // Aplicar descuento si existe
       const discount = user.discounts.find((d) => d.status === 'active');
-
       if (discount) {
         total *= 1 - Number(discount.amount) / 100;
-
         discount.status = 'used';
         discount.isUsed = true;
         await queryRunner.manager.save(Discounts, discount);
@@ -115,13 +115,13 @@ export class OrdersService {
       const order = queryRunner.manager.create(Order, {
         user,
         status: 'pending',
-        totalPrice: total > 0 ? total : 0, // Evitar valores negativos
+        totalPrice: total > 0 ? total : 0,
         orderDetails,
         discount: discount || null,
       });
 
       await queryRunner.manager.save(Order, order);
-      await queryRunner.manager.save(Product, updatedProducts);
+      await queryRunner.manager.save(ProductCombination, updatedCombinations);
 
       await queryRunner.commitTransaction();
       return order;
@@ -157,8 +157,14 @@ export class OrdersService {
           const product = await queryRunner.manager.findOne(Product, {
             where: { id: detail.productId },
           });
+          const productCombination = await queryRunner.manager.findOne(
+            ProductCombination,
+            {
+              where: { id: detail.productId },
+            },
+          );
           if (product) {
-            product.stock += detail.quantity;
+            productCombination.stock += detail.quantity;
             await queryRunner.manager.save(Product, product);
 
             const stockMovement = queryRunner.manager.create(StockMovements, {
@@ -208,8 +214,14 @@ export class OrdersService {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: detail.productId },
         });
+        const productCombination = await queryRunner.manager.findOne(
+          ProductCombination,
+          {
+            where: { id: detail.productId },
+          },
+        );
         if (product) {
-          product.stock += detail.quantity;
+          productCombination.stock += detail.quantity;
           await queryRunner.manager.save(Product, product);
 
           const stockMovement = queryRunner.manager.create(StockMovements, {
@@ -261,7 +273,13 @@ export class OrdersService {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: item.productId },
         });
-        if (!product || product.stock < item.quantity) {
+        const productCombination = await queryRunner.manager.findOne(
+          ProductCombination,
+          {
+            where: { id: item.productId },
+          },
+        );
+        if (!product || productCombination.stock < item.quantity) {
           throw new ForbiddenException('Stock insuficiente para el producto');
         }
         totalPrice += product.price * item.quantity;
@@ -274,7 +292,7 @@ export class OrdersService {
         // Actualizar el stock: si se edita la orden, aquí podrías necesitar revertir primero el stock anterior y aplicar el nuevo.\n
         // Suponiendo que la orden original ya descontó stock, deberías restaurar el stock anterior y luego descontar el nuevo.\n
         // Aquí simplificamos asumiendo que la orden se edita antes de cualquier confirmación de pago.\n
-        product.stock -= item.quantity;
+        productCombination.stock -= item.quantity;
         updatedProducts.push(product);
       }
 
