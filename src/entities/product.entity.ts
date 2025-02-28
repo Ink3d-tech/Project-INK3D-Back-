@@ -12,11 +12,11 @@ import {
 import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Reviews } from './reviews.entity';
+import { ProductCombination } from './product-combination.entity';
 import { StockMovements } from './stock-movement.entiy';
 
 @Entity()
 @Check('price >= 0')
-@Check('stock >= 0')
 @Check('discount >= 0')
 export class Product {
   @PrimaryGeneratedColumn('uuid')
@@ -31,9 +31,6 @@ export class Product {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
 
-  @Column({ type: 'int', default: 0 })
-  stock: number;
-
   @Column('jsonb', { nullable: true })
   image: string[];
 
@@ -45,13 +42,6 @@ export class Product {
 
   @Column({ type: 'int', default: 0, nullable: true })
   discount: number;
-
-  @Column({
-    type: 'enum',
-    enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
-    nullable: true,
-  })
-  size: string;
 
   @ManyToMany(() => User, (user) => user.favorites)
   favoritedBy: User[];
@@ -69,4 +59,9 @@ export class Product {
 
   @OneToMany(() => StockMovements, (stockMovements) => stockMovements.product)
   stockMovements: StockMovements[];
+
+  @OneToMany(() => ProductCombination, (combination) => combination.product, {
+    cascade: true,
+  })
+  combinations: ProductCombination[];
 }

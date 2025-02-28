@@ -1,20 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like } from 'typeorm';
-import { Product } from 'src/entities/product.entity';
-import { Category } from 'src/entities/category.entity';
+import { Repository, Connection } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { StockMovementsService } from 'src/stock-movements/stock-movements.service';
+import { CreateProductCombinationDto } from './dto/product-combination.dto';
+import { Product } from 'src/entities/product.entity';
+import { UpdateProductCombinationDto } from './dto/update-combination.dto';
+import { Category } from 'src/entities/category.entity';
+import { ProductCombination } from 'src/entities/product-combination.entity';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @InjectRepository(ProductCombination)
+    private readonly combinationRepository: Repository<ProductCombination>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-    private readonly stockMovementsService: StockMovementsService,
+    private readonly connection: Connection,
   ) {}
 
   async findAll(): Promise<Product[]> {
@@ -34,105 +38,154 @@ export class ProductsService {
     return product;
   }
 
-  async search(query: string): Promise<Product[]> {
-    return this.productRepository.find({
-      where: [{ name: Like(`%${query}%`) }, { category: Like(`%${query}%`) }],
-      relations: ['category'],
-    });
-  }
-
-  async create(productData: CreateProductDto): Promise<Product> {
-    const category = await this.categoryRepository.findOne({
-      where: { id: productData.category[0].id },
-    });
-
-    if (!category) {
-      throw new NotFoundException('Category not found');
-    }
-
-    const newProduct = this.productRepository.create({
-      ...productData,
-      category,
-    });
-
-    return this.productRepository.save(newProduct);
-  }
-
-  async updateProduct(
-    id: string,
-    productData: UpdateProductDto,
+  async createProduct(
+    createProductDto: CreateProductDto,
+    combinationsDto: CreateProductCombinationDto[],
   ): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    if (!product) {
-      throw new NotFoundException('Product not found');
-    }
-
-    let stockChange = 0;
-
-    // Validar y asignar nueva categoría si es necesario
-    if (productData.category) {
+    try {
       const category = await this.categoryRepository.findOne({
-        where: { id: productData.category[0].id },
+        where: { id: createProductDto.category[0].id },
       });
-
       if (!category) {
-        throw new NotFoundException('Category not found');
+        throw new NotFoundException('Categoría no encontrada');
       }
 
-      product.category = category;
-    }
-
-    // Calcular cambio en el stock
-    if (
-      productData.stock !== undefined &&
-      productData.stock !== product.stock
-    ) {
-      stockChange = productData.stock - product.stock;
-    }
-
-    Object.assign(product, productData);
-
-    const updatedProduct = await this.productRepository.save(product);
-
-    // Registrar movimiento de stock si hubo un cambio
-    if (stockChange !== 0) {
-      await this.stockMovementsService.createStockMovement({
-        productId: updatedProduct.id,
-        quantity: Math.abs(stockChange), // Siempre positivo
-        type: 'manual_adjustment', // Ajuste manual de stock
-        reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
+      // Creamos la instancia del producto
+      const product = this.productRepository.create({
+        name: createProductDto.name,
+        description: createProductDto.description,
+        price: createProductDto.price,
+        discount: createProductDto.discount,
+        image: createProductDto.image,
+        category: category,
       });
-    }
 
-    return updatedProduct;
+      const savedProduct = await queryRunner.manager.save(product);
+
+      // Creamos las combinaciones vinculándolas al producto creado
+      const combinations = combinationsDto.map((dto) => {
+        const combination = this.combinationRepository.create({
+          size: dto.size,
+          color: dto.color,
+          stock: dto.stock,
+          image: dto.image, // si se envía
+          product: savedProduct,
+        });
+        return combination;
+      });
+
+      await queryRunner.manager.save(combinations);
+      await queryRunner.commitTransaction();
+
+      return savedProduct;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
+    }
   }
 
-  async deactivateProduct(id: string): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
+  /**
+   * Actualiza los datos generales del producto y, opcionalmente, sus combinaciones actuales.
+   * Se espera que en combinationsDto cada objeto incluya el id de la combinación a actualizar.
+   */
+  async updateProduct(
+    updateProductDto: UpdateProductDto,
+    combinationsDto?: UpdateProductCombinationDto[],
+  ): Promise<Product> {
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    if (!product) {
-      throw new NotFoundException('Product not found');
+    try {
+      // Buscamos el producto a actualizar, incluyendo sus combinaciones
+      const product = await this.productRepository.findOne({
+        where: { id: updateProductDto.id },
+        relations: ['combinations'],
+      });
+      if (!product) {
+        throw new NotFoundException('Producto no encontrado');
+      }
+
+      // Actualizamos los campos generales si fueron proporcionados
+      if (updateProductDto.name !== undefined)
+        product.name = updateProductDto.name;
+      if (updateProductDto.description !== undefined)
+        product.description = updateProductDto.description;
+      if (updateProductDto.price !== undefined)
+        product.price = updateProductDto.price;
+      if (updateProductDto.discount !== undefined)
+        product.discount = updateProductDto.discount;
+      if (updateProductDto.image !== undefined)
+        product.image = updateProductDto.image;
+      if (updateProductDto.category !== undefined) {
+        const category = await this.categoryRepository.findOne({
+          where: { id: updateProductDto.category[0].id },
+        });
+        if (!category) {
+          throw new NotFoundException('Categoría no encontrada');
+        }
+        product.category = category;
+      }
+
+      await queryRunner.manager.save(product);
+
+      // Actualizamos las combinaciones existentes si se proporcionan
+      if (combinationsDto && combinationsDto.length > 0) {
+        for (const dto of combinationsDto) {
+          const combination = product.combinations.find(
+            (comb) => comb.id === dto.id,
+          );
+          if (!combination) {
+            throw new NotFoundException(
+              `Combinación con id ${dto.id} no encontrada en este producto`,
+            );
+          }
+          if (dto.size !== undefined) combination.size = dto.size;
+          if (dto.color !== undefined) combination.color = dto.color;
+          if (dto.stock !== undefined) combination.stock = dto.stock;
+          if (dto.image !== undefined) combination.image = dto.image;
+
+          await queryRunner.manager.save(combination);
+        }
+      }
+
+      await queryRunner.commitTransaction();
+      return product;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw error;
+    } finally {
+      await queryRunner.release();
     }
-    product.isActive = false;
-    return this.productRepository.save(product);
   }
 
-  async activateProduct(id: string): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id } });
-
-    if (!product) {
-      throw new NotFoundException('Product not found');
-    }
-    product.isActive = true;
-    return this.productRepository.save(product);
-  }
-
-  async delete(id: string): Promise<void> {
-    const result = await this.productRepository.delete(id);
-
+  /**
+   * Elimina un producto; debido al onDelete: 'CASCADE', se eliminarán las combinaciones asociadas.
+   */
+  async deleteProduct(productId: string): Promise<void> {
+    const result = await this.productRepository.delete(productId);
     if (result.affected === 0) {
-      throw new NotFoundException('Product not found');
+      throw new NotFoundException('Producto no encontrado');
     }
+  }
+
+  /**
+   * Cambia el estado de isActive del producto.
+   */
+  async toggleProductStatus(productId: string): Promise<Product> {
+    const product = await this.productRepository.findOne({
+      where: { id: productId },
+    });
+    if (!product) {
+      throw new NotFoundException('Producto no encontrado');
+    }
+    product.isActive = !product.isActive;
+    return await this.productRepository.save(product);
   }
 }

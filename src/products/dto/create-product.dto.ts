@@ -77,5 +77,13 @@ export class CreateProductDto {
   })
   @IsEnum(Sizes)
   @IsOptional()
-  size?: string;
+  size?: Sizes[];
+
+  @ApiProperty({
+    example: 'White',
+    description: 'Color of the product',
+    required: false,
+  })
+  @IsOptional()
+  color?: string[];
 }
