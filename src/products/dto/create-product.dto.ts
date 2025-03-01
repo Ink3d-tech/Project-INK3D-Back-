@@ -10,7 +10,6 @@ import {
   IsInt,
   IsNotEmpty,
 } from 'class-validator';
-import { Category } from 'src/entities/category.entity';
 
 enum Sizes {
   XS = 'XS',
@@ -66,8 +65,7 @@ export class CreateProductDto {
     description: 'Category ID of the product',
   })
   @IsNotEmpty()
-  @IsNotEmpty()
-  category: Category;
+  category: { id: string };
 
   @ApiProperty({
     example: 'M',

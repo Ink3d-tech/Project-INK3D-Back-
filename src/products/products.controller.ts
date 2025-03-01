@@ -91,10 +91,10 @@ export class ProductsController {
           stock: 10,
           image: 'https://imagen.com/laptop.jpg',
           discount: 5,
-          categoryId: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
+          category: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
         },
       },
-      'product.update.categoryId': {
+      'product.update.category.id': {
         value: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
       },
     },

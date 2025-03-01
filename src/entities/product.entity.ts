@@ -8,6 +8,7 @@ import {
   ManyToMany,
   OneToMany,
   Check,
+  JoinColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
 import { User } from './user.entity';
@@ -59,6 +60,7 @@ export class Product {
   @ManyToOne(() => Category, (category) => category.products, {
     nullable: false,
   })
+  @JoinColumn({ name: 'categoryId' })
   category: Category;
 
   @OneToMany(() => Reviews, (reviews) => reviews.product)
