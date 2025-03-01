@@ -25,7 +25,10 @@ export class MagazineService {
     return this.magazineRepository.findOne({ where: { id } });
   }
 
-  async update(id: number, updateMagazineDto: UpdateMagazineDto): Promise<Magazine> {
+  async update(
+    id: number,
+    updateMagazineDto: UpdateMagazineDto,
+  ): Promise<Magazine> {
     await this.magazineRepository.update(id, updateMagazineDto);
     return this.magazineRepository.findOne({ where: { id } });
   }
