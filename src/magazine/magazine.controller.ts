@@ -6,17 +6,22 @@ import {
   Delete,
   Param,
   Body,
-  UseGuards,
+  // UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  // ApiBearerAuth,
+} from '@nestjs/swagger';
 import { MagazineService } from './magazine.service';
 import { CreateMagazineDto } from './dto/create-magazine.dto';
 import { UpdateMagazineDto } from './dto/update-magazine.dto';
 import { Magazine } from '../entities/magazine.entity';
-import { Roles } from '../auth/roles.decorator';
-import { RolesGuard } from '../auth/guards/roles.guard';
-
-import { JwtModule } from '@nestjs/jwt';
+// import { RolesGuard } from '../auth/guards/roles.guard';
+// import { AuthGuard } from 'src/auth/guards/auth.guard';
+// import { Role } from 'src/roles.enum';
+// import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 
 @ApiTags('Magazine')
 @Controller('api/magazine')
@@ -24,8 +29,9 @@ export class MagazineController {
   constructor(private readonly magazineService: MagazineService) {}
 
   @Post()
-  @UseGuards(JwtModule, RolesGuard)
-  @Roles('admin')
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Crea un nuevo artículo' })
   @ApiResponse({
     status: 201,
@@ -59,8 +65,9 @@ export class MagazineController {
   }
 
   @Put(':id')
-  @UseGuards(JwtModule, RolesGuard)
-  @Roles('admin')
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Edita un artículo' })
   @ApiResponse({
     status: 200,
@@ -75,8 +82,9 @@ export class MagazineController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtModule, RolesGuard)
-  @Roles('admin')
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Elimina un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo eliminado' })
   remove(@Param('id') id: number): Promise<void> {

@@ -43,8 +43,10 @@ export class ProductsService {
 
   async create(productData: CreateProductDto): Promise<Product> {
     const category = await this.categoryRepository.findOne({
-      where: { id: productData.category[0].id },
+      where: { id: productData.category.id },
+      relations: ['products'],
     });
+    console.log('category id-->', productData.category);
 
     if (!category) {
       throw new NotFoundException('Category not found');
