@@ -2,16 +2,17 @@ import {
   Controller,
   Post,
   Get,
-  Put,
   Delete,
   Param,
   Body,
+  Patch,
   // UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
+  ApiBody,
   // ApiBearerAuth,
 } from '@nestjs/swagger';
 import { MagazineService } from './magazine.service';
@@ -60,22 +61,35 @@ export class MagazineController {
     description: 'Artículo encontrado',
     type: Magazine,
   })
-  findOne(@Param('id') id: number): Promise<Magazine> {
+  findOne(@Param('id') id: string): Promise<Magazine> {
     return this.magazineService.findOne(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   // @ApiBearerAuth()
   // @UseGuards(AuthGuard, RolesGuard)
   // @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Edita un artículo' })
+  @ApiBody({
+    type: UpdateMagazineDto,
+    examples: {
+      'user.update': {
+        value: {
+          title: 'La moda actual en EUROPA',
+          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          image: 'https://imagenssprueba.png',
+          author: 'Laura J.',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: 'Artículo actualizado',
     type: Magazine,
   })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateMagazineDto: UpdateMagazineDto,
   ): Promise<Magazine> {
     return this.magazineService.update(id, updateMagazineDto);
@@ -87,7 +101,17 @@ export class MagazineController {
   // @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Elimina un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo eliminado' })
-  remove(@Param('id') id: number): Promise<void> {
+  remove(@Param('id') id: string): Promise<void> {
     return this.magazineService.remove(id);
+  }
+
+  @Patch(':id/active')
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @AllowOnlyRole(Role.Admin)
+  @ApiOperation({ summary: 'Activa o desactiva un artículo' })
+  @ApiResponse({ status: 200, description: 'Artículo actualizado' })
+  toggleActive(@Param('id') id: string): Promise<void> {
+    return this.magazineService.toggleActive(id);
   }
 }

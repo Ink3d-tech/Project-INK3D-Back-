@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage } from '@nestjs/websockets';
 import { MagazineService } from './magazine.service';
 
 @WebSocketGateway()
