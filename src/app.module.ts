@@ -26,6 +26,7 @@ import { CloudinaryConfig } from './config/cloudinary';
 import { Chatbot } from './chatbot/chatbot';
 import { WebSocketAdapter } from './websocket.adapter';
 import { MagazineModule } from './magazine/magazine.module';
+import { Magazine } from './entities/magazine.entity';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { MagazineModule } from './magazine/magazine.module';
       Order,
       Discounts,
       StockMovements,
+      Magazine,
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
