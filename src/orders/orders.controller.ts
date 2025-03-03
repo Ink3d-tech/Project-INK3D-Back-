@@ -8,24 +8,33 @@ import {
   Delete,
   NotFoundException,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from '../entities/order.entity';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiHideProperty,
   ApiOperation,
   ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/roles.enum';
+import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
+import { AllowOwnerOrRole } from 'src/decorators/allow-owner-or-role.decorator';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  // Endpoint para crear una nueva orden
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOwnerOrRole(Role.Admin)
   @Post()
   @ApiOperation({ summary: 'Create a new order' })
   @ApiBody({
@@ -76,7 +85,9 @@ export class OrdersController {
     return this.ordersService.addOrder(createOrderDto);
   }
 
-  // Endpoint para obtener todas las órdenes
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @Get()
   @ApiOperation({ summary: 'Get all orders' })
   @ApiResponse({
@@ -130,7 +141,9 @@ export class OrdersController {
     return this.ordersService.getAllOrders();
   }
 
-  // Endpoint para obtener una orden por su ID
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOwnerOrRole(Role.Admin)
   @Get(':id')
   @ApiOperation({ summary: 'Get an order by id' })
   @ApiParam({
@@ -171,7 +184,9 @@ export class OrdersController {
     return order;
   }
 
-  // Endpoint para actualizar el estado de una orden
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update order status' })
   @ApiParam({
@@ -228,7 +243,9 @@ export class OrdersController {
     return order;
   }
 
-  // Endpoint para cancelar una orden
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOwnerOrRole(Role.Admin)
   @Patch(':id/cancel')
   @ApiOperation({ summary: 'Cancel an order' })
   @ApiParam({
@@ -269,7 +286,9 @@ export class OrdersController {
     return order;
   }
 
-  // Endpoint para eliminar una orden
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @Delete(':id')
   @ApiHideProperty()
   async deleteOrder(@Param('id') id: string): Promise<Order> {

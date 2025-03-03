@@ -31,6 +31,9 @@ export class FileUploadController {
   constructor(private readonly fileUploadService: FileUploadService) {}
 
   @Post()
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Upload image' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
