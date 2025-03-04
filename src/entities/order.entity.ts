@@ -35,4 +35,7 @@ export class Order {
 
   @Column('jsonb', { nullable: false })
   orderDetails: { productId: string; quantity: number; price: number }[];
+
+  @Column({ nullable: true })
+  discountCode: string;
 }

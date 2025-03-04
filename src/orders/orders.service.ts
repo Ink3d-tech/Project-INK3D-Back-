@@ -43,7 +43,7 @@ export class OrdersService {
   }
 
   async addOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    const { userId, products } = createOrderDto;
+    const { userId, products, discountCode: discountCode } = createOrderDto;
 
     if (!Array.isArray(products) || products.length < 1) {
       throw new BadRequestException('Cart must contain at least one product.');
@@ -54,11 +54,11 @@ export class OrdersService {
     await queryRunner.startTransaction();
 
     try {
+      // Buscar al usuario y cargar descuentos asociados (si los tuviera)
       const user = await queryRunner.manager.findOne(User, {
         where: { id: userId },
         relations: ['discounts'],
       });
-
       if (!user) {
         throw new NotFoundException('User not found.');
       }
@@ -67,11 +67,11 @@ export class OrdersService {
       const orderDetails = [];
       const updatedProducts: Product[] = [];
 
+      // Procesar cada producto en la orden
       for (const item of products) {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: item.id },
         });
-
         if (!product) {
           throw new NotFoundException(`Product with ID ${item.id} not found.`);
         }
@@ -81,13 +81,14 @@ export class OrdersService {
           );
         }
 
-        // Actualiza el stock y guarda el objeto actualizado
+        // Descontar el stock y guardar el producto actualizado
         product.stock -= item.quantity;
         updatedProducts.push(product);
 
+        // Registrar movimiento de stock (ejemplo)
         const stockMovement = queryRunner.manager.create(StockMovements, {
           product,
-          quantity: -item.quantity, // Se resta porque es una venta
+          quantity: -item.quantity, // venta: cantidad negativa
           type: 'order_creation',
         });
         await queryRunner.manager.save(StockMovements, stockMovement);
@@ -97,27 +98,38 @@ export class OrdersService {
           quantity: item.quantity,
           priceAtPurchase: product.price,
         });
-
         total += Number(product.price) * item.quantity;
       }
 
-      // Buscar un descuento activo del usuario
-      const discount = user.discounts.find((d) => d.status === 'active');
+      let appliedDiscountCode = null;
 
-      if (discount) {
-        total *= 1 - Number(discount.amount) / 100;
-
+      // Si se envía un código de descuento en el body
+      if (discountCode) {
+        // Buscar el descuento en la entidad Discounts (suponiendo que el campo code se usa para almacenar el UUID)
+        const discount = await queryRunner.manager.findOne(Discounts, {
+          where: { id: discountCode },
+        });
+        if (!discount) {
+          throw new BadRequestException('Invalid discount code.');
+        }
+        if (discount.status !== 'active') {
+          throw new BadRequestException('Discount code is not active.');
+        }
+        // Aplicar el descuento: total se reduce según el porcentaje (ejemplo: discount.amount = 10 para 10% de descuento)
+        total = total * (1 - Number(discount.amount) / 100);
         discount.status = 'used';
-        discount.isUsed = true;
         await queryRunner.manager.save(Discounts, discount);
+        appliedDiscountCode = discountCode;
       }
 
+      // Se asume que la entidad Order tiene un campo 'discountCode' de tipo string
       const order = queryRunner.manager.create(Order, {
         user,
         status: 'pending',
-        totalPrice: total > 0 ? total : 0, // Evitar valores negativos
+        totalPrice: total > 0 ? total : 0,
         orderDetails,
-        discount: discount || null,
+        discountCode: appliedDiscountCode, // almacenar el código de descuento aplicado, si lo hubo
+        currency: createOrderDto.currency,
       });
 
       await queryRunner.manager.save(Order, order);
