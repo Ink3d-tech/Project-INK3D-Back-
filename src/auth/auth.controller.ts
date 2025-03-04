@@ -81,7 +81,7 @@ export class AuthController {
   async googleCallback(@Req() req, @Res() res) {
     const response = await this.authService.signInWithGoogle(req.user);
     res.redirect(
-      `https://project-ink3d-back-1.onrender.com//?token=${response.access_token}`,
+      `https://ink3d-tech-2-0.vercel.app/home//?token=${response.access_token}`,
     );
   }
 }
