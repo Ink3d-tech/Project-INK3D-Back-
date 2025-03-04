@@ -21,19 +21,25 @@ export class MagazineService {
     return this.magazineRepository.find();
   }
 
-  findOne(id: number): Promise<Magazine> {
+  findOne(id: string): Promise<Magazine> {
     return this.magazineRepository.findOne({ where: { id } });
   }
 
   async update(
-    id: number,
+    id: string,
     updateMagazineDto: UpdateMagazineDto,
   ): Promise<Magazine> {
     await this.magazineRepository.update(id, updateMagazineDto);
     return this.magazineRepository.findOne({ where: { id } });
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: string): Promise<void> {
     await this.magazineRepository.delete(id);
+  }
+
+  async toggleActive(id: string): Promise<void> {
+    await this.magazineRepository.update(id, {
+      isActive: !(await this.findOne(id)).isActive,
+    });
   }
 }

@@ -1,12 +1,21 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { Order } from 'src/entities/order.entity';
+import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PaymentMethodsService {
   private mercadoPagoPreference: Preference;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    @InjectRepository(Order)
+    private readonly ordersRepository: Repository<Order>,
+    private readonly configService: ConfigService,
+    private nodemailerService: NodeMailerService,
+  ) {
     const accessToken = this.configService.get<string>(
       'MERCADOPAGO_ACCESS_TOKEN',
     );
@@ -49,6 +58,25 @@ export class PaymentMethodsService {
       };
 
       const response = await this.mercadoPagoPreference.create(preference);
+
+      // Obtener la orden desde la base de datos
+      const order = await this.ordersRepository.findOne({
+        where: { id: orderId },
+        relations: ['user'], // Cargar la relación con el usuario
+      });
+
+      if (!order || !order.user) {
+        throw new BadRequestException('Order or user not found');
+      }
+
+      const userEmail = order.user.email; // Obtener el email del usuario
+
+      // Enviar email de confirmación con los datos de la orden
+      await this.nodemailerService.sendEmail(
+        userEmail,
+        '¡Tu compra ha sido procesada con éxito!',
+        `Hola ${order.user.name}, tu compra ha sido confirmada. Orden ID: ${order.id}.`,
+      );
 
       return {
         payment_url: response.init_point,

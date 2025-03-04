@@ -2,26 +2,27 @@ import {
   Controller,
   Post,
   Get,
-  Put,
   Delete,
   Param,
   Body,
-  // UseGuards,
+  Patch,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
-  // ApiBearerAuth,
+  ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { MagazineService } from './magazine.service';
 import { CreateMagazineDto } from './dto/create-magazine.dto';
 import { UpdateMagazineDto } from './dto/update-magazine.dto';
 import { Magazine } from '../entities/magazine.entity';
-// import { RolesGuard } from '../auth/guards/roles.guard';
-// import { AuthGuard } from 'src/auth/guards/auth.guard';
-// import { Role } from 'src/roles.enum';
-// import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { Role } from 'src/roles.enum';
+import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 
 @ApiTags('Magazine')
 @Controller('api/magazine')
@@ -29,9 +30,9 @@ export class MagazineController {
   constructor(private readonly magazineService: MagazineService) {}
 
   @Post()
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @AllowOnlyRole(Role.Admin)
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Crea un nuevo artículo' })
   @ApiResponse({
     status: 201,
@@ -60,34 +61,57 @@ export class MagazineController {
     description: 'Artículo encontrado',
     type: Magazine,
   })
-  findOne(@Param('id') id: number): Promise<Magazine> {
+  findOne(@Param('id') id: string): Promise<Magazine> {
     return this.magazineService.findOne(id);
   }
 
-  @Put(':id')
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @AllowOnlyRole(Role.Admin)
+  @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Edita un artículo' })
+  @ApiBody({
+    type: UpdateMagazineDto,
+    examples: {
+      'user.update': {
+        value: {
+          title: 'La moda actual en EUROPA',
+          content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+          image: 'https://imagenssprueba.png',
+          author: 'Laura J.',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: 'Artículo actualizado',
     type: Magazine,
   })
   update(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @Body() updateMagazineDto: UpdateMagazineDto,
   ): Promise<Magazine> {
     return this.magazineService.update(id, updateMagazineDto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @Delete(':id')
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Elimina un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo eliminado' })
-  remove(@Param('id') id: number): Promise<void> {
+  remove(@Param('id') id: string): Promise<void> {
     return this.magazineService.remove(id);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
+  @Patch(':id/active')
+  @ApiOperation({ summary: 'Activa o desactiva un artículo' })
+  @ApiResponse({ status: 200, description: 'Artículo actualizado' })
+  toggleActive(@Param('id') id: string): Promise<void> {
+    return this.magazineService.toggleActive(id);
   }
 }

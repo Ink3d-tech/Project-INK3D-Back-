@@ -26,10 +26,14 @@ import { CloudinaryConfig } from './config/cloudinary';
 import { Chatbot } from './chatbot/chatbot';
 import { WebSocketAdapter } from './websocket.adapter';
 import { MagazineModule } from './magazine/magazine.module';
+<<<<<<< HEAD
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { FinanzasModule } from './finanzas/finanzas.module';
 import { Transactions } from './entities/transaction.entity';
 import { Invoice } from './entities/invoice.entity';
+=======
+import { Magazine } from './entities/magazine.entity';
+>>>>>>> 190daf11148a0da9eaba740600ab6021698142ea
 
 @Module({
   imports: [
@@ -40,7 +44,11 @@ import { Invoice } from './entities/invoice.entity';
       Order,
       Discounts,
       StockMovements,
+<<<<<<< HEAD
       Transactions,
+=======
+      Magazine,
+>>>>>>> 190daf11148a0da9eaba740600ab6021698142ea
     ]),
     ConfigModule.forRoot({
       isGlobal: true,

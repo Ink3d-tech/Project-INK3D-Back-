@@ -7,6 +7,7 @@ import { User } from 'src/entities/user.entity';
 import { Order } from 'src/entities/order.entity';
 import * as bcrypt from 'bcrypt';
 import { StockMovements } from 'src/entities/stock-movement.entiy';
+import { Magazine } from 'src/entities/magazine.entity';
 
 async function hashPassword(password: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
@@ -26,6 +27,8 @@ export class SeederService {
     private readonly orderRepository: Repository<Order>,
     @InjectRepository(StockMovements)
     private readonly stockMovementRepository: Repository<StockMovements>,
+    @InjectRepository(Magazine)
+    private readonly magazineRepository: Repository<Magazine>,
   ) {}
 
   async seed() {
@@ -190,8 +193,40 @@ export class SeederService {
       await this.stockMovementRepository.save(stockMovements);
     }
 
+    /** 🔹 6️⃣ Crear Posts en Magazine */
+    const existingPosts = await this.magazineRepository.find();
+    if (existingPosts.length === 0) {
+      const posts: Partial<Magazine>[] = [
+        {
+          title: 'Influencia del Automovilismo en la Moda',
+          content:
+            'El auge de la Fórmula 1, el drifting y el tuning en Asia ha impulsado una moda que mezcla tecnología y adrenalina. Equipos y marcas han colaborado para crear prendas que capturan la esencia del motorsport, desde chaquetas inspiradas en los pits hasta camisetas con gráficos de alto octanaje.',
+          image:
+            'https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg',
+          author: 'Camilo C',
+        },
+        {
+          title: 'El Legado Japonés y la Cultura JDM',
+          content:
+            'Japón ha sido pionero en fusionar la cultura automovilística con el streetwear. La escena JDM y las icónicas carreras callejeras han influenciado marcas que incorporan colores vibrantes, logos de escuderías y tipografías técnicas en sus diseños.',
+          image:
+            'https://i.pinimg.com/736x/f2/ff/b2/f2ffb25e1c23e2887642683567c8408b.jpg',
+          author: 'Laura P',
+        },
+        {
+          title: 'Tendencia en China y Corea del Sur',
+          content:
+            'Tendencia en China y Corea del SurCon la creciente popularidad de los deportes de motor, las marcas asiáticas han llevado la moda motorsport al siguiente nivel. Colaboraciones exclusivas entre diseñadores y fabricantes de automóviles han generado colecciones limitadas que combinan innovación, estilo y funcionalidad.',
+          image:
+            'https://i.pinimg.com/736x/73/ca/d8/73cad83cba5eff4254c0f842afebe448.jpg',
+          author: 'Pedro R',
+        },
+      ];
+      await this.magazineRepository.save(posts);
+    }
+
     console.log(
-      '✅ Seed de categorías, productos, usuarios, órdenes y movimientos de stock completado.',
+      '✅ Seed de categorías, productos, usuarios, órdenes, movimientos de stock y posts en magazine completado.',
     );
   }
 }
