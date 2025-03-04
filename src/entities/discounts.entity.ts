@@ -26,10 +26,10 @@ export class Discounts {
 
   @Column({
     type: 'enum',
-    enum: ['active', 'expired', 'used'],
-    default: 'active',
+    enum: ['active', 'expired', 'used', 'inactive'],
+    default: 'inactive',
   })
-  status: 'active' | 'expired' | 'used'; // Estado del descuento
+  status: 'active' | 'expired' | 'used' | 'inactive'; // Estado del descuento
 
   @ManyToOne(() => User, (user) => user.discounts, { nullable: true })
   userId: User | null;
