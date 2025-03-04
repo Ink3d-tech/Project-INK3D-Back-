@@ -11,8 +11,8 @@ export class NodeMailerService {
       user: process.env.EMAIL_USER || '',
       pass: process.env.EMAIL_PASS || '',
     },
-    debug: true,  // Habilita logs detallados
-    logger: true, // Muestra eventos de conexión
+    debug: false,  
+    logger: false, 
   });
 
   async sendEmail(to: string, subject: string, text: string) {
