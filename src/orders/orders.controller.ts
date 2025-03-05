@@ -42,14 +42,15 @@ export class OrdersController {
     examples: {
       'order.create': {
         value: {
-          userId: '79062eed-7d51-431a-828c-db47feb9e3f7',
+          userId: '474d16b7-9e50-447b-9702-7a58d25e8196',
+          discountCode: 'c6b7f845-d2ea-4a06-8f8b-28d18f48abb3',
           products: [
             {
-              id: '79062eed-7d51-431a-828c-db47feb9e3f7',
+              id: 'b8e0e24d-d2d5-47c8-b454-bd3baf25af21',
               quantity: 1,
             },
             {
-              id: '79062eed-7d51-431a-828c-db47feb9e3f7',
+              id: 'b4234348-2fb8-45dd-951e-bd9d6d74c20b',
               quantity: 2,
             },
           ],
