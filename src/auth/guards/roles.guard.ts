@@ -34,8 +34,9 @@ export class RolesGuard implements CanActivate {
 
     // Si en el body se envía un userId, se verifica que coincida con el usuario autenticado.
     const userIdFromBody = request.body?.userId;
+
     if (userIdFromBody) {
-      if (user.id === userIdFromBody) {
+      if (user.userId === userIdFromBody) {
         // Si coinciden, se permite el acceso sin necesidad de roles adicionales.
         return true;
       } else {
