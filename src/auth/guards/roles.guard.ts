@@ -32,6 +32,16 @@ export class RolesGuard implements CanActivate {
       );
     }
 
+    // Primero: verificar si viene un id en los parámetros de la URL
+    const userIdFromParams = request.params?.id;
+    if (userIdFromParams) {
+      if (user.userId === userIdFromParams) {
+        return true;
+      } else {
+        throw new ForbiddenException('Access denied: param id mismatch.');
+      }
+    }
+
     // Si en el body se envía un userId, se verifica que coincida con el usuario autenticado.
     const userIdFromBody = request.body?.userId;
 
