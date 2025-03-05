@@ -25,8 +25,6 @@ export class RolesGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    // const userIdFromParams = request.params.id;
-    // console.log('USER FROM PARAMS', userIdFromParams);
 
     if (!user) {
       throw new ForbiddenException(
@@ -34,11 +32,18 @@ export class RolesGuard implements CanActivate {
       );
     }
 
+    // Si en el body se envía un userId, se verifica que coincida con el usuario autenticado.
     const userIdFromBody = request.body?.userId;
-    if (userIdFromBody && user.id !== userIdFromBody) {
-      throw new ForbiddenException('Access denied: userId mismatch.');
+    if (userIdFromBody) {
+      if (user.id === userIdFromBody) {
+        // Si coinciden, se permite el acceso sin necesidad de roles adicionales.
+        return true;
+      } else {
+        throw new ForbiddenException('Access denied: userId mismatch.');
+      }
     }
 
+    // Si no se envía userId, se procede con la validación de roles.
     if (requiredRole) {
       if (!user.role.includes(requiredRole)) {
         throw new ForbiddenException('Access denied.');
@@ -55,6 +60,6 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    throw new ForbiddenException('Unaurhorized.');
+    throw new ForbiddenException('Unauthorized.');
   }
 }
