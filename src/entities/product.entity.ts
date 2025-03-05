@@ -14,6 +14,7 @@ import { Category } from './category.entity';
 import { User } from './user.entity';
 import { Reviews } from './reviews.entity';
 import { StockMovements } from './stock-movement.entiy';
+import { DetailsVenta } from './details-sales.entity';
 
 @Entity()
 @Check('price >= 0')
@@ -53,6 +54,10 @@ export class Product {
     nullable: true,
   })
   size: string;
+  @OneToMany(() => DetailsVenta, (details) => details.product)
+  detailsVenta: DetailsVenta[];
+
+
 
   @ManyToMany(() => User, (user) => user.favorites)
   favoritedBy: User[];
@@ -65,6 +70,7 @@ export class Product {
 
   @OneToMany(() => Reviews, (reviews) => reviews.product)
   reviews: Reviews[];
+  
 
   @Column({ type: 'boolean', default: true })
   isActive: boolean;

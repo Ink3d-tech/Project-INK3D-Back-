@@ -11,8 +11,8 @@ export class CreateOrderDto {
 
   @IsArray()
   @IsNotEmpty()
-  products: { id: string; quantity: number }[];
+  products: { id: string; quantity: number}[];
 
-  @IsNotEmpty()
-  orderDetails: { productId: string; quantity: number; price: number }[];
+  // @IsNotEmpty()
+  // orderDetails: { productId: string; quantity: number; price: number }[];
 }

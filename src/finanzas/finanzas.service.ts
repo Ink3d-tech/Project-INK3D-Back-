@@ -4,20 +4,26 @@ import { Repository } from 'typeorm';
 import { Transactions } from 'src/entities/transaction.entity';
 import { Order } from 'src/entities/order.entity';
 import { Product } from 'src/entities/product.entity';
+import { DetailsVenta } from 'src/entities/details-sales.entity';
 
 @Injectable()
 export class FinanzasService {
   constructor(
     @InjectRepository(Transactions)
     private transactionRepository: Repository<Transactions>,
+
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
+
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+
+    @InjectRepository(DetailsVenta) // Inyectamos el repositorio de DetailsVenta
+    private detailsVentaRepository: Repository<DetailsVenta>,
   ) {}
 
   // 🔹 CRUD de Transacciones 🔹
-  
+
   async createTransaction(userId: string, orderId: string, amount: number): Promise<Transactions> {
     const transaction = this.transactionRepository.create({
       user: { id: userId },
@@ -89,18 +95,51 @@ export class FinanzasService {
       .limit(1)
       .getRawOne();
   }
-
   async getDetalleVentas(): Promise<any[]> {
-    return await this.orderRepository
-      .createQueryBuilder('order')
-      .leftJoin('order.orderDetails', 'details')
-      .leftJoin('details.product', 'product')
-      .select('order.id', 'venta_id')
-      .addSelect('product.name', 'producto')
-      .addSelect('details.price', 'precio')
-      .addSelect('details.quantity', 'cantidad')
-      .addSelect('details.price * details.quantity', 'total')
-      .where("order.status = 'completed'")
-      .getRawMany();
+    try {
+      // Buscamos las órdenes completadas con sus detalles y productos
+      const orders = await this.orderRepository.find({
+        where: { status: 'completed' },
+        relations: ['detailsVenta', 'detailsVenta.product'],
+      });
+  
+      console.log("📦 Órdenes encontradas:", orders); // Verifica si las órdenes fueron encontradas correctamente
+  
+      if (orders.length === 0) {
+        console.log("No se encontraron órdenes completadas.");
+      }
+  
+      // Procesamos los detalles de cada venta y calculamos los totales
+      const result = orders.map(order => {
+        if (order.detailsVenta.length === 0) {
+          console.log(`La orden con ID ${order.id} no tiene detalles.`);
+        }
+        return order.detailsVenta.map(detail => {
+          if (!detail.product) {
+            console.log(`El detalle con ID ${detail.id} no tiene un producto asociado.`);
+          }
+  
+          const total = detail.price * detail.quantity;
+          return {
+            venta_id: order.id,
+            producto: detail.product ? detail.product.name : 'Producto no encontrado',
+            precio: detail.price,
+            cantidad: detail.quantity,
+            total: total,
+          };
+        });
+      }).flat(); // Usamos `flat` para aplanar el array de arrays a un solo array
+  
+      console.log("📊 Resultado:", result); // Ver qué devuelve el resultado
+  
+      return result;
+  
+    } catch (error) {
+      console.error("Error al obtener detalles de ventas:", error);
+      throw error;
+    }
   }
+  
+  
+  
 }

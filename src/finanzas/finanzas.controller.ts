@@ -1,4 +1,3 @@
-// src/finance/finance.controller.ts
 import {
   Controller,
   Post,
@@ -21,18 +20,13 @@ import { FinanzasService } from './finanzas.service';
 import { Transactions } from 'src/entities/transaction.entity';
 import { CreateTransactionDto } from './Dto/createTransactionDto';
 import { UpdateTransactionDto } from './Dto/updateTransaction';
+import { log } from 'node:console';
 
-@ApiTags('Finance') // Agrupa los endpoints en la documentación de Swagger
+@ApiTags('Finance')
 @Controller('finance')
 export class FinanzasController {
   constructor(private readonly financeService: FinanzasService) {}
 
-  /**
-   * 📌 Crear una transacción
-   *
-   * @param createTransactionDto Datos necesarios para crear una transacción
-   * @returns La transacción creada
-   */
   @Post('transaction')
   @ApiOperation({ summary: 'Crear una nueva transacción' })
   @ApiResponse({
@@ -43,20 +37,26 @@ export class FinanzasController {
   @ApiBody({
     type: CreateTransactionDto,
     description: 'Datos de la transacción a crear',
+    examples: {
+      example1: {
+        value: {
+          userId: '123e4567-e89b-12d3-a456-426614174000',
+          orderId: '987e6543-b21a-45c7-a321-67890abcdef0',
+          amount: 150.75,
+        },
+      },
+    },
   })
   async createTransaction(
-    @Body('userId') id: string,
-    @Body('orderId') order: string,
-    @Body('amount') amount: string,
+    @Body() createTransactionDto: CreateTransactionDto,
   ): Promise<Transactions> {
-    return this.financeService.createTransaction(id, order, parseInt(amount));
+    return this.financeService.createTransaction(
+      createTransactionDto.userId,
+      createTransactionDto.orderId,
+      createTransactionDto.amount,
+    );
   }
 
-  /**
-   * 📌 Obtener todas las transacciones
-   *
-   * @returns Lista de todas las transacciones
-   */
   @Get('transactions')
   @ApiOperation({ summary: 'Obtener todas las transacciones' })
   @ApiResponse({
@@ -68,15 +68,9 @@ export class FinanzasController {
     return this.financeService.getTransactions();
   }
 
-  /**
-   * 📌 Obtener una transacción específica por ID
-   *
-   * @param id Identificador de la transacción
-   * @returns La transacción correspondiente
-   */
   @Get('transaction/:id')
   @ApiOperation({ summary: 'Obtener una transacción por ID' })
-  @ApiParam({ name: 'id', type: Number, description: 'ID de la transacción' })
+  @ApiParam({ name: 'id', type: String, description: 'ID de la transacción' })
   @ApiResponse({
     status: 200,
     description: 'Transacción encontrada',
@@ -87,23 +81,23 @@ export class FinanzasController {
     return this.financeService.getTransactionById(id);
   }
 
-  /**
-   * 📌 Actualizar el estado de una transacción
-   *
-   * @param id Identificador de la transacción
-   * @param updateTransactionDto Datos de la transacción a actualizar
-   * @returns La transacción actualizada
-   */
   @Patch('transaction/:id')
   @ApiOperation({ summary: 'Actualizar el estado de una transacción' })
   @ApiParam({
     name: 'id',
-    type: Number,
+    type: String,
     description: 'ID de la transacción a actualizar',
   })
   @ApiBody({
     type: UpdateTransactionDto,
     description: 'Datos a actualizar en la transacción',
+    examples: {
+      example1: {
+        value: {
+          status: 'completed',
+        },
+      },
+    },
   })
   @ApiResponse({
     status: 200,
@@ -121,18 +115,12 @@ export class FinanzasController {
     );
   }
 
-  /**
-   * 📌 Eliminar una transacción
-   *
-   * @param id Identificador de la transacción
-   * @returns Respuesta sin contenido si la eliminación fue exitosa
-   */
   @Delete('transaction/:id')
-  @HttpCode(204) // Código de respuesta 204 (No Content)
+  @HttpCode(204)
   @ApiOperation({ summary: 'Eliminar una transacción' })
   @ApiParam({
     name: 'id',
-    type: Number,
+    type: String,
     description: 'ID de la transacción a eliminar',
   })
   @ApiResponse({
@@ -143,6 +131,7 @@ export class FinanzasController {
   async deleteTransaction(@Param('id') id: string): Promise<void> {
     return this.financeService.deleteTransaction(id);
   }
+
   @Get('/ventas/total')
   @ApiOperation({ summary: 'Obtener el total de todas las ventas' })
   async getTotalVentas() {
@@ -150,7 +139,9 @@ export class FinanzasController {
   }
 
   @Get('/ventas/productos-vendidos')
-  @ApiOperation({ summary: 'Obtener cantidad de productos vendidos por categoría' })
+  @ApiOperation({
+    summary: 'Obtener cantidad de productos vendidos por categoría',
+  })
   async getProductosVendidosPorCategoria() {
     return this.financeService.getProductosVendidosPorCategoria();
   }
@@ -173,4 +164,3 @@ export class FinanzasController {
     return this.financeService.getDetalleVentas();
   }
 }
-

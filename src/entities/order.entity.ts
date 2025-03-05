@@ -6,11 +6,11 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Transaction,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Transactions } from './transaction.entity';
+import { DetailsVenta } from './details-sales.entity';
 
 @Entity('orders')
 export class Order {
@@ -20,7 +20,6 @@ export class Order {
   @ManyToOne(() => User, (user) => user.orders)
   @JoinColumn({ name: 'userId' })
   user: User;
-
 
   @Column()
   status: string;
@@ -33,6 +32,8 @@ export class Order {
 
   @OneToMany(() => Transactions, (transaction) => transaction.order)
   transactions: Transactions[];
+  @OneToMany(() => DetailsVenta, (details) => details.order)
+  detailsVenta: DetailsVenta[];
 
   @CreateDateColumn()
   createdAt: Date;

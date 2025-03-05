@@ -7,9 +7,10 @@ import { User } from "src/entities/user.entity";
 import { FinanzasController } from "./finanzas.controller";
 import { FinanzasService } from "./finanzas.service";
 import { Product } from "src/entities/product.entity";
+import { DetailsVenta } from "src/entities/details-sales.entity";
 
 @Module({
-    imports:[TypeOrmModule.forFeature([Transactions,User,Order,Invoice,Product])],
+    imports:[TypeOrmModule.forFeature([Transactions,User,Order,Invoice,Product,DetailsVenta])],
     controllers:[FinanzasController],
     providers:[FinanzasService]
 })
