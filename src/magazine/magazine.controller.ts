@@ -54,6 +54,17 @@ export class MagazineController {
     return this.magazineService.findAll();
   }
 
+  @Get('active')
+  @ApiOperation({ summary: 'Obtiene todos los artículos activos' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de artículos activos',
+    type: [Magazine],
+  })
+  findActive(): Promise<Magazine[]> {
+    return this.magazineService.findActive();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Obtiene un artículo por ID' })
   @ApiResponse({
@@ -65,10 +76,10 @@ export class MagazineController {
     return this.magazineService.findOne(id);
   }
 
-  @Patch(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @AllowOnlyRole(Role.Admin)
+  @Patch(':id')
   @ApiOperation({ summary: 'Edita un artículo' })
   @ApiBody({
     type: UpdateMagazineDto,
@@ -108,7 +119,7 @@ export class MagazineController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @AllowOnlyRole(Role.Admin)
-  @Patch(':id/active')
+  @Patch('active/:id')
   @ApiOperation({ summary: 'Activa o desactiva un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo actualizado' })
   toggleActive(@Param('id') id: string): Promise<void> {

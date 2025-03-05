@@ -51,7 +51,7 @@ export class CreateProductDto {
     example: 'https://imagen.com/camiseta.jpg',
     description: 'Image URL',
   })
-  @IsNotEmpty()
+  @IsOptional()
   image: string[];
 
   @ApiProperty({ example: 5, description: 'Discount' })

@@ -34,6 +34,11 @@ export class RolesGuard implements CanActivate {
       );
     }
 
+    const userIdFromBody = request.body?.userId;
+    if (userIdFromBody && user.id !== userIdFromBody) {
+      throw new ForbiddenException('Access denied: userId mismatch.');
+    }
+
     if (requiredRole) {
       if (!user.role.includes(requiredRole)) {
         throw new ForbiddenException('Access denied.');

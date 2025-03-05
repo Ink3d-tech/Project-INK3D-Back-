@@ -42,4 +42,8 @@ export class MagazineService {
       isActive: !(await this.findOne(id)).isActive,
     });
   }
+
+  async findActive(): Promise<Magazine[]> {
+    return this.magazineRepository.find({ where: { isActive: true } });
+  }
 }
