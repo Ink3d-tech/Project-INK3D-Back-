@@ -44,8 +44,8 @@ export class OrdersService {
   }
 
   async addOrder(createOrderDto: CreateOrderDto): Promise<Order> {
-    const { userId, products } = createOrderDto;
-  
+    const { userId, products, discountCode: discountCode } = createOrderDto;
+
     if (!Array.isArray(products) || products.length < 1) {
       throw new BadRequestException('Cart must contain at least one product.');
     }
@@ -55,6 +55,7 @@ export class OrdersService {
     await queryRunner.startTransaction();
   
     try {
+      // Buscar al usuario y cargar descuentos asociados (si los tuviera)
       const user = await queryRunner.manager.findOne(User, {
         where: { id: userId },
         relations: ['discounts'],
@@ -104,24 +105,36 @@ export class OrdersService {
         });
         console.log("Current order details:", orderDetailsToSave);
       }
-  
-      // Aplicar descuento si existe
-      const discount = user.discounts.find((d) => d.status === 'active');
-  
-      if (discount) {
-        total *= 1 - Number(discount.amount) / 100;
+
+      let appliedDiscountCode = null;
+
+      // Si se envía un código de descuento en el body
+      if (discountCode) {
+        // Buscar el descuento en la entidad Discounts (suponiendo que el campo code se usa para almacenar el UUID)
+        const discount = await queryRunner.manager.findOne(Discounts, {
+          where: { id: discountCode },
+        });
+        if (!discount) {
+          throw new BadRequestException('Invalid discount code.');
+        }
+        if (discount.status !== 'active') {
+          throw new BadRequestException('Discount code is not active.');
+        }
+        // Aplicar el descuento: total se reduce según el porcentaje (ejemplo: discount.amount = 10 para 10% de descuento)
+        total = total * (1 - Number(discount.amount) / 100);
         discount.status = 'used';
-        discount.isUsed = true;
         await queryRunner.manager.save(Discounts, discount);
+        appliedDiscountCode = discountCode;
       }
-  
-      // Crear la orden
+
+      // Se asume que la entidad Order tiene un campo 'discountCode' de tipo string
       const order = queryRunner.manager.create(Order, {
         user,
         status: 'pending',
         totalPrice: total > 0 ? total : 0,
         orderDetails: orderDetailsToSave,
-        discount: discount || null,
+        discountCode: appliedDiscountCode, // almacenar el código de descuento aplicado, si lo hubo
+        currency: createOrderDto.currency,
       });
       await queryRunner.manager.save(Order, order);
   
