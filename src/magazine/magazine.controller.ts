@@ -75,10 +75,10 @@ export class MagazineController {
     return this.magazineService.findOne(id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
   @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Edita un artículo' })
   @ApiBody({
     type: UpdateMagazineDto,
@@ -105,23 +105,24 @@ export class MagazineController {
     return this.magazineService.update(id, updateMagazineDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
   @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Elimina un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo eliminado' })
   remove(@Param('id') id: string): Promise<void> {
     return this.magazineService.remove(id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
   @Patch('active/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Activa o desactiva un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo actualizado' })
   toggleActive(@Param('id') id: string): Promise<void> {
     return this.magazineService.toggleActive(id);
   }
 }
+
