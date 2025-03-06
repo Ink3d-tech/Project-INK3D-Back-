@@ -19,7 +19,6 @@ import { MagazineService } from './magazine.service';
 import { CreateMagazineDto } from './dto/create-magazine.dto';
 import { UpdateMagazineDto } from './dto/update-magazine.dto';
 import { Magazine } from '../entities/magazine.entity';
-import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/roles.enum';
 import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
@@ -31,7 +30,7 @@ export class MagazineController {
 
   @Post()
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Crea un nuevo artículo' })
   @ApiResponse({
@@ -76,10 +75,10 @@ export class MagazineController {
     return this.magazineService.findOne(id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
   @Patch(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Edita un artículo' })
   @ApiBody({
     type: UpdateMagazineDto,
@@ -106,23 +105,24 @@ export class MagazineController {
     return this.magazineService.update(id, updateMagazineDto);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
   @Delete(':id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Elimina un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo eliminado' })
   remove(@Param('id') id: string): Promise<void> {
     return this.magazineService.remove(id);
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
   @Patch('active/:id')
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard)
+  @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Activa o desactiva un artículo' })
   @ApiResponse({ status: 200, description: 'Artículo actualizado' })
   toggleActive(@Param('id') id: string): Promise<void> {
     return this.magazineService.toggleActive(id);
   }
 }
+
