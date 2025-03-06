@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Transactions } from 'src/entities/transaction.entity';
@@ -20,10 +20,11 @@ export class FinanzasService {
 
     @InjectRepository(DetailsVenta) // Inyectamos el repositorio de DetailsVenta
     private detailsVentaRepository: Repository<DetailsVenta>,
+   
   ) {}
 
   // 🔹 CRUD de Transacciones 🔹
-
+  
   async createTransaction(userId: string, orderId: string, amount: number): Promise<Transactions> {
     const transaction = this.transactionRepository.create({
       user: { id: userId },
@@ -64,16 +65,35 @@ export class FinanzasService {
     return result.total || 0;
   }
 
+
+
   async getProductosVendidosPorCategoria(): Promise<any[]> {
-    return await this.productRepository
-      .createQueryBuilder('product')
-      .leftJoin('product.category', 'category')
-      .leftJoin('product.stockMovements', 'stock')
-      .select('category.name', 'categoria')
-      .addSelect('SUM(stock.quantity)', 'cantidad_vendida')
-      .groupBy('category.name')
-      .getRawMany();
+    const logger = new Logger('FinanzasService'); // El primer argumento es el contexto del logger
+    
+    logger.log('Iniciando la consulta de productos vendidos por categoría...');  // Log de inicio
+  
+    try {
+      const result = await this.productRepository
+        .createQueryBuilder('product')
+        .leftJoin('product.category', 'category')
+        .leftJoin('product.stockMovements', 'stock')
+        .select('category.name', 'categoria')
+        .addSelect('SUM(CASE WHEN stock.type = :venta THEN stock.quantity ELSE 0 END)', 'cantidad_vendida')
+        .setParameter('venta', 'order_creation') // Asegúrate de que "order_creation" es el tipo correcto
+        .groupBy('category.name')
+        .getRawMany();
+  
+      logger.log('Consulta ejecutada exitosamente. Resultados obtenidos:');
+      logger.log(result);  // Log de los resultados obtenidos
+  
+      return result;
+    } catch (error) {
+      logger.error('Error al ejecutar la consulta de productos vendidos por categoría:', error);
+      throw error;
+    }
+  
   }
+  
 
   async getTicketPromedio(): Promise<number> {
     const result = await this.orderRepository
@@ -89,12 +109,14 @@ export class FinanzasService {
       .createQueryBuilder('product')
       .leftJoin('product.stockMovements', 'stock')
       .select('product.name', 'producto')
-      .addSelect('SUM(stock.quantity)', 'cantidad_vendida')
+      .addSelect('SUM(ABS(stock.quantity))', 'cantidad_vendida') // Tomamos el valor absoluto
+      .where("stock.type = 'order_creation'") // Solo ventas
       .groupBy('product.id')
       .orderBy('cantidad_vendida', 'DESC')
       .limit(1)
       .getRawOne();
   }
+  
   async getDetalleVentas(): Promise<any[]> {
     try {
       // Buscamos las órdenes completadas con sus detalles y productos
@@ -103,17 +125,21 @@ export class FinanzasService {
         relations: ['detailsVenta', 'detailsVenta.product'],
       });
   
-      console.log("📦 Órdenes encontradas:", orders); // Verifica si las órdenes fueron encontradas correctamente
+      console.log("📦 Órdenes encontradas:", orders);
   
       if (orders.length === 0) {
         console.log("No se encontraron órdenes completadas.");
+        return []; // Devuelve un array vacío si no hay órdenes completadas
       }
   
       // Procesamos los detalles de cada venta y calculamos los totales
       const result = orders.map(order => {
         if (order.detailsVenta.length === 0) {
           console.log(`La orden con ID ${order.id} no tiene detalles.`);
+          return []; // Si no tiene detalles, devuelve un array vacío para esa orden
         }
+        
+        // Mapeamos los detalles de venta y calculamos el total
         return order.detailsVenta.map(detail => {
           if (!detail.product) {
             console.log(`El detalle con ID ${detail.id} no tiene un producto asociado.`);
@@ -128,10 +154,9 @@ export class FinanzasService {
             total: total,
           };
         });
-      }).flat(); // Usamos `flat` para aplanar el array de arrays a un solo array
+      }).flat(); // Usamos `flat()` para aplanar el array de arrays a un solo array
   
-      console.log("📊 Resultado:", result); // Ver qué devuelve el resultado
-  
+      console.log("📊 Resultado:", result);
       return result;
   
     } catch (error) {

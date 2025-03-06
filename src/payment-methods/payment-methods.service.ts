@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { Order } from 'src/entities/order.entity';
+import { Transactions } from 'src/entities/transaction.entity'; // Importamos la entidad de transacciones
 import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
 import { Repository } from 'typeorm';
 
@@ -13,6 +14,8 @@ export class PaymentMethodsService {
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
+    @InjectRepository(Transactions) // Inyectamos el repositorio de transacciones
+    private readonly transactionRepository: Repository<Transactions>,
     private readonly configService: ConfigService,
     private nodemailerService: NodeMailerService,
   ) {
@@ -37,6 +40,7 @@ export class PaymentMethodsService {
     currency: string,
   ) {
     try {
+      // Generamos la preferencia de pago para MercadoPago
       const preference = {
         body: {
           items: products.map((product) => ({
@@ -57,21 +61,33 @@ export class PaymentMethodsService {
         },
       };
 
+      // Creamos la preferencia en MercadoPago
       const response = await this.mercadoPagoPreference.create(preference);
 
-      // Obtener la orden desde la base de datos
+      // Obtenemos la orden desde la base de datos
       const order = await this.ordersRepository.findOne({
         where: { id: orderId },
-        relations: ['user'], // Cargar la relación con el usuario
+        relations: ['user'],
       });
 
       if (!order || !order.user) {
         throw new BadRequestException('Order or user not found');
       }
 
-      const userEmail = order.user.email; // Obtener el email del usuario
+      // Creamos una transacción asociada a la orden
+      const transaction = this.transactionRepository.create({
+        order: { id: orderId },
+        user: { id: order.user.id },
+        amount: order.totalPrice,
+        type: 'payment',
+        status: 'pending', // Inicialmente está pendiente
+        date: new Date(),
+      });
 
-      // Enviar email de confirmación con los datos de la orden
+      await this.transactionRepository.save(transaction);
+
+      // Enviar correo de confirmación
+      const userEmail = order.user.email;
       await this.nodemailerService.sendEmail(
         userEmail,
         '¡Tu compra ha sido procesada con éxito!',
@@ -79,7 +95,7 @@ export class PaymentMethodsService {
       );
 
       return {
-        payment_url: response.init_point,
+        payment_url: response.init_point, // URL para redirigir al cliente a la pasarela de pago
       };
     } catch (error) {
       console.error(
@@ -100,13 +116,35 @@ export class PaymentMethodsService {
       if (topic === 'payment') {
         console.log(`Processing payment ${paymentId}`);
 
+        // Recuperamos la transacción asociada
+        const transaction = await this.transactionRepository.findOne({
+          where: { externalReference: paymentId },
+        });
+
+        if (!transaction) {
+          throw new BadRequestException('Transaction not found');
+        }
+
+        // Actualizamos el estado de la transacción dependiendo de la respuesta de MercadoPago
+        if (paymentData.status === 'approved') {
+          transaction.status = 'completed';
+        } else if (paymentData.status === 'pending') {
+          transaction.status = 'pending';
+        } else if (paymentData.status === 'rejected') {
+          transaction.status = 'failed';
+        }
+
+        // Guardamos la transacción actualizada
+        await this.transactionRepository.save(transaction);
+
+        // Retornamos una respuesta indicando que se procesó la notificación
         return { message: `Payment ${paymentId} processed` };
       }
 
-      return { message: 'Notification recieved but not processed' };
+      return { message: 'Notification received but not processed' };
     } catch (error) {
-      console.error('Payment notificarion error:', error);
-      throw new BadRequestException('Payment notificarion error');
+      console.error('Payment notification error:', error);
+      throw new BadRequestException('Payment notification error');
     }
   }
 }
