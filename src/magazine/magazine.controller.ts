@@ -19,7 +19,6 @@ import { MagazineService } from './magazine.service';
 import { CreateMagazineDto } from './dto/create-magazine.dto';
 import { UpdateMagazineDto } from './dto/update-magazine.dto';
 import { Magazine } from '../entities/magazine.entity';
-import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { Role } from 'src/roles.enum';
 import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
@@ -31,7 +30,7 @@ export class MagazineController {
 
   @Post()
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard)
   @AllowOnlyRole(Role.Admin)
   @ApiOperation({ summary: 'Crea un nuevo artículo' })
   @ApiResponse({
