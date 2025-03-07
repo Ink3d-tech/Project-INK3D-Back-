@@ -198,6 +198,7 @@ export class SeederService {
     if (existingPosts.length === 0) {
       const posts: Partial<Magazine>[] = [
         {
+          category: 'MOTORSPORT',
           title: 'Influencia del Automovilismo en la Moda',
           content:
             'El auge de la Fórmula 1, el drifting y el tuning en Asia ha impulsado una moda que mezcla tecnología y adrenalina. Equipos y marcas han colaborado para crear prendas que capturan la esencia del motorsport, desde chaquetas inspiradas en los pits hasta camisetas con gráficos de alto octanaje.',
@@ -206,6 +207,7 @@ export class SeederService {
           author: 'Camilo C',
         },
         {
+          category: 'MUNDO ASIAN',
           title: 'El Legado Japonés y la Cultura JDM',
           content:
             'Japón ha sido pionero en fusionar la cultura automovilística con el streetwear. La escena JDM y las icónicas carreras callejeras han influenciado marcas que incorporan colores vibrantes, logos de escuderías y tipografías técnicas en sus diseños.',
@@ -214,6 +216,7 @@ export class SeederService {
           author: 'Laura P',
         },
         {
+          category: 'STREETWEAR',
           title: 'Tendencia en China y Corea del Sur',
           content:
             'Tendencia en China y Corea del SurCon la creciente popularidad de los deportes de motor, las marcas asiáticas han llevado la moda motorsport al siguiente nivel. Colaboraciones exclusivas entre diseñadores y fabricantes de automóviles han generado colecciones limitadas que combinan innovación, estilo y funcionalidad.',
