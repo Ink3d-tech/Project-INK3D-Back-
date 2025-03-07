@@ -88,43 +88,42 @@ export class SeederService {
 
     /** 🔹 3️⃣ Crear Productos */
     let existingProducts = await this.productRepository.find();
-    if (existingProducts.length === 0) {
-      const products: Partial<Product>[] = [
-        {
-          name: 'Camiseta Negra',
-          description: 'Camiseta negra de algodón 100%',
-          price: 19.99,
-          stock: 50,
-          image: ["https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg"],
-          category: categoryMap.get('ropa'),
-          size: 'M',
-          isActive: true,
-        },
-        {
-          name: 'Pantalón Jeans Azul',
-          description: 'Pantalón jeans azul de mezclilla',
-          price: 39.99,
-          stock: 30,
-          image: ["https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg"],
-          category: categoryMap.get('ropa'),
-          size: 'L',
-          isActive: true,
-        },
-        {
-          name: 'Zapatillas Deportivas',
-          description: 'Zapatillas deportivas para correr',
-          price: 59.99,
-          stock: 20,
-          image: ["https://res.cloudinary.com/dnoajwhp4/image/upload/v1741220680/iyjrycd4r1krryymqe85.jpg"],
-          category: categoryMap.get('calzado'),
-          size: 'XL',
-          isActive: true,
-        },
-      ];
-      await this.productRepository.save(products);
-      existingProducts = await this.productRepository.find();
-    }
-
+      if (existingProducts.length === 0) {
+  const products: Partial<Product>[] = [
+    {
+      name: 'Remera Negra', // Cambio de "Camiseta Negra" a "Remera Negra"
+      description: 'Remera negra de algodón 100%',
+      price: 1999,
+      stock: 50,
+      category: categoryMap.get('ropa'),
+      size: 'M',
+      isActive: true,
+      image: ["https://i.pinimg.com/736x/21/32/95/213295c0655c307a18f7f7704e851927.jpg"]
+    },
+    {
+      name: 'Pantalón Jeans Azul',
+      description: 'Pantalón jeans azul de mezclilla',
+      price: 3999,
+      stock: 30,
+      category: categoryMap.get('ropa'),
+      size: 'L',
+      isActive: true,
+      image: ["https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg"]
+    },
+    {
+      name: 'Zapatillas Deportivas',
+      description: 'Zapatillas deportivas para correr',
+      price: 5999,
+      stock: 20,
+      category: categoryMap.get('calzado'),
+      size: 'XL',
+      isActive: true,
+      image: ["https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg"]
+    },
+  ];
+  await this.productRepository.save(products);
+  console.log("✅ Productos insertados correctamente en la base de datos.");
+}
     /** 🔹 4️⃣ Crear Órdenes */
     const existingOrders = await this.orderRepository.find();
     if (existingOrders.length === 0) {
