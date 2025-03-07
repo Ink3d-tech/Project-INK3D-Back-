@@ -17,7 +17,10 @@ export class MagazineService {
     return this.magazineRepository.save(magazine);
   }
 
-  findAll(): Promise<Magazine[]> {
+  async findAll(category?: string): Promise<Magazine[]> {
+    if (category) {
+      return this.magazineRepository.find({ where: { category } });
+    }
     return this.magazineRepository.find();
   }
 

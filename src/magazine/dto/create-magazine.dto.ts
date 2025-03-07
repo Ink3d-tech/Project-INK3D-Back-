@@ -2,6 +2,11 @@ import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMagazineDto {
+  @ApiProperty({ example: 'Moda' })
+  @IsString()
+  @IsNotEmpty()
+  category: string;
+
   @ApiProperty({ example: 'La moda actual en Asia' })
   @IsString()
   @IsNotEmpty()
@@ -23,4 +28,6 @@ export class CreateMagazineDto {
   @IsString()
   @IsNotEmpty()
   author: string;
+
+
 }
