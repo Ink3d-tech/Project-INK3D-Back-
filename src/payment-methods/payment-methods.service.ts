@@ -9,7 +9,6 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class PaymentMethodsService {
   private mercadoPagoPreference: Preference;
-
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
@@ -19,18 +18,14 @@ export class PaymentMethodsService {
     const accessToken = this.configService.get<string>(
       'MERCADOPAGO_ACCESS_TOKEN',
     );
-
     if (!accessToken) {
       throw new Error(
         'Payment methods service not configured. Please set the MERCADOPAGO_ACCESS_TOKEN environment variable.',
       );
     }
-
     const client = new MercadoPagoConfig({ accessToken });
-
     this.mercadoPagoPreference = new Preference(client);
   }
-
   async createPayment(
     orderId: string,
     products: { id: string; title: string; price: number; quantity: number }[],
@@ -56,28 +51,21 @@ export class PaymentMethodsService {
           notification_url: 'https://tu-sitio.com/api/payment-methods/webhook',
         },
       };
-
       const response = await this.mercadoPagoPreference.create(preference);
-
-      // Obtener la orden desde la base de datos
       const order = await this.ordersRepository.findOne({
         where: { id: orderId },
-        relations: ['user'], // Cargar la relación con el usuario
+        relations: ['user'], 
       });
 
       if (!order || !order.user) {
         throw new BadRequestException('Order or user not found');
       }
-
-      const userEmail = order.user.email; // Obtener el email del usuario
-
-      // Enviar email de confirmación con los datos de la orden
+      const userEmail = order.user.email; 
       await this.nodemailerService.sendEmail(
         userEmail,
         '¡Tu compra ha sido procesada con éxito!',
         `Hola ${order.user.name}, tu compra ha sido confirmada. Orden ID: ${order.id}.`,
       );
-
       return {
         payment_url: response.init_point,
       };
@@ -89,20 +77,16 @@ export class PaymentMethodsService {
       throw new BadRequestException('Unable to create payment in Mercado Pago');
     }
   }
-
   async processPaymentNotification(paymentData: any) {
     try {
       console.log('Payment notification received:', paymentData);
-
       const paymentId = paymentData.data?.id;
       const topic = paymentData.type || paymentData.topic;
-
       if (topic === 'payment') {
         console.log(`Processing payment ${paymentId}`);
 
         return { message: `Payment ${paymentId} processed` };
       }
-
       return { message: 'Notification recieved but not processed' };
     } catch (error) {
       console.error('Payment notificarion error:', error);
