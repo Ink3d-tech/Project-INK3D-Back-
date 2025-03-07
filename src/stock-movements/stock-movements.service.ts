@@ -41,7 +41,7 @@ export class StockMovementsService {
     }
 
     // Definir qué tipos de movimiento representan entrada o salida de stock
-    const incomingTypes = ['purchase', 'manual_adjustment']; // Movimientos que aumentan stock
+    const incomingTypes = ['initial-stock', 'purchase', 'manual_adjustment']; // Movimientos que aumentan stock
     const outgoingTypes = ['order_creation', 'order_cancellation']; // Movimientos que reducen stock
 
     // Verificar que el stock no se vuelva negativo en movimientos de salida

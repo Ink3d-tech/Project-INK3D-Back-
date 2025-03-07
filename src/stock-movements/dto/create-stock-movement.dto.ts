@@ -16,6 +16,7 @@ export class CreateStockMovementDto {
     },
   )
   type:
+    | 'initial-stock'
     | 'purchase'
     | 'manual_adjustment'
     | 'order_creation'

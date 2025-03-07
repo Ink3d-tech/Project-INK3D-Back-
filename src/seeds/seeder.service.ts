@@ -95,7 +95,9 @@ export class SeederService {
           description: 'Camiseta negra de algodón 100%',
           price: 19.99,
           stock: 50,
-          image: ["https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg"],
+          image: [
+            'https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg',
+          ],
           category: categoryMap.get('ropa'),
           size: 'M',
           isActive: true,
@@ -105,7 +107,9 @@ export class SeederService {
           description: 'Pantalón jeans azul de mezclilla',
           price: 39.99,
           stock: 30,
-          image: ["https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg"],
+          image: [
+            'https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg',
+          ],
           category: categoryMap.get('ropa'),
           size: 'L',
           isActive: true,
@@ -115,7 +119,9 @@ export class SeederService {
           description: 'Zapatillas deportivas para correr',
           price: 59.99,
           stock: 20,
-          image: ["https://res.cloudinary.com/dnoajwhp4/image/upload/v1741220680/iyjrycd4r1krryymqe85.jpg"],
+          image: [
+            'https://res.cloudinary.com/dnoajwhp4/image/upload/v1741220680/iyjrycd4r1krryymqe85.jpg',
+          ],
           category: categoryMap.get('calzado'),
           size: 'XL',
           isActive: true,
@@ -172,25 +178,25 @@ export class SeederService {
           product: existingProducts[0],
           quantity: 50,
           type: 'manual_adjustment',
-          reason: 'Initial stock',
+          reason: 'initial-stock',
         },
         {
           product: existingProducts[1],
           quantity: 30,
           type: 'manual_adjustment',
-          reason: 'Initial stock',
+          reason: 'initial-stock',
         },
         {
           product: existingProducts[2],
           quantity: 20,
           type: 'manual_adjustment',
-          reason: 'Initial stock',
+          reason: 'initial-stock',
         },
         {
           product: existingProducts[0],
           quantity: 5,
           type: 'manual_adjustment',
-          reason: 'Initial stock',
+          reason: 'initial-stock',
         },
       ];
       await this.stockMovementRepository.save(stockMovements);
