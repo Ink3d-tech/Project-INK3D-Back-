@@ -166,33 +166,51 @@ export class SeederService {
     /** 🔹 5️⃣ Crear Movimientos de Stock */
     const existingStockMovements = await this.stockMovementRepository.find();
     if (existingStockMovements.length === 0) {
-      const stockMovements: Partial<StockMovements>[] = [
+      const products: Partial<Product>[] = [
         {
-          product: existingProducts[0],
-          quantity: 50,
-          type: 'manual_adjustment',
-          reason: 'Initial stock',
+          name: 'Remera Negra',
+          description: 'Remera negra de algodón 100%',
+          price: 1999,
+          stock: 50,
+          category: categoryMap.get('ropa'),
+          size: 'M',  // Tamaño asignado
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/21/32/95/213295c0655c307a18f7f7704e851927.jpg"]
         },
         {
-          product: existingProducts[1],
-          quantity: 30,
-          type: 'manual_adjustment',
-          reason: 'Initial stock',
+          name: 'Pantalón Jeans Azul',
+          description: 'Pantalón jeans azul de mezclilla',
+          price: 3999,
+          stock: 30,
+          category: categoryMap.get('ropa'),
+          size: 'L',  // Tamaño asignado
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg"]
         },
         {
-          product: existingProducts[2],
-          quantity: 20,
-          type: 'manual_adjustment',
-          reason: 'Initial stock',
+          name: 'Zapatillas Deportivas',
+          description: 'Zapatillas deportivas para correr',
+          price: 5999,
+          stock: 20,
+          category: categoryMap.get('calzado'),
+          size: 'XL',  // Tamaño asignado
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg"]
         },
+        // Si necesitas un valor por defecto:
         {
-          product: existingProducts[0],
-          quantity: 5,
-          type: 'manual_adjustment',
-          reason: 'Initial stock',
-        },
+          name: 'Gorra Estilo',
+          description: 'Gorra de estilo urbano',
+          price: 1499,
+          stock: 100,
+          category: categoryMap.get('accesorios'),
+          size: 'M',  // Valor predeterminado
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/10/20/fe/1020fe72fb33bc7a0e34c9ac5d7ad25c.jpg"]
+        }
       ];
-      await this.stockMovementRepository.save(stockMovements);
+      await this.productRepository.save(products);
+      
     }
 
     /** 🔹 6️⃣ Crear Posts en Magazine */

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { Order } from 'src/entities/order.entity';
-import { Transactions } from 'src/entities/transaction.entity'; // Importamos la entidad de transacciones
+import { Transactions } from 'src/entities/transaction.entity'; 
 import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
 import { Repository } from 'typeorm';
 
@@ -13,7 +13,7 @@ export class PaymentMethodsService {
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
-    @InjectRepository(Transactions) // Inyectamos el repositorio de transacciones
+    @InjectRepository(Transactions) 
     private readonly transactionRepository: Repository<Transactions>,
     private readonly configService: ConfigService,
     private nodemailerService: NodeMailerService,
@@ -35,7 +35,6 @@ export class PaymentMethodsService {
     currency: string,
   ) {
     try {
-      // Generamos la preferencia de pago para MercadoPago
       const preference = {
         body: {
           items: products.map((product) => ({
@@ -71,7 +70,7 @@ export class PaymentMethodsService {
         `Hola ${order.user.name}, tu compra ha sido confirmada. Orden ID: ${order.id}.`,
       );
       return {
-        payment_url: response.init_point, // URL para redirigir al cliente a la pasarela de pago
+        payment_url: response.init_point, 
       };
     } catch (error) {
       console.error(
@@ -97,8 +96,6 @@ export class PaymentMethodsService {
         if (!transaction) {
           throw new BadRequestException('Transaction not found');
         }
-
-        // Actualizamos el estado de la transacción dependiendo de la respuesta de MercadoPago
         if (paymentData.status === 'approved') {
           transaction.status = 'completed';
         } else if (paymentData.status === 'pending') {
@@ -106,11 +103,7 @@ export class PaymentMethodsService {
         } else if (paymentData.status === 'rejected') {
           transaction.status = 'failed';
         }
-
-        // Guardamos la transacción actualizada
         await this.transactionRepository.save(transaction);
-
-        // Retornamos una respuesta indicando que se procesó la notificación
         return { message: `Payment ${paymentId} processed` };
       }
       return { message: 'Notification recieved but not processed' };
