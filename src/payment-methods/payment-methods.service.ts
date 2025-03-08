@@ -47,9 +47,10 @@ export class PaymentMethodsService {
           })),
           external_reference: orderId,
           back_urls: {
-            success: 'https://tu-sitio.com/success',
-            failure: 'https://tu-sitio.com/failure',
-            pending: 'https://tu-sitio.com/pending',
+            /// APLIQUE CAMBIOS A LA URL ///
+            success: 'http://localhost:3001/orders',
+            failure: 'http://localhost:3001/orders',
+            pending: 'http://localhost:3001/orders',
           },
           auto_return: 'approved',
           notification_url: 'https://project-ink3d-back-1.onrender.com/api/payment-methods/webhook',
