@@ -51,7 +51,7 @@ export class AuthController {
       bio: 'Lorem ipsum dolor sit amet',
     },
   })
-  async signUp(@Body() createAuthDto: CreateUserDto) {
+  signUp(@Body() createAuthDto: CreateUserDto) {
     return this.authService.signUp(createAuthDto);
   }
 
@@ -68,7 +68,7 @@ export class AuthController {
       },
     },
   })
-  async signIn(@Body() credentials: LoginUserDto) {
+  signIn(@Body() credentials: LoginUserDto) {
     return this.authService.signIn(credentials.email, credentials.password);
   }
 
@@ -81,7 +81,7 @@ export class AuthController {
   async googleCallback(@Req() req, @Res() res) {
     const response = await this.authService.signInWithGoogle(req.user);
     res.redirect(
-      `https://ink3d-tech-2-0.vercel.app/home/?token=${response.access_token}`,
+      `${process.env.CLIENT_URL}/home//?token=${response.access_token}`,
     );
   }
 }

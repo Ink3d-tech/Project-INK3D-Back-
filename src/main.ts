@@ -1,16 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { WebSocketAdapter } from './websocket.adapter';
 import * as dotenv from 'dotenv';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // Habilitar CORS en NestJS
+
+  const webSocketAdapter = app.get(WebSocketAdapter);
+  app.useWebSocketAdapter(webSocketAdapter);
+
   app.enableCors({
-    origin: '*', // Permitir el frontend
-    methods: 'GET,POST,PUT,DELETE, PATCH',
+    origin: '*',
+    methods: 'GET,POST,PUT,DELETE,PATCH',
     allowedHeaders: 'Content-Type,Authorization',
     credentials: true,
   });
@@ -23,8 +28,14 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-
   SwaggerModule.setup('api', app, document);
+
+
+
   await app.listen(process.env.PORT ?? 3000);
+  console.log(
+    `Servidor corriendo en http://localhost:${process.env.PORT ?? 3000}`,
+  );
 }
+
 bootstrap();

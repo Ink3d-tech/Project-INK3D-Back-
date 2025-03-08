@@ -4,6 +4,8 @@ import { Repository, Like } from 'typeorm';
 import { Product } from 'src/entities/product.entity';
 import { Category } from 'src/entities/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { StockMovementsService } from 'src/stock-movements/stock-movements.service';
 
 @Injectable()
 export class ProductsService {
@@ -12,6 +14,7 @@ export class ProductsService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private readonly stockMovementsService: StockMovementsService,
   ) {}
 
   async findAll(): Promise<Product[]> {
@@ -33,18 +36,17 @@ export class ProductsService {
 
   async search(query: string): Promise<Product[]> {
     return this.productRepository.find({
-      where: [
-        { name: Like(`%${query}%`) },
-        { category: { name: Like(`%${query}%`) } },
-      ],
+      where: [{ name: Like(`%${query}%`) }, { category: Like(`%${query}%`) }],
       relations: ['category'],
     });
   }
 
   async create(productData: CreateProductDto): Promise<Product> {
     const category = await this.categoryRepository.findOne({
-      where: { id: productData.categoryId },
+      where: { id: productData.category.id },
+      relations: ['products'],
     });
+    console.log('category id-->', productData.category);
 
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -60,33 +62,55 @@ export class ProductsService {
 
   async updateProduct(
     id: string,
-    productData: Partial<CreateProductDto>,
+    productData: UpdateProductDto,
   ): Promise<Product> {
     const product = await this.productRepository.findOne({ where: { id } });
+
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-    const updatedProduct = await this.productRepository.save({
-      ...product,
-      name: productData.name,
-      description: productData.description,
-      price: productData.price,
-      stock: productData.stock,
-      image: productData.image,
-      discount: productData.discount,
-    });
+
+    let stockChange = 0;
+
+    // Validar y asignar nueva categoría si es necesario
+    if (productData.category) {
+      const category = await this.categoryRepository.findOne({
+        where: { id: productData.category[0].id },
+      });
+
+      if (!category) {
+        throw new NotFoundException('Category not found');
+      }
+
+      product.category = category;
+    }
+
+    // Calcular cambio en el stock
+    if (
+      productData.stock !== undefined &&
+      productData.stock !== product.stock
+    ) {
+      stockChange = productData.stock - product.stock;
+    }
+
+    Object.assign(product, productData);
+
+    const updatedProduct = await this.productRepository.save(product);
+
+    // Registrar movimiento de stock si hubo un cambio
+    if (stockChange !== 0) {
+      await this.stockMovementsService.createStockMovement({
+        productId: updatedProduct.id,
+        quantity: Math.abs(stockChange), // Siempre positivo
+        type: 'manual_adjustment', // Ajuste manual de stock
+        reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
+      });
+    }
+
     return updatedProduct;
   }
 
-  async delete(id: string): Promise<void> {
-    const result = await this.productRepository.delete(id);
-
-    if (result.affected === 0) {
-      throw new NotFoundException('Product not found');
-    }
-  }
-
-  async DeActivevateProduct(id: string): Promise<Product> {
+  async deactivateProduct(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({ where: { id } });
 
     if (!product) {
@@ -96,7 +120,7 @@ export class ProductsService {
     return this.productRepository.save(product);
   }
 
-  async ActivevateProduct(id: string): Promise<Product> {
+  async activateProduct(id: string): Promise<Product> {
     const product = await this.productRepository.findOne({ where: { id } });
 
     if (!product) {
@@ -104,5 +128,13 @@ export class ProductsService {
     }
     product.isActive = true;
     return this.productRepository.save(product);
+  }
+
+  async delete(id: string): Promise<void> {
+    const result = await this.productRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Product not found');
+    }
   }
 }

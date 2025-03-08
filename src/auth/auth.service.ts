@@ -9,7 +9,7 @@ import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +17,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
+    private nodemailerService: NodeMailerService,
   ) {}
 
   async signUp(user: Partial<User>) {
@@ -27,13 +28,22 @@ export class AuthService {
       throw new BadRequestException('Email already in use');
     }
 
-    const hashedPassord = await bcrypt.hash(user.password, 10);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser = { ...user, password: hashedPassword, confirmPassword: undefined};
 
-    const newUser = { ...user, password: hashedPassord };
     if (!newUser) {
       throw new NotFoundException('User not found');
     }
+
     const savedUser = await this.userRepository.save(newUser);
+
+    // Enviar email de bienvenida
+    await this.nodemailerService.sendEmail(
+      savedUser.email,
+      '¡Bienvenido a Ink3d Store, esperamos que disfrutes de nuestra Tienda & Magazine!',
+      `Hola ${savedUser.name}, tu cuenta ha sido creada exitosamente.`,
+    );
+
     return savedUser;
   }
 
@@ -54,7 +64,7 @@ export class AuthService {
     return { token, message: 'User logged in successfully' };
   }
 
-  async validateGoogleUser(googleUser: CreateUserDto) {
+  async validateGoogleUser(googleUser: Partial<User>) {
     const user = await this.userRepository.findOne({
       where: { email: googleUser.email },
     });
@@ -77,6 +87,12 @@ export class AuthService {
         role: 'user',
       });
       await this.userRepository.save(user);
+
+      await this.nodemailerService.sendEmail(
+        user.email,
+        '¡Bienvenido a Ink3d Store, esperamos que disfrutes de nuestra Tienda & Magazine!',
+        `Hola ${user.name}, tu cuenta ha sido creada exitosamente.`,
+      );
     }
 
     const payload = { userId: user.id, email: user.email, role: user.role };

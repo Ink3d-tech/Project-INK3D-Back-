@@ -3,14 +3,14 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Product } from './product.entity';
+import { Transactions } from './transaction.entity';
+import { DetailsVenta } from './details-sales.entity';
 
 @Entity('orders')
 export class Order {
@@ -24,8 +24,16 @@ export class Order {
   @Column()
   status: string;
 
-  @Column('decimal')
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalPrice: number;
+
+  @Column({ type: 'enum', enum: ['USD', 'ARS', 'COP', 'CLP'], default: 'USD' })
+  currency: string;
+
+  @OneToMany(() => Transactions, (transaction) => transaction.order)
+  transactions: Transactions[];
+  @OneToMany(() => DetailsVenta, (details) => details.order)
+  detailsVenta: DetailsVenta[];
 
   @CreateDateColumn()
   createdAt: Date;
@@ -33,9 +41,9 @@ export class Order {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToMany(() => Product)
-  @JoinTable({
-    name: 'order_products',
-  })
-  products: Product[];
+  @Column('jsonb', { nullable: false })
+  orderDetails: { productId: string; quantity: number; price: number }[];
+
+  @Column({ nullable: true })
+  discountCode: string;
 }
