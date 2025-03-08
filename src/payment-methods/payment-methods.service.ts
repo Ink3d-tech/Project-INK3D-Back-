@@ -52,8 +52,8 @@ export class PaymentMethodsService {
             pending: 'https://tu-sitio.com/pending',
           },
           auto_return: 'approved',
-          notification_url: 'https://tu-sitio.com/api/payment-methods/webhook',
-        },
+          notification_url: 'https://project-ink3d-back-1.onrender.com/api/payment-methods/webhook',
+        },       
       };
 
       // Creamos la preferencia en MercadoPago
@@ -137,7 +137,24 @@ export class PaymentMethodsService {
       console.error('Payment notification error:', error);
       throw new BadRequestException('Payment notification error');
     }
+
   }
+
+  async getPaymentStatus(paymentId: string) {
+    const transaction = await this.transactionRepository.findOne({
+      where: { externalReference: paymentId },
+    });
+
+    console.log('================/ TRANSACTION /====================');
+    console.log('Transaction:', transaction);
+    console.log('====================================');
+
+    if (!transaction) {
+      throw new BadRequestException('Transaction not found');
+    }
+
+    return { status: transaction.status };
+}
 }
 
 
