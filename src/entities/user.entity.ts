@@ -13,6 +13,8 @@ import { Order } from './order.entity';
 import { Product } from './product.entity';
 import { Reviews } from './reviews.entity';
 import { Discounts } from './discounts.entity';
+import {  Transactions } from './transaction.entity';
+import { Invoice } from './invoice.entity';
 
 @Entity()
 export class User {
@@ -42,6 +44,11 @@ export class User {
 
   @Column({ nullable: true })
   bio: string;
+
+  @OneToMany(() => Transactions, (transaction) => transaction.user)
+  transactions: Transactions[];
+    @OneToMany(() => User, (user) => user.invoices)
+    invoices: Invoice[];
 
   @Column({ type: 'enum', enum: ['admin', 'user', 'mod'], default: 'user' })
   role: string;
