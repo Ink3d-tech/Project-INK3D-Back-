@@ -60,10 +60,62 @@ export class SeederService {
         email: 'juan@example.com',
         password: '1HulkSmash2025#',
       },
-      { name: 'Ana Gómez', email: 'ana@example.com', password: 'Mjolnir2025#' },
+      { 
+        name: 'Ana Gómez', 
+        email: 'ana@example.com', 
+        password: 'Mjolnir2025#' 
+      },
       {
         name: 'Admin',
         email: 'admin@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'cami',
+        email: 'cami@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'david',
+        email: 'david@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'gino',
+        email: 'gino@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'facu',
+        email: 'facu@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'lau',
+        email: 'lau@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'ariel',
+        email: 'ariel@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'nacho',
+        email: 'nacho@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'mati',
+        email: 'matt@example.com',
         password: '@dm!n1234',
         role: 'admin',
       },
