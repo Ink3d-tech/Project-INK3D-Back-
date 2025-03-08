@@ -29,7 +29,7 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUser = { ...user, password: hashedPassword };
+    const newUser = { ...user, password: hashedPassword, confirmPassword: undefined};
 
     if (!newUser) {
       throw new NotFoundException('User not found');

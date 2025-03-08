@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req } from '@nestjs/common';
+import { Controller, Post, Body, Req, Param, Get } from '@nestjs/common';
 import { PaymentMethodsService } from './payment-methods.service';
 import { Product } from '../entities/product.entity';
 import { Request } from 'express';
@@ -19,7 +19,7 @@ export class PaymentMethodsController {
       'payment-method.create': {
         value: {
           orderId: 'cdaf3d44-8b81-4b41-8b3a-8c5e171d737c',
-          currency: 'USD',
+          currency: 'ARS',
           products: [
             {
               id: 'a52a1076-e7ff-46af-9e92-c4300a8028bf',
@@ -71,4 +71,14 @@ export class PaymentMethodsController {
       return { message: 'Error procesando el Webhook' };
     }
   }
+
+
+  @Get('status/:paymentId')
+  async getPaymentStatus(@Param('paymentId') paymentId: string) {
+    return this.paymentMethodsService.getPaymentStatus(paymentId);
+  }
 }
+
+
+
+

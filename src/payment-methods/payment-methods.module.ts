@@ -7,10 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrdersService } from 'src/orders/orders.service';
 import { Order } from 'src/entities/order.entity';
 import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
+import { Transactions } from 'src/entities/transaction.entity';
 
 @Module({
   controllers: [PaymentMethodsController],
-  imports: [ConfigModule, NodemailerModule, TypeOrmModule.forFeature([Order])],
+  imports: [ConfigModule, NodemailerModule, TypeOrmModule.forFeature([Order,Transactions])],
   providers: [PaymentMethodsService, NodeMailerService, OrdersService],
   exports: [PaymentMethodsService],
 })
