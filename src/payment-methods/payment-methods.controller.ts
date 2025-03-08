@@ -71,4 +71,9 @@ export class PaymentMethodsController {
       return { message: 'Error procesando el Webhook' };
     }
   }
+
+  @Get('status/:paymentId')
+  async getPaymentStatus(@Param('paymentId') paymentId: string) {
+    return this.paymentMethodsService.getPaymentStatus(paymentId);
+  }
 }
