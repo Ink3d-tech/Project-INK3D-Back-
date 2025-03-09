@@ -30,6 +30,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { FinanzasModule } from './finanzas/finanzas.module';
 import { Transactions } from './entities/transaction.entity';
 import { Magazine } from './entities/magazine.entity';
+import { PerspectiveModule } from './perspective/perspective.module';
 
 
 @Module({
@@ -42,7 +43,8 @@ import { Magazine } from './entities/magazine.entity';
       Discounts,
       StockMovements,
       Transactions,
-      Magazine
+      Magazine,
+     
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -72,7 +74,8 @@ import { Magazine } from './entities/magazine.entity';
     NodemailerModule,
     FileUploadModule,
     MagazineModule,
-    FinanzasModule
+    FinanzasModule,
+    PerspectiveModule
   ],
   providers: [
     SeederService,

@@ -3,7 +3,9 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class Magazine {
@@ -27,4 +29,6 @@ export class Magazine {
 
   @CreateDateColumn()
   createdAt: Date;
+  @OneToMany(() => Comment, comment => comment.magazine)
+  comments: Comment[];
 }

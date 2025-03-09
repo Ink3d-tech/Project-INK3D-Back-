@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
+import axios from 'axios';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { Order } from 'src/entities/order.entity';
 import { Transactions } from 'src/entities/transaction.entity'; // Importamos la entidad de transacciones
@@ -20,7 +21,7 @@ export class PaymentMethodsService {
     private nodemailerService: NodeMailerService,
   ) {
     const accessToken = this.configService.get<string>(
-      'MERCADOPAGO_ACCESS_TOKEN',
+      'MP_ACCESS_TOKEN',
     );
 
     if (!accessToken) {
@@ -52,12 +53,12 @@ export class PaymentMethodsService {
           })),
           external_reference: orderId,
           back_urls: {
-            success: 'https://tu-sitio.com/success',
+            success: 'https://5b72-186-134-31-0.ngrok-free.app/payment-methods/orders',
             failure: 'https://tu-sitio.com/failure',
             pending: 'https://tu-sitio.com/pending',
           },
           auto_return: 'approved',
-          notification_url: 'https://tu-sitio.com/api/payment-methods/webhook',
+          notification_url: 'https://5b72-186-134-31-0.ngrok-free.app/payment-methods/webhook',
         },
       };
 
@@ -106,45 +107,62 @@ export class PaymentMethodsService {
     }
   }
 
-  async processPaymentNotification(paymentData: any) {
+ async processPaymentNotification(paymentData: any) {
     try {
-      console.log('Payment notification received:', paymentData);
+      console.log('📩 Payment notification received:', paymentData);
 
       const paymentId = paymentData.data?.id;
       const topic = paymentData.type || paymentData.topic;
 
-      if (topic === 'payment') {
-        console.log(`Processing payment ${paymentId}`);
-
-        // Recuperamos la transacción asociada
-        const transaction = await this.transactionRepository.findOne({
-          where: { externalReference: paymentId },
-        });
-
-        if (!transaction) {
-          throw new BadRequestException('Transaction not found');
-        }
-
-        // Actualizamos el estado de la transacción dependiendo de la respuesta de MercadoPago
-        if (paymentData.status === 'approved') {
-          transaction.status = 'completed';
-        } else if (paymentData.status === 'pending') {
-          transaction.status = 'pending';
-        } else if (paymentData.status === 'rejected') {
-          transaction.status = 'failed';
-        }
-
-        // Guardamos la transacción actualizada
-        await this.transactionRepository.save(transaction);
-
-        // Retornamos una respuesta indicando que se procesó la notificación
-        return { message: `Payment ${paymentId} processed` };
+      if (!paymentId || topic !== 'payment') {
+        console.warn('⚠️ Webhook sin ID de pago o no es un evento de pago.');
+        return { message: 'Webhook sin datos relevantes' };
       }
 
-      return { message: 'Notification received but not processed' };
+      console.log(`🔍 Consultando estado del pago ${paymentId} en MercadoPago...`);
+
+      // Hacer una solicitud a MercadoPago para obtener el estado real del pago
+      const mercadoPagoResponse = await axios.get(
+        `https://api.mercadopago.com/v1/payments/${paymentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+          },
+        },
+      );
+
+      const paymentStatus = mercadoPagoResponse.data.status;
+
+      console.log(`✅ Estado del pago: ${paymentStatus}`);
+
+      // Buscar la transacción en la base de datos
+      const transaction = await this.transactionRepository.findOne({
+        where: { externalReference: paymentId },
+      });
+
+      if (!transaction) {
+        console.warn(`⚠️ Transacción con referencia ${paymentId} no encontrada.`);
+        return { message: 'Transacción no encontrada' };
+      }
+
+      // Actualizar estado según la respuesta de MercadoPago
+      if (paymentStatus === 'approved') {
+        transaction.status = 'completed';
+      } else if (paymentStatus === 'pending') {
+        transaction.status = 'pending';
+      } else if (paymentStatus === 'rejected') {
+        transaction.status = 'failed';
+      }
+
+      // Guardar la transacción actualizada
+      await this.transactionRepository.save(transaction);
+
+      console.log(`✅ Transacción ${paymentId} actualizada a estado: ${transaction.status}`);
+
+      return { message: `Pago ${paymentId} procesado correctamente` };
     } catch (error) {
-      console.error('Payment notification error:', error);
-      throw new BadRequestException('Payment notification error');
+      console.error('❌ Error al procesar la notificación de pago:', error.response?.data || error);
+      throw new BadRequestException('Error procesando la notificación de pago');
     }
   }
 }
