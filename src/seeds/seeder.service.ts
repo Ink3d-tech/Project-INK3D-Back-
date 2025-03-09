@@ -148,6 +148,7 @@ export class SeederService {
           price: 1999,
           stock: 25,
           category: categoryMap.get('ropa'),
+          style: "Motorsport"
           size: 'M',
           isActive: true,
           image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
@@ -158,6 +159,7 @@ export class SeederService {
           price: 1999,
           stock: 15,
           category: categoryMap.get('ropa'),
+          style: "Motorsport",
           size: 'M',
           isActive: true,
           image: ["https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg"]
@@ -168,6 +170,7 @@ export class SeederService {
           price: 3999,
           stock: 30,
           category: categoryMap.get('ropa'),
+          style: "Streetwear",
           size: 'L',
           isActive: true,
           image: ["https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg"]
@@ -178,6 +181,7 @@ export class SeederService {
           price: 5999,
           stock: 20,
           category: categoryMap.get('calzado'),
+          style: "Motorsport",
           size: 'L',
           isActive: true,
           image: ["https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg"]
@@ -188,6 +192,7 @@ export class SeederService {
           price: 3999,
           stock: 15,
           category: categoryMap.get('calzado'),
+          style: "Motorsport",
           size: 'XL',
           isActive: true,
           image: ["https://i.pinimg.com/736x/dd/7a/af/dd7aafb86cfbb1422909224e7f3902d1.jpg"]
@@ -198,6 +203,7 @@ export class SeederService {
           price: 5999,
           stock: 10,
           category: categoryMap.get('calzado'),
+          style: "Motorsport",
           size: 'XL',
           isActive: true,
           image: ["https://i.pinimg.com/736x/d7/fc/ae/d7fcae3b8197a9acc7c7fbba40b33b30.jpg"]
@@ -208,6 +214,7 @@ export class SeederService {
           price: 1899,
           stock: 10,
           category: categoryMap.get('ropa'),
+          style: "Motorsport",
           size: 'L',
           isActive: true,
           image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
@@ -218,6 +225,7 @@ export class SeederService {
           price: 1299,
           stock: 20,
           category: categoryMap.get('calzado'),
+          style: "Motorsport",
           size: 'XL',
           isActive: true,
           image: ["https://i.pinimg.com/736x/dd/7a/af/dd7aafb86cfbb1422909224e7f3902d1.jpg"]
@@ -228,6 +236,7 @@ export class SeederService {
           price: 999,
           stock: 25,
           category: categoryMap.get('ropa'),
+          style: "Motorsport",
           size: 'M',
           isActive: true,
           image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
@@ -238,6 +247,7 @@ export class SeederService {
           price: 499,
           stock: 30,
           category: categoryMap.get('accesorios'),
+          style: "Motorsport",
           size: 'XL',
           isActive: true,
           image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
@@ -248,6 +258,7 @@ export class SeederService {
           price: 2100,
           stock: 8,
           category: categoryMap.get('ropa'),
+          style: "Motorsport",
           size: 'XL',
           isActive: true,
           image: ["https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg"]
