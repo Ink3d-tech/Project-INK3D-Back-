@@ -185,9 +185,9 @@ export class OrdersController {
     return order;
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @AllowOnlyRole(Role.Admin)
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update order status' })
   @ApiParam({

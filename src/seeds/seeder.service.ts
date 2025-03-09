@@ -60,10 +60,62 @@ export class SeederService {
         email: 'juan@example.com',
         password: '1HulkSmash2025#',
       },
-      { name: 'Ana Gómez', email: 'ana@example.com', password: 'Mjolnir2025#' },
+      { 
+        name: 'Ana Gómez', 
+        email: 'ana@example.com', 
+        password: 'Mjolnir2025#' 
+      },
       {
         name: 'Admin',
         email: 'admin@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'cami',
+        email: 'cami@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'david',
+        email: 'david@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'gino',
+        email: 'gino@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'facu',
+        email: 'facu@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'lau',
+        email: 'lau@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'ariel',
+        email: 'ariel@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'nacho',
+        email: 'nacho@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'mati',
+        email: 'matt@example.com',
         password: '@dm!n1234',
         role: 'admin',
       },
@@ -90,37 +142,117 @@ export class SeederService {
     let existingProducts = await this.productRepository.find();
       if (existingProducts.length === 0) {
   const products: Partial<Product>[] = [
-    {
-      name: 'Remera Negra', // Cambio de "Camiseta Negra" a "Remera Negra"
-      description: 'Remera negra de algodón 100%',
-      price: 1999,
-      stock: 50,
-      category: categoryMap.get('ropa'),
-      size: 'M',
-      isActive: true,
-      image: ["https://i.pinimg.com/736x/21/32/95/213295c0655c307a18f7f7704e851927.jpg"]
-    },
-    {
-      name: 'Pantalón Jeans Azul',
-      description: 'Pantalón jeans azul de mezclilla',
-      price: 3999,
-      stock: 30,
-      category: categoryMap.get('ropa'),
-      size: 'L',
-      isActive: true,
-      image: ["https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg"]
-    },
-    {
-      name: 'Zapatillas Deportivas',
-      description: 'Zapatillas deportivas para correr',
-      price: 5999,
-      stock: 20,
-      category: categoryMap.get('calzado'),
-      size: 'XL',
-      isActive: true,
-      image: ["https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg"]
-    },
-  ];
+        {
+          name: 'Remera senna edition',
+          description: 'Remera senna editio limitada',
+          price: 1999,
+          stock: 25,
+          category: categoryMap.get('ropa'),
+          size: 'M',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
+        },
+        {
+          name: 'Campera Ferrari custom',
+          description: 'Campera Ferrari custom edicion limitada',
+          price: 1999,
+          stock: 15,
+          category: categoryMap.get('ropa'),
+          size: 'M',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg"]
+        },
+        {
+          name: 'Pantalón sport N6 custom',
+          description: 'Pantalón sport N6 custom edicion limitada',
+          price: 3999,
+          stock: 30,
+          category: categoryMap.get('ropa'),
+          size: 'L',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg"]
+        },
+        {
+          name: 'Zapatillas Nike custom',
+          description: 'Zapatillas Nike custom edicion limitada',
+          price: 5999,
+          stock: 20,
+          category: categoryMap.get('calzado'),
+          size: 'L',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg"]
+        },
+        {
+          name: 'Zapatillas Nike custom Shell',
+          description: 'Zapatillas Nike custom Shell edicion limitada',
+          price: 3999,
+          stock: 15,
+          category: categoryMap.get('calzado'),
+          size: 'XL',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/dd/7a/af/dd7aafb86cfbb1422909224e7f3902d1.jpg"]
+        },
+        {
+          name: 'Zapatillas Buiton edicion',
+          description: 'Zapatillas Buiton edicion limitada',
+          price: 5999,
+          stock: 10,
+          category: categoryMap.get('calzado'),
+          size: 'XL',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/d7/fc/ae/d7fcae3b8197a9acc7c7fbba40b33b30.jpg"]
+        },
+        {
+          name: 'Campera Red Bull Racing',
+          description: 'Edición especial de Red Bull Racing con detalles en bordado',
+          price: 1899,
+          stock: 10,
+          category: categoryMap.get('ropa'),
+          size: 'L',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
+        },
+        {
+          name: 'Zapatillas Motorsport AMG',
+          description: 'Zapatillas inspiradas en AMG, diseño aerodinámico y suela antideslizante',
+          price: 1299,
+          stock: 20,
+          category: categoryMap.get('calzado'),
+          size: 'XL',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/dd/7a/af/dd7aafb86cfbb1422909224e7f3902d1.jpg"]
+        },
+        {
+          name: 'Camisa Alfa Romeo F1',
+          description: 'Camisa oficial de Alfa Romeo F1 Team, edición limitada',
+          price: 999,
+          stock: 25,
+          category: categoryMap.get('ropa'),
+          size: 'M',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
+        },
+        {
+          name: 'Gorra McLaren Pirelli Edition',
+          description: 'Gorra McLaren con el icónico logo de Pirelli en el frente',
+          price: 499,
+          stock: 30,
+          category: categoryMap.get('accesorios'),
+          size: 'XL',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
+        },
+        {
+          name: 'Chaqueta Porsche Motorsport',
+          description: 'Chaqueta oficial Porsche Motorsport con tecnología cortaviento',
+          price: 2100,
+          stock: 8,
+          category: categoryMap.get('ropa'),
+          size: 'XL',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg"]
+        }
+      ];
   await this.productRepository.save(products);
   console.log("✅ Productos insertados correctamente en la base de datos.");
 }
