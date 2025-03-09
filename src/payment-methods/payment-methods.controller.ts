@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req } from '@nestjs/common';
+import { Controller, Post, Body, Req, Param, Get } from '@nestjs/common';
 import { PaymentMethodsService } from './payment-methods.service';
 import { Product } from '../entities/product.entity';
 import { Request } from 'express';
@@ -71,4 +71,14 @@ export class PaymentMethodsController {
       return { message: 'Error procesando el Webhook' };
     }
   }
+
+
+  @Get('status/:paymentId')
+  async getPaymentStatus(@Param('paymentId') paymentId: string) {
+    return this.paymentMethodsService.getPaymentStatus(paymentId);
+  }
 }
+
+
+
+

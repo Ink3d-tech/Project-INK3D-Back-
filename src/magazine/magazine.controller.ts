@@ -6,6 +6,7 @@ import {
   Param,
   Body,
   Patch,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -14,6 +15,7 @@ import {
   ApiResponse,
   ApiBody,
   ApiBearerAuth,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { MagazineService } from './magazine.service';
 import { CreateMagazineDto } from './dto/create-magazine.dto';
@@ -44,13 +46,19 @@ export class MagazineController {
 
   @Get()
   @ApiOperation({ summary: 'Obtiene todos los artículos' })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    description: 'Filtra los artículos por categoría',
+    type: String,
+  })
   @ApiResponse({
     status: 200,
     description: 'Lista de artículos',
     type: [Magazine],
   })
-  findAll(): Promise<Magazine[]> {
-    return this.magazineService.findAll();
+  findAll(@Query('category') category?: string): Promise<Magazine[]> {
+    return this.magazineService.findAll(category);
   }
 
   @Get('active')
@@ -75,6 +83,18 @@ export class MagazineController {
     return this.magazineService.findOne(id);
   }
 
+  @Get('categories')
+@ApiOperation({ summary: 'Obtiene todas las categorías disponibles' })
+@ApiResponse({
+  status: 200,
+  description: 'Lista de categorías',
+  type: [String],
+})
+findAllCategories(): Promise<string[]> {
+  return this.magazineService.findAllCategories();
+}
+
+
   @Patch(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard)
@@ -89,6 +109,7 @@ export class MagazineController {
           content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
           image: 'https://imagenssprueba.png',
           author: 'Laura J.',
+          category: 'Moda',  // Añadir el ejemplo de category
         },
       },
     },
@@ -125,4 +146,3 @@ export class MagazineController {
     return this.magazineService.toggleActive(id);
   }
 }
-

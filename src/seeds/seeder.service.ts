@@ -60,10 +60,62 @@ export class SeederService {
         email: 'juan@example.com',
         password: '1HulkSmash2025#',
       },
-      { name: 'Ana Gómez', email: 'ana@example.com', password: 'Mjolnir2025#' },
+      { 
+        name: 'Ana Gómez', 
+        email: 'ana@example.com', 
+        password: 'Mjolnir2025#' 
+      },
       {
         name: 'Admin',
         email: 'admin@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'cami',
+        email: 'cami@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'david',
+        email: 'david@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'gino',
+        email: 'gino@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'facu',
+        email: 'facu@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'lau',
+        email: 'lau@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'ariel',
+        email: 'ariel@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'nacho',
+        email: 'nacho@example.com',
+        password: '@dm!n1234',
+        role: 'admin',
+      },
+      {
+        name: 'mati',
+        email: 'matt@example.com',
         password: '@dm!n1234',
         role: 'admin',
       },
@@ -88,14 +140,15 @@ export class SeederService {
 
     /** 🔹 3️⃣ Crear Productos */
     let existingProducts = await this.productRepository.find();
-    if (existingProducts.length === 0) {
-      const products: Partial<Product>[] = [
+      if (existingProducts.length === 0) {
+  const products: Partial<Product>[] = [
         {
           name: 'Remera senna edition',
           description: 'Remera senna editio limitada',
           price: 1999,
           stock: 25,
           category: categoryMap.get('ropa'),
+          style: "Motorsport",
           size: 'M',
           isActive: true,
           image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
@@ -116,6 +169,7 @@ export class SeederService {
           price: 3999,
           stock: 30,
           category: categoryMap.get('ropa'),
+          style: "Streetwear",
           size: 'L',
           isActive: true,
           image: ["https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg"]
@@ -166,6 +220,18 @@ export class SeederService {
           price: 1299,
           stock: 20,
           category: categoryMap.get('calzado'),
+          style: "Motorsport",
+          size: 'L',
+          isActive: true,
+          image: ["https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg"]
+        },
+        {
+          name: 'Zapatillas Nike custom Shell',
+          description: 'Zapatillas Nike custom Shell edicion limitada',
+          price: 3999,
+          stock: 15,
+          category: categoryMap.get('calzado'),
+          style: "Motorsport",
           size: 'XL',
           isActive: true,
           image: ["https://i.pinimg.com/736x/dd/7a/af/dd7aafb86cfbb1422909224e7f3902d1.jpg"]
@@ -201,10 +267,9 @@ export class SeederService {
           image: ["https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg"]
         }
       ];
-      await this.productRepository.save(products);
-      existingProducts = await this.productRepository.find();
-    }
-
+  await this.productRepository.save(products);
+  console.log("✅ Productos insertados correctamente en la base de datos.");
+}
     /** 🔹 4️⃣ Crear Órdenes */
     const existingOrders = await this.orderRepository.find();
     if (existingOrders.length === 0) {
@@ -281,6 +346,7 @@ export class SeederService {
     if (existingPosts.length === 0) {
       const posts: Partial<Magazine>[] = [
         {
+          category: 'MOTORSPORT',
           title: 'Influencia del Automovilismo en la Moda',
           content:
             'El auge de la Fórmula 1, el drifting y el tuning en Asia ha impulsado una moda que mezcla tecnología y adrenalina. Equipos y marcas han colaborado para crear prendas que capturan la esencia del motorsport, desde chaquetas inspiradas en los pits hasta camisetas con gráficos de alto octanaje.',
@@ -289,6 +355,7 @@ export class SeederService {
           author: 'Camilo C',
         },
         {
+          category: 'MUNDO ASIAN',
           title: 'El Legado Japonés y la Cultura JDM',
           content:
             'Japón ha sido pionero en fusionar la cultura automovilística con el streetwear. La escena JDM y las icónicas carreras callejeras han influenciado marcas que incorporan colores vibrantes, logos de escuderías y tipografías técnicas en sus diseños.',
@@ -297,6 +364,7 @@ export class SeederService {
           author: 'Laura P',
         },
         {
+          category: 'STREETWEAR',
           title: 'Tendencia en China y Corea del Sur',
           content:
             'Tendencia en China y Corea del SurCon la creciente popularidad de los deportes de motor, las marcas asiáticas han llevado la moda motorsport al siguiente nivel. Colaboraciones exclusivas entre diseñadores y fabricantes de automóviles han generado colecciones limitadas que combinan innovación, estilo y funcionalidad.',

@@ -35,7 +35,7 @@ export class RolesGuard implements CanActivate {
     // Primero: verificar si viene un id en los parámetros de la URL
     const userIdFromParams = request.params?.id;
     if (userIdFromParams) {
-      if (user.userId === userIdFromParams) {
+      if (user.userId === userIdFromParams || user.role.includes('admin')) {
         return true;
       } else {
         throw new ForbiddenException('Access denied: param id mismatch.');
@@ -46,7 +46,7 @@ export class RolesGuard implements CanActivate {
     const userIdFromBody = request.body?.userId;
 
     if (userIdFromBody) {
-      if (user.userId === userIdFromBody) {
+      if (user.userId === userIdFromBody || user.role.includes('admin')) {
         // Si coinciden, se permite el acceso sin necesidad de roles adicionales.
         return true;
       } else {

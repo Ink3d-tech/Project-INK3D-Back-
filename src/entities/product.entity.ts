@@ -54,6 +54,10 @@ export class Product {
     nullable: true,
   })
   size: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  style: string;
+
   @OneToMany(() => DetailsVenta, (details) => details.product)
   detailsVenta: DetailsVenta[];
 
@@ -78,3 +82,4 @@ export class Product {
   @OneToMany(() => StockMovements, (stockMovements) => stockMovements.product)
   stockMovements: StockMovements[];
 }
+
