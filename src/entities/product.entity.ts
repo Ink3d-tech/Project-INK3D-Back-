@@ -53,6 +53,11 @@ export class Product {
     enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
     nullable: true,
   })
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+style: string;
+
+
   size: string;
   @OneToMany(() => DetailsVenta, (details) => details.product)
   detailsVenta: DetailsVenta[];

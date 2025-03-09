@@ -91,11 +91,12 @@ export class SeederService {
       if (existingProducts.length === 0) {
   const products: Partial<Product>[] = [
     {
-      name: 'Remera Negra', // Cambio de "Camiseta Negra" a "Remera Negra"
+      name: 'Remera Negra',
       description: 'Remera negra de algodón 100%',
       price: 1999,
       stock: 50,
       category: categoryMap.get('ropa'),
+      style: "Asian",
       size: 'M',
       isActive: true,
       image: ["https://i.pinimg.com/736x/21/32/95/213295c0655c307a18f7f7704e851927.jpg"]
@@ -106,6 +107,7 @@ export class SeederService {
       price: 3999,
       stock: 30,
       category: categoryMap.get('ropa'),
+      style: "Streetwear",
       size: 'L',
       isActive: true,
       image: ["https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg"]
@@ -116,6 +118,7 @@ export class SeederService {
       price: 5999,
       stock: 20,
       category: categoryMap.get('calzado'),
+      style: "Motorsport",
       size: 'XL',
       isActive: true,
       image: ["https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg"]
