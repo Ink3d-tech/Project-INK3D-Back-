@@ -74,10 +74,10 @@ export class PaymentMethodsController {
   }
 
 
-  // @Get('status/:paymentId')
-  // async getPaymentStatus(@Param('paymentId') paymentId: string) {
-  //   return this.paymentMethodsService.getPaymentStatus(paymentId);
-  // }
+  @Get('status/:paymentId')
+  async getPaymentStatus(@Param('paymentId') paymentId: string) {
+    return this.paymentMethodsService.getPaymentStatus(paymentId);
+  }
 }
 
 
