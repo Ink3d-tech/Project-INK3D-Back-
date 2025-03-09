@@ -63,6 +63,7 @@ export class PaymentMethodsController {
   @Post('webhook')
   async handleWebhook(@Req() req: Request) {
     try {
+      console.log('📩 Webhook recibido en el backend:', req.body);
       const paymentData = req.body;
       await this.paymentMethodsService.processPaymentNotification(paymentData);
       return { message: 'Webhook recibido correctamente' };
@@ -73,10 +74,10 @@ export class PaymentMethodsController {
   }
 
 
-  @Get('status/:paymentId')
-  async getPaymentStatus(@Param('paymentId') paymentId: string) {
-    return this.paymentMethodsService.getPaymentStatus(paymentId);
-  }
+  // @Get('status/:paymentId')
+  // async getPaymentStatus(@Param('paymentId') paymentId: string) {
+  //   return this.paymentMethodsService.getPaymentStatus(paymentId);
+  // }
 }
 
 
