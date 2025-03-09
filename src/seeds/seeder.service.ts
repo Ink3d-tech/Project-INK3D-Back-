@@ -148,7 +148,7 @@ export class SeederService {
           price: 1999,
           stock: 25,
           category: categoryMap.get('ropa'),
-          style: "Motorsport"
+          style: "Motorsport",
           size: 'M',
           isActive: true,
           image: ["https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg"]
