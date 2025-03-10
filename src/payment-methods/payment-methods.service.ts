@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import axios from 'axios';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { Order } from 'src/entities/order.entity';
-import { Transactions } from 'src/entities/transaction.entity'; // Importamos la entidad de transacciones
 import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
 import { Repository } from 'typeorm';
+import axios from 'axios';
 
 @Injectable()
 export class PaymentMethodsService {
@@ -14,8 +13,6 @@ export class PaymentMethodsService {
   constructor(
     @InjectRepository(Order)
     private readonly ordersRepository: Repository<Order>,
-    @InjectRepository(Transactions) // Inyectamos el repositorio de transacciones
-    private readonly transactionRepository: Repository<Transactions>,
     private readonly configService: ConfigService,
     private nodemailerService: NodeMailerService,
   ) {
@@ -49,13 +46,13 @@ export class PaymentMethodsService {
           external_reference: orderId,
           back_urls: {
             /// APLIQUE CAMBIOS A LA URL ///
-            success: 'http://localhost:3001/orders',
-            failure: 'http://localhost:3001/orders',
-            pending: 'http://localhost:3001/orders',
+            success: 'https://ink3d-tech-2-0.vercel.app/orders',
+            failure: 'https://ink3d-tech-2-0.vercel.app/orders',
+            pending: 'https://ink3d-tech-2-0.vercel.app/orders',
           },
           auto_return: 'approved',
           notification_url:
-            'https://31c3-2802-8010-9419-8801-ed37-b1aa-9984-6452.ngrok-free.app/payment-methods/webhook',
+            'https://project-ink3d-back-1.onrender.com/payment-methods/webhook',
         },
       };
 
