@@ -17,15 +17,18 @@ export class StockMovementsService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
-
-  async getStockMovements(productId?: string) {
-    const whereCondition = productId
-      ? { where: { product: { id: productId } } }
-      : {};
+  async find() {
     return await this.stockMovementRepository.find({
       relations: ['product'],
       order: { createdAt: 'DESC' },
-      ...whereCondition,
+    });
+  }
+
+  async getStockMovements(productId: string) {
+    return await this.stockMovementRepository.find({
+      where: { product: { id: productId } },
+      relations: ['product'],
+      order: { createdAt: 'DESC' },
     });
   }
 
@@ -41,8 +44,12 @@ export class StockMovementsService {
     }
 
     // Definir qué tipos de movimiento representan entrada o salida de stock
-    const incomingTypes = ['initial-stock', 'purchase', 'manual_adjustment']; // Movimientos que aumentan stock
-    const outgoingTypes = ['order_creation', 'order_cancellation']; // Movimientos que reducen stock
+    const incomingTypes = [
+      'supplies_purchase',
+      'manual_add',
+      'order_cancellation',
+    ]; // Movimientos que aumentan stock
+    const outgoingTypes = ['order_creation', 'manual_take']; // Movimientos que reducen stock
 
     // Verificar que el stock no se vuelva negativo en movimientos de salida
     if (outgoingTypes.includes(type) && product.stock < quantity) {

@@ -60,7 +60,11 @@ export class SeederService {
         email: 'juan@example.com',
         password: '1HulkSmash2025#',
       },
-      { name: 'Ana Gómez', email: 'ana@example.com', password: 'Mjolnir2025#' },
+      {
+        name: 'Ana Gómez',
+        email: 'ana@example.com',
+        password: 'Mjolnir2025#',
+      },
       {
         name: 'Admin',
         email: 'admin@example.com',
@@ -87,50 +91,160 @@ export class SeederService {
     userMap.set('ana', createdUsers[1]);
 
     /** 🔹 3️⃣ Crear Productos */
-    let existingProducts = await this.productRepository.find();
+    const existingProducts = await this.productRepository.find();
     if (existingProducts.length === 0) {
       const products: Partial<Product>[] = [
         {
-          name: 'Camiseta Negra',
-          description: 'Camiseta negra de algodón 100%',
-          price: 19.99,
-          stock: 50,
-          image: [
-            'https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg',
-          ],
+          name: 'Remera senna edition',
+          description: 'Remera senna editio limitada',
+          price: 1999,
+          stock: 25,
           category: categoryMap.get('ropa'),
+          style: 'Motorsport',
           size: 'M',
           isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg',
+          ],
         },
         {
-          name: 'Pantalón Jeans Azul',
-          description: 'Pantalón jeans azul de mezclilla',
-          price: 39.99,
-          stock: 30,
-          image: [
-            'https://res.cloudinary.com/dnoajwhp4/image/upload/v1740040569/wqnww16quxvghd7s6gp2.jpg',
-          ],
+          name: 'Campera Ferrari custom',
+          description: 'Campera Ferrari custom edicion limitada',
+          price: 1999,
+          stock: 15,
           category: categoryMap.get('ropa'),
+          style: 'Motorsport',
+          size: 'M',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg',
+          ],
+        },
+        {
+          name: 'Pantalón sport N6 custom',
+          description: 'Pantalón sport N6 custom edicion limitada',
+          price: 3999,
+          stock: 30,
+          category: categoryMap.get('ropa'),
+          style: 'Streetwear',
           size: 'L',
           isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/f0/04/6d/f0046df3f87ce98891f4d355402209b1.jpg',
+          ],
         },
         {
           name: 'Zapatillas Deportivas',
           description: 'Zapatillas deportivas para correr',
           price: 59.99,
           stock: 20,
-          image: [
-            'https://res.cloudinary.com/dnoajwhp4/image/upload/v1741220680/iyjrycd4r1krryymqe85.jpg',
-          ],
           category: categoryMap.get('calzado'),
+          style: 'Motorsport',
+          size: 'L',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg',
+          ],
+        },
+        {
+          name: 'Zapatillas Nike custom Shell',
+          description: 'Zapatillas Nike custom Shell edicion limitada',
+          price: 3999,
+          stock: 15,
+          category: categoryMap.get('calzado'),
+          style: 'Motorsport',
           size: 'XL',
           isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/dd/7a/af/dd7aafb86cfbb1422909224e7f3902d1.jpg',
+          ],
+        },
+        {
+          name: 'Zapatillas Buiton edicion',
+          description: 'Zapatillas Buiton edicion limitada',
+          price: 5999,
+          stock: 10,
+          category: categoryMap.get('calzado'),
+          style: 'Motorsport',
+          size: 'XL',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/d7/fc/ae/d7fcae3b8197a9acc7c7fbba40b33b30.jpg',
+          ],
+        },
+        {
+          name: 'Campera Red Bull Racing',
+          description:
+            'Edición especial de Red Bull Racing con detalles en bordado',
+          price: 1899,
+          stock: 10,
+          category: categoryMap.get('ropa'),
+          style: 'Motorsport',
+          size: 'L',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg',
+          ],
+        },
+        {
+          name: 'Zapatillas Motorsport AMG',
+          description:
+            'Zapatillas inspiradas en AMG, diseño aerodinámico y suela antideslizante',
+          price: 1299,
+          stock: 20,
+          category: categoryMap.get('calzado'),
+          style: 'Motorsport',
+          size: 'XL',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/dd/7a/af/dd7aafb86cfbb1422909224e7f3902d1.jpg',
+          ],
+        },
+        {
+          name: 'Camisa Alfa Romeo F1',
+          description: 'Camisa oficial de Alfa Romeo F1 Team, edición limitada',
+          price: 999,
+          stock: 25,
+          category: categoryMap.get('ropa'),
+          style: 'Motorsport',
+          size: 'M',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg',
+          ],
+        },
+        {
+          name: 'Gorra McLaren Pirelli Edition',
+          description:
+            'Gorra McLaren con el icónico logo de Pirelli en el frente',
+          price: 499,
+          stock: 30,
+          category: categoryMap.get('accesorios'),
+          style: 'Motorsport',
+          size: 'XL',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/16/9a/49/169a497c320601b50225324917ef52e8.jpg',
+          ],
+        },
+        {
+          name: 'Chaqueta Porsche Motorsport',
+          description:
+            'Chaqueta oficial Porsche Motorsport con tecnología cortaviento',
+          price: 2100,
+          stock: 8,
+          category: categoryMap.get('ropa'),
+          style: 'Motorsport',
+          size: 'XL',
+          isActive: true,
+          image: [
+            'https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg',
+          ],
         },
       ];
       await this.productRepository.save(products);
-      existingProducts = await this.productRepository.find();
+      console.log('✅ Productos insertados correctamente en la base de datos.');
     }
-
     /** 🔹 4️⃣ Crear Órdenes */
     const existingOrders = await this.orderRepository.find();
     if (existingOrders.length === 0) {
@@ -177,26 +291,26 @@ export class SeederService {
         {
           product: existingProducts[0],
           quantity: 50,
-          type: 'manual_adjustment',
-          reason: 'initial-stock',
+          type: 'manual_add',
+          reason: 'Initial stock',
         },
         {
           product: existingProducts[1],
           quantity: 30,
-          type: 'manual_adjustment',
-          reason: 'initial-stock',
+          type: 'manual_add',
+          reason: 'Initial stock',
         },
         {
           product: existingProducts[2],
           quantity: 20,
-          type: 'manual_adjustment',
-          reason: 'initial-stock',
+          type: 'manual_add',
+          reason: 'Initial stock',
         },
         {
-          product: existingProducts[0],
+          product: existingProducts[3],
           quantity: 5,
-          type: 'manual_adjustment',
-          reason: 'initial-stock',
+          type: 'manual_add',
+          reason: 'Initial stock',
         },
       ];
       await this.stockMovementRepository.save(stockMovements);

@@ -23,10 +23,11 @@ export class StockMovements {
   @Column({
     type: 'enum',
     enum: [
-      'purchase',
-      'manual_adjustment',
+      'supplies_purchase',
+      'manual_add',
       'order_creation',
       'order_cancellation',
+      'manual_take',
     ],
   })
   type: string;

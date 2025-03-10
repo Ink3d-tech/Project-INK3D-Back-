@@ -22,8 +22,8 @@ export class StockMovementsController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
   @AllowOnlyRole(Role.Admin)
-  @Get(':productId?')
-  async getStockMovements(@Param('productId') productId?: string) {
+  @Get(':productId')
+  async getStockMovements(@Param('productId') productId: string) {
     return this.stockMovementsService.getStockMovements(productId);
   }
 

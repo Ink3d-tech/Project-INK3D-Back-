@@ -59,6 +59,7 @@ export class OrdersService {
         where: { id: userId },
         relations: ['discounts'],
       });
+
       if (!user) {
         throw new NotFoundException('User not found.');
       }
@@ -66,12 +67,13 @@ export class OrdersService {
       let total = 0;
       const orderDetails = [];
       const updatedProducts: Product[] = [];
+      const orderDetailsToSave = [];
 
-      // Procesar cada producto en la orden
       for (const item of products) {
         const product = await queryRunner.manager.findOne(Product, {
           where: { id: item.id },
         });
+
         if (!product) {
           throw new NotFoundException(`Product with ID ${item.id} not found.`);
         }
@@ -81,11 +83,11 @@ export class OrdersService {
           );
         }
 
-        // Descontar el stock y guardar el producto actualizado
+        // Reducir stock
         product.stock -= item.quantity;
         updatedProducts.push(product);
 
-        // Registrar movimiento de stock (ejemplo)
+        // Guardar movimiento de stock
         const stockMovement = queryRunner.manager.create(StockMovements, {
           product,
           quantity: -item.quantity, // venta: cantidad negativa
@@ -93,12 +95,15 @@ export class OrdersService {
         });
         await queryRunner.manager.save(StockMovements, stockMovement);
 
-        orderDetails.push({
-          productId: product.id,
+        total += Number(product.price) * item.quantity;
+        console.log('Processing item:', item);
+        // Crear detalles de la orden con el precio real de la base de datos
+        orderDetailsToSave.push({
+          productId: product.id, // Aquí asignamos productId
           quantity: item.quantity,
           priceAtPurchase: product.price,
         });
-        total += Number(product.price) * item.quantity;
+        console.log('Current order details:', orderDetailsToSave);
       }
 
       let appliedDiscountCode = null;
@@ -133,8 +138,35 @@ export class OrdersService {
       });
 
       await queryRunner.manager.save(Order, order);
+
+      // Guardar los detalles de la venta
+      const detailsEntities = await Promise.all(
+        orderDetailsToSave.map(async (detail) => {
+          // Encontrar el producto para asegurarnos de que no sea nulo
+          const product = await queryRunner.manager.findOne(Product, {
+            where: { id: detail.productId },
+          });
+          if (!product) {
+            throw new NotFoundException(
+              `Product with ID ${detail.productId} not found.`,
+            );
+          }
+
+          // Crear y devolver el detalle de la venta
+          return queryRunner.manager.create(DetailsVenta, {
+            order,
+            product,
+            quantity: detail.quantity,
+            price: detail.price,
+          });
+        }),
+      );
+
+      // Guardar los detalles de venta
+      await queryRunner.manager.save(DetailsVenta, detailsEntities);
       await queryRunner.manager.save(Product, updatedProducts);
 
+      // Confirmar la transacción
       await queryRunner.commitTransaction();
       return order;
     } catch (error) {
@@ -163,8 +195,7 @@ export class OrdersService {
         throw new NotFoundException(`Orden con ID ${orderId} no encontrada.`);
       }
 
-      // Por ejemplo, si el estado cambia a "deleted", restauramos el stock.
-      if (status === 'deleted') {
+      if (status === 'canceled') {
         for (const detail of order.orderDetails) {
           const product = await queryRunner.manager.findOne(Product, {
             where: { id: detail.productId },
