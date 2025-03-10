@@ -17,6 +17,12 @@ export class StockMovementsService {
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
   ) {}
+  async find() {
+    return await this.stockMovementRepository.find({
+      relations: ['product'],
+      order: { createdAt: 'DESC' },
+    });
+  }
 
   async getStockMovements(productId?: string) {
     const whereCondition = productId

@@ -20,6 +20,4 @@ export class Transactions {
 
   @Column()
   date: Date;
-  @Column({ nullable: true })
-externalReference?: string;
 }
