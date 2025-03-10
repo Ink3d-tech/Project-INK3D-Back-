@@ -38,7 +38,7 @@ export class ProductsService {
     return this.productRepository.find({
       where: [
         { name: Like(`%${query}%`) },
-        { category: { name: Like(`%${query}%`) } }, 
+        { category: { name: Like(`%${query}%`) } },
         { style: Like(`%${query}%`) },
       ],
       relations: ['category'],
@@ -58,12 +58,23 @@ export class ProductsService {
     const newProduct = this.productRepository.create({
       ...productData,
       category,
-      style: productData.style ?? 'Motorsport', 
+      style: productData.style ?? 'Motorsport',
     });
 
-    return this.productRepository.save(newProduct);
-  }
+    const savedProduct = await this.productRepository.save(newProduct);
 
+    // Registrar el movimiento de stock para el stock inicial
+    if (savedProduct.stock > 0) {
+      await this.stockMovementsService.createStockMovement({
+        productId: savedProduct.id,
+        quantity: savedProduct.stock, // Ingreso inicial de stock
+        type: 'manual_adjustment',
+        reason: 'Initial stock',
+      });
+    }
+
+    return savedProduct;
+  }
 
   async findByStyle(style: string): Promise<Product[]> {
     return this.productRepository.find({
@@ -72,7 +83,10 @@ export class ProductsService {
     });
   }
 
-  async updateProduct(id: string, productData: UpdateProductDto): Promise<Product> {
+  async updateProduct(
+    id: string,
+    productData: UpdateProductDto,
+  ): Promise<Product> {
     const product = await this.productRepository.findOne({ where: { id } });
 
     if (!product) {
@@ -83,7 +97,7 @@ export class ProductsService {
 
     if (productData.category) {
       const category = await this.categoryRepository.findOne({
-        where: { id: productData.category.id }, 
+        where: { id: productData.category.id },
       });
 
       if (!category) {
@@ -94,7 +108,10 @@ export class ProductsService {
     }
 
     // Calcular cambio en el stock
-    if (productData.stock !== undefined && productData.stock !== product.stock) {
+    if (
+      productData.stock !== undefined &&
+      productData.stock !== product.stock
+    ) {
       stockChange = productData.stock - product.stock;
     }
 
@@ -124,7 +141,7 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-    
+
     product.isActive = false;
     return this.productRepository.save(product);
   }
@@ -135,7 +152,7 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-    
+
     product.isActive = true;
     return this.productRepository.save(product);
   }
@@ -148,4 +165,3 @@ export class ProductsService {
     }
   }
 }
-
