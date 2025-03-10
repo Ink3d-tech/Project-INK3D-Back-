@@ -125,16 +125,18 @@ export class DiscountsController {
 
   @Get('code/:code')
   @ApiOperation({ summary: 'Obtener un descuento por código' })
+  @ApiBearerAuth()  
   findByCode(@Param('code') code: string) {
     return this.discountsService.findByCode(code);
   }
 
   @Post('use/:code')
-@ApiOperation({ summary: 'Aplicar un código de descuento' })
-applyDiscount(@Param('code') code: string) {
-  return this.discountsService.applyDiscount(code);
-}
-
+  @ApiOperation({ summary: 'Aplicar un código de descuento' })
+  @ApiBearerAuth()  
+  @UseGuards(AuthGuard)  
+  applyDiscount(@Param('code') code: string) {
+    return this.discountsService.applyDiscount(code);
+  }
 
 
   @ApiBearerAuth()
@@ -195,6 +197,8 @@ applyDiscount(@Param('code') code: string) {
       },
     },
   })
+
+
   update(
     @Param('id') id: string,
     @Body() updateDiscountDto: UpdateDiscountDto,
