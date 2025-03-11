@@ -55,58 +55,135 @@ export class OrdersService {
     await queryRunner.startTransaction();
   
     try {
-      // Buscar al usuario y cargar descuentos asociados (si los tuviera)
-      const user = await queryRunner.manager.findOne(User, {
-        where: { id: userId },
-        relations: ['discounts'],
-      });
 
-      if (!user) {
-        throw new NotFoundException('User not found.');
-      }
+
+
+// Buscar al usuario y cargar descuentos asociados (si los tuviera)
+const user = await queryRunner.manager.findOne(User, {
+  where: { id: userId },
+  relations: ['discounts'],
+});
+
+if (!user) {
+  throw new NotFoundException('User not found.');
+}
+
+let total = 0;
+const updatedProducts: Product[] = [];
+const orderDetailsToSave = [];
+
+for (const item of products) {
+  const product = await queryRunner.manager.findOne(Product, {
+    where: { id: item.id },
+  });
+
+  if (!product) {
+    throw new NotFoundException(`Product with ID ${item.id} not found.`);
+  }
+  if (product.stock < item.quantity) {
+    throw new BadRequestException(
+      `Product ${product.name} stock is insufficient.`,
+    );
+  }
+
+  // Guardar el stock antes de la reducción
+  const previousStock = product.stock;
+
+  // Reducir stock
+  product.stock -= item.quantity;
+  updatedProducts.push(product);
+
+  const stockMovement = queryRunner.manager.create(StockMovements, {
+    product,
+    quantity: -item.quantity,
+    type: 'order_creation',
+    previousStock: previousStock, 
+    newStock: product.stock, 
+  });
+  await queryRunner.manager.save(StockMovements, stockMovement);
+
+  total += Number(product.price) * item.quantity;
+  console.log('Processing item:', item);
+
+  orderDetailsToSave.push({
+    productId: product.id, 
+    quantity: item.quantity,
+    price: product.price, 
+  });
+
+  console.log('Current order details:', orderDetailsToSave);
+}
+
+let appliedDiscountCode = null;
+
+
+
+
+
+
+
+
+      // // Buscar al usuario y cargar descuentos asociados (si los tuviera)
+      // const user = await queryRunner.manager.findOne(User, {
+      //   where: { id: userId },
+      //   relations: ['discounts'],
+      // });
+
+      // if (!user) {
+      //   throw new NotFoundException('User not found.');
+      // }
   
-      let total = 0;
-      const updatedProducts: Product[] = [];
-      const orderDetailsToSave = [];
+      // let total = 0;
+      // const updatedProducts: Product[] = [];
+      // const orderDetailsToSave = [];
 
-      for (const item of products) {
-        const product = await queryRunner.manager.findOne(Product, {
-          where: { id: item.id },
-        });
+      // for (const item of products) {
+      //   const product = await queryRunner.manager.findOne(Product, {
+      //     where: { id: item.id },
+      //   });
 
-        if (!product) {
-          throw new NotFoundException(`Product with ID ${item.id} not found.`);
-        }
-        if (product.stock < item.quantity) {
-          throw new BadRequestException(
-            `Product ${product.name} stock is insufficient.`,
-          );
-        }
+      //   if (!product) {
+      //     throw new NotFoundException(`Product with ID ${item.id} not found.`);
+      //   }
+      //   if (product.stock < item.quantity) {
+      //     throw new BadRequestException(
+      //       `Product ${product.name} stock is insufficient.`,
+      //     );
+      //   }
 
-        // Reducir stock
-        product.stock -= item.quantity;
-        updatedProducts.push(product);
+      //   // Reducir stock
+      //   product.stock -= item.quantity;
+      //   updatedProducts.push(product);
 
-        // Guardar movimiento de stock
-        const stockMovement = queryRunner.manager.create(StockMovements, {
-          product,
-          quantity: -item.quantity,
-          type: 'order_creation',
-        });
-        await queryRunner.manager.save(StockMovements, stockMovement);
+      //   // Guardar movimiento de stock
+      //   const stockMovement = queryRunner.manager.create(StockMovements, {
+      //     product,
+      //     quantity: -item.quantity,
+      //     type: 'order_creation',
+      //   });
+      //   await queryRunner.manager.save(StockMovements, stockMovement);
 
-        total += Number(product.price) * item.quantity;
-        console.log('Processing item:', item);
-        // Crear detalles de la orden con el precio real de la base de datos
-        orderDetailsToSave.push({
-          productId: product.id, // Aquí asignamos productId
-          quantity: item.quantity,
-          price: product.price, // Tomamos el precio de la base de datos
-        });
-        console.log('Current order details:', orderDetailsToSave);
-      }
+      //   total += Number(product.price) * item.quantity;
+      //   console.log('Processing item:', item);
+      //   // Crear detalles de la orden con el precio real de la base de datos
+      //   orderDetailsToSave.push({
+      //     productId: product.id, // Aquí asignamos productId
+      //     quantity: item.quantity,
+      //     price: product.price, // Tomamos el precio de la base de datos
+      //   });
+      //   console.log('Current order details:', orderDetailsToSave);
+      // }
 
-      let appliedDiscountCode = null;
+      // let appliedDiscountCode = null;
+
+
+
+
+
+
+
+
+
 
       // Si se envía un código de descuento en el body
       if (discountCode) {
