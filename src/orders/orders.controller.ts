@@ -185,9 +185,9 @@ export class OrdersController {
     return order;
   }
 
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @AllowOnlyRole(Role.Admin)
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update order status' })
   @ApiParam({
@@ -271,7 +271,7 @@ export class OrdersController {
           quantity: 1,
           priceAtPurchase: 10,
         },
-        {
+        { 
           productId: '79062eed-7d51-431a-828c-db47feb9e3f7',
           quantity: 2,
           priceAtPurchase: 10,
@@ -293,7 +293,7 @@ export class OrdersController {
   @Delete(':id')
   @ApiHideProperty()
   async deleteOrder(@Param('id') id: string): Promise<Order> {
-    const order = await this.ordersService.deleteOrder(id);
+    const order =  this.ordersService.deleteOrder(id);
     if (!order) {
       throw new NotFoundException(`Orden con ID ${id} no encontrada.`);
     }

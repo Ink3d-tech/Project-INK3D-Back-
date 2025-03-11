@@ -41,12 +41,23 @@ export class MagazineService {
   }
 
   async toggleActive(id: string): Promise<void> {
-    await this.magazineRepository.update(id, {
-      isActive: !(await this.findOne(id)).isActive,
-    });
+    const magazine = await this.findOne(id);
+    if (magazine) {
+      await this.magazineRepository.update(id, { isActive: !magazine.isActive });
+    }
   }
 
   async findActive(): Promise<Magazine[]> {
     return this.magazineRepository.find({ where: { isActive: true } });
   }
+
+  async findAllCategories(): Promise<string[]> {
+    const categories = await this.magazineRepository
+      .createQueryBuilder('magazine')
+      .select('DISTINCT magazine.category', 'category')
+      .getRawMany();
+
+    return categories.map((c) => c.category);
+  }
 }
+

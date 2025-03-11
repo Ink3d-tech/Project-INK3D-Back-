@@ -83,6 +83,18 @@ export class MagazineController {
     return this.magazineService.findOne(id);
   }
 
+  @Get('categories')
+@ApiOperation({ summary: 'Obtiene todas las categorías disponibles' })
+@ApiResponse({
+  status: 200,
+  description: 'Lista de categorías',
+  type: [String],
+})
+findAllCategories(): Promise<string[]> {
+  return this.magazineService.findAllCategories();
+}
+
+
   @Patch(':id')
   @ApiBearerAuth()
   @UseGuards(AuthGuard)

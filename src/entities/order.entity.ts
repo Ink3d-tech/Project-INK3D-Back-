@@ -4,10 +4,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Transactions } from './transaction.entity';
+import { DetailsVenta } from './details-sales.entity';
 
 @Entity('orders')
 export class Order {
@@ -27,6 +30,11 @@ export class Order {
   @Column({ type: 'enum', enum: ['USD', 'ARS', 'COP', 'CLP'], default: 'USD' })
   currency: string;
 
+  @OneToMany(() => Transactions, (transaction) => transaction.order)
+  transactions: Transactions[];
+  @OneToMany(() => DetailsVenta, (details) => details.order)
+  detailsVenta: DetailsVenta[];
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -38,4 +46,7 @@ export class Order {
 
   @Column({ nullable: true })
   discountCode: string;
+
+  @Column({ nullable: true })
+  externalReference: string;
 }

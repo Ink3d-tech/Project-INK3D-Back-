@@ -21,6 +21,17 @@ enum Sizes {
 }
 
 export class CreateProductDto {
+
+  @ApiProperty({
+    example: 'ASIAN',
+    description: 'Product style (e.g., Asian, MotorSport, Formal)',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  @Length(1, 100)
+  style?: string;
+
   @ApiProperty({ example: 'Camiseta Negra', description: 'Product name' })
   @IsNotEmpty()
   @IsString()

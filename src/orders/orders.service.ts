@@ -13,6 +13,7 @@ import { EditOrderDto, UpdateOrderDto } from './dto/update-order.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Discounts } from 'src/entities/discounts.entity';
 import { StockMovements } from 'src/entities/stock-movement.entiy';
+import { DetailsVenta } from 'src/entities/details-sales.entity';
 
 @Injectable()
 export class OrdersService {
@@ -48,11 +49,11 @@ export class OrdersService {
     if (!Array.isArray(products) || products.length < 1) {
       throw new BadRequestException('Cart must contain at least one product.');
     }
-
+  
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
-
+  
     try {
       // Buscar al usuario y cargar descuentos asociados (si los tuviera)
       const user = await queryRunner.manager.findOne(User, {
@@ -63,9 +64,8 @@ export class OrdersService {
       if (!user) {
         throw new NotFoundException('User not found.');
       }
-
+  
       let total = 0;
-      const orderDetails = [];
       const updatedProducts: Product[] = [];
       const orderDetailsToSave = [];
 
@@ -90,7 +90,7 @@ export class OrdersService {
         // Guardar movimiento de stock
         const stockMovement = queryRunner.manager.create(StockMovements, {
           product,
-          quantity: -item.quantity, // venta: cantidad negativa
+          quantity: -item.quantity,
           type: 'order_creation',
         });
         await queryRunner.manager.save(StockMovements, stockMovement);
@@ -101,7 +101,7 @@ export class OrdersService {
         orderDetailsToSave.push({
           productId: product.id, // Aquí asignamos productId
           quantity: item.quantity,
-          priceAtPurchase: product.price,
+          price: product.price, // Tomamos el precio de la base de datos
         });
         console.log('Current order details:', orderDetailsToSave);
       }
@@ -132,11 +132,10 @@ export class OrdersService {
         user,
         status: 'pending',
         totalPrice: total > 0 ? total : 0,
-        orderDetails,
+        orderDetails: orderDetailsToSave,
         discountCode: appliedDiscountCode, // almacenar el código de descuento aplicado, si lo hubo
         currency: createOrderDto.currency,
       });
-
       await queryRunner.manager.save(Order, order);
 
       // Guardar los detalles de la venta
@@ -170,12 +169,16 @@ export class OrdersService {
       await queryRunner.commitTransaction();
       return order;
     } catch (error) {
+      // Si ocurre un error, revertimos los cambios realizados en la transacción
       await queryRunner.rollbackTransaction();
       throw error;
     } finally {
+      // Finalmente, liberamos el queryRunner
       await queryRunner.release();
     }
   }
+  
+  
 
   async updateOrderStatus(
     orderId: string,
@@ -187,7 +190,6 @@ export class OrdersService {
     await queryRunner.startTransaction();
 
     try {
-      // Obtenemos la orden; orderDetails es un campo JSON, así que no es una relación en sí.
       const order = await queryRunner.manager.findOne(Order, {
         where: { id: orderId },
       });
@@ -206,7 +208,7 @@ export class OrdersService {
 
             const stockMovement = queryRunner.manager.create(StockMovements, {
               product,
-              quantity: detail.quantity, // Se suma porque se devuelve stock
+              quantity: detail.quantity,
               type: 'order_cancellation',
             });
             await queryRunner.manager.save(StockMovements, stockMovement);
@@ -215,7 +217,6 @@ export class OrdersService {
       }
 
       order.status = status;
-      // Si es "deleted", podrías agregar aquí el motivo (si lo incluyes en el DTO y en la entidad)
       await queryRunner.manager.save(Order, order);
       await queryRunner.commitTransaction();
 
@@ -257,7 +258,7 @@ export class OrdersService {
 
           const stockMovement = queryRunner.manager.create(StockMovements, {
             product,
-            quantity: detail.quantity, // Se suma porque se devuelve stock
+            quantity: detail.quantity,
             type: 'order_cancellation',
           });
           await queryRunner.manager.save(StockMovements, stockMovement);
@@ -314,9 +315,6 @@ export class OrdersService {
           priceAtPurchase: product.price,
         });
 
-        // Actualizar el stock: si se edita la orden, aquí podrías necesitar revertir primero el stock anterior y aplicar el nuevo.\n
-        // Suponiendo que la orden original ya descontó stock, deberías restaurar el stock anterior y luego descontar el nuevo.\n
-        // Aquí simplificamos asumiendo que la orden se edita antes de cualquier confirmación de pago.\n
         product.stock -= item.quantity;
         updatedProducts.push(product);
       }

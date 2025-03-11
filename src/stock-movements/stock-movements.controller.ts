@@ -16,7 +16,7 @@ export class StockMovementsController {
   @AllowOnlyRole(Role.Admin)
   @Get()
   async getAllStockMovements() {
-    return this.stockMovementsService.getStockMovements();
+    return this.stockMovementsService.find();
   }
 
   @ApiBearerAuth()
