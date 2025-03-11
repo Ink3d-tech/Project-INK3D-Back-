@@ -65,12 +65,22 @@ export class ProductsService {
 
     // Registrar el movimiento de stock para el stock inicial
     if (savedProduct.stock > 0) {
+      // await this.stockMovementsService.createStockMovement({
+      //   productId: savedProduct.id,
+      //   quantity: savedProduct.stock, // Ingreso inicial de stock
+      //   type: 'manual_adjustment',
+      //   reason: 'Initial stock',
+      // });
+
       await this.stockMovementsService.createStockMovement({
         productId: savedProduct.id,
-        quantity: savedProduct.stock, // Ingreso inicial de stock
-        type: 'manual_adjustment',
-        reason: 'Initial stock',
+        quantity: savedProduct.stock,
+        previousStock: 0, 
+        newStock: savedProduct.stock, 
+        type: 'initial_stock', 
+        reason: 'Initial stock entry',
       });
+      
     }
 
     return savedProduct;
@@ -123,14 +133,25 @@ export class ProductsService {
     const updatedProduct = await this.productRepository.save(product);
 
     // Registrar movimiento de stock si hubo un cambio
+    // if (stockChange !== 0) {
+    //   await this.stockMovementsService.createStockMovement({
+    //     productId: updatedProduct.id,
+    //     quantity: Math.abs(stockChange),
+    //     type: 'manual_adjustment',
+    //     reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
+    //   });
+    // }
     if (stockChange !== 0) {
       await this.stockMovementsService.createStockMovement({
         productId: updatedProduct.id,
         quantity: Math.abs(stockChange),
+        previousStock: product.stock,  // 👈 Agregar el stock antes del cambio
+        newStock: updatedProduct.stock, // 👈 Agregar el stock después del cambio
         type: 'manual_adjustment',
         reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
       });
     }
+    
 
     return updatedProduct;
   }
