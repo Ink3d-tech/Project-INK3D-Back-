@@ -29,7 +29,7 @@ export class SeederService {
     private readonly stockMovementRepository: Repository<StockMovements>,
     @InjectRepository(Magazine)
     private readonly magazineRepository: Repository<Magazine>,
-  ) {}
+  ) { }
 
   async seed() {
     console.log('🚀 Iniciando Seed...');
@@ -60,10 +60,10 @@ export class SeederService {
         email: 'juan@example.com',
         password: '1HulkSmash2025#',
       },
-      { 
-        name: 'Ana Gómez', 
-        email: 'ana@example.com', 
-        password: 'Mjolnir2025#' 
+      {
+        name: 'Ana Gómez',
+        email: 'ana@example.com',
+        password: 'Mjolnir2025#'
       },
       {
         name: 'Admin',
@@ -140,8 +140,8 @@ export class SeederService {
 
     /** 🔹 3️⃣ Crear Productos */
     let existingProducts = await this.productRepository.find();
-      if (existingProducts.length === 0) {
-  const products: Partial<Product>[] = [
+    if (existingProducts.length === 0) {
+      const products: Partial<Product>[] = [
         {
           name: 'Remera senna edition',
           description: 'Remera senna editio limitada',
@@ -262,11 +262,110 @@ export class SeederService {
           size: 'XL',
           isActive: true,
           image: ["https://i.pinimg.com/736x/37/56/db/3756dbb86b5ff642341f6ef7557d1ec6.jpg"]
-        }
+        },
+        {
+          "name": "Camiseta Urban Tokyo",
+          "description": "Camiseta de algodón con diseño inspirado en la cultura urbana de Tokio, gráficos minimalistas y ajuste oversize.",
+          "price": 2499,
+          "stock": 20,
+          "category": categoryMap.get("ropa"),
+          "style": "Asian",
+          "size": "L",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/9a/4c/3b/9a4c3b36c408866a7d18fbd7f18f5bed.jpg","https://i.pinimg.com/736x/bb/da/55/bbda557c26ae321a27f130a1101ee58b.jpg"]
+        },
+        {
+          "name": "Camiseta Urban Tokyo",
+          "description": "Camiseta de algodón con diseño inspirado en la cultura urbana de Tokio, gráficos minimalistas y ajuste oversize.",
+          "price": 2499,
+          "stock": 50,
+          "category": categoryMap.get("ropa"),
+          "style": "Streetwear",
+          "size": "M",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/9a/4c/3b/9a4c3b36c408866a7d18fbd7f18f5bed.jpg","https://i.pinimg.com/736x/bb/da/55/bbda557c26ae321a27f130a1101ee58b.jpg"]
+        },
+        {
+          "name": "Zapatillas Street Edge",
+          "description": "Zapatillas de suela gruesa con detalles en cuero sintético, perfectas para un look urbano y moderno.",
+          "price": 5299,
+          "stock": 18,
+          "category": categoryMap.get("calzado"),
+          "style": "Streetwear",
+          "size": "XL",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/69/ba/bb/69babba7cf8fa78d01333a7a20da840c.jpg","https://i.pinimg.com/736x/ed/b3/c8/edb3c8c8153544de0a6444f4992091a8.jpg"]
+        },
+        {
+          "name": "Buzo Harajuku Night",
+          "description": "Buzo estilo bomber con patrones inspirados en la moda de Harajuku, forro interior suave.",
+          "price": 4599,
+          "stock": 12,
+          "category": categoryMap.get("ropa"),
+          "style": "Asian",
+          "size": "L",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/55/05/71/55057121f8dfb8939be45b151b78562e.jpg"]
+        },
+        {
+          "name": "Joggers Cyberpunk",
+          "description": "Pantalón jogger con bolsillos funcionales y diseño técnico inspirado en el estilo cyberpunk de las calles de Shibuya.",
+          "price": 3799,
+          "stock": 22,
+          "category": categoryMap.get("ropa"),
+          "style": "Streetwear",
+          "size": "M",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/a2/79/26/a27926f0f468df4d2c476862f859b5e8.jpg", "https://i.pinimg.com/736x/ac/d6/5e/acd65ee38f5d7c891ce1747963590183.jpg"]
+        },
+        {
+          "name": "Joggers Cyberpunk",
+          "description": "Pantalón jogger con bolsillos funcionales y diseño técnico inspirado en el estilo cyberpunk de las calles de Shibuya.",
+          "price": 3799,
+          "stock": 22,
+          "category": categoryMap.get("ropa"),
+          "style": "Streetwear",
+          "size": "L",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/a2/79/26/a27926f0f468df4d2c476862f859b5e8.jpg", "https://i.pinimg.com/736x/ac/d6/5e/acd65ee38f5d7c891ce1747963590183.jpg"]
+        },
+        {
+          "name": "Chaqueta Samurai Flow",
+          "description": "Chaqueta estilo bomber con bordados inspirados en samuráis, tejido premium y ajuste perfecto para un estilo elegante y moderno.",
+          "price": 4999,
+          "stock": 12,
+          "category": categoryMap.get("ropa"),
+          "style": "Asian",
+          "size": "M",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/55/59/60/555960ea4c1a6e7ea32295d1e553c5b2.jpg", "https://i.pinimg.com/736x/ff/f4/2b/fff42b0c379bbcc5375ec4cf159ee095.jpg"]
+        },
+        {
+          "name": "Chaqueta Samurai Flow",
+          "description": "Chaqueta estilo bomber con bordados inspirados en samuráis, tejido premium y ajuste perfecto para un estilo elegante y moderno.",
+          "price": 4999,
+          "stock": 12,
+          "category": categoryMap.get("ropa"),
+          "style": "Asian",
+          "size": "S",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/55/59/60/555960ea4c1a6e7ea32295d1e553c5b2.jpg", "https://i.pinimg.com/736x/ff/f4/2b/fff42b0c379bbcc5375ec4cf159ee095.jpg"]
+        },
+        {
+          "name": "Pantalón Kanji Oversize",
+          "description": "Pantalón ancho con estampado de kanjis y diseño inspirado en la moda urbana japonesa.",
+          "price": 4299,
+          "stock": 20,
+          "category": categoryMap.get("ropa"),
+          "style": "Asian",
+          "size": "L",
+          "isActive": true,
+          "image": ["https://i.pinimg.com/736x/8f/67/2f/8f672f952b4bfda7be570c3b750eb150.jpg", "https://i.pinimg.com/736x/73/90/76/7390760ef10ecb74d326bba5f7608876.jpg", "https://i.pinimg.com/736x/22/96/fa/2296fabcca02ab1c5cb83ebf6968e4c1.jpg"]
+        },
       ];
-  await this.productRepository.save(products);
-  console.log("✅ Productos insertados correctamente en la base de datos.");
-}
+      await this.productRepository.save(products);
+      console.log("✅ Productos insertados correctamente en la base de datos.");
+    }
     /** 🔹 4️⃣ Crear Órdenes */
     const existingOrders = await this.orderRepository.find();
     if (existingOrders.length === 0) {
