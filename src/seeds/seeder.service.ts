@@ -363,9 +363,6 @@ export class SeederService {
           "image": ["https://i.pinimg.com/736x/8f/67/2f/8f672f952b4bfda7be570c3b750eb150.jpg", "https://i.pinimg.com/736x/73/90/76/7390760ef10ecb74d326bba5f7608876.jpg", "https://i.pinimg.com/736x/22/96/fa/2296fabcca02ab1c5cb83ebf6968e4c1.jpg"]
         },
       ];
-    //   await this.productRepository.save(products);
-    //   console.log("✅ Productos insertados correctamente en la base de datos.");
-    // }
     await this.productRepository.save(products);
     console.log("✅ Productos insertados correctamente en la base de datos.");
   
