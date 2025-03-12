@@ -24,6 +24,7 @@ import { NodemailerModule } from './nodemailer/nodemailer.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { CloudinaryConfig } from './config/cloudinary';
 import { Chatbot } from './chatbot/chatbot';
+import { WebSocketAdapter } from './websocket.adapter';
 import { MagazineModule } from './magazine/magazine.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { FinanzasModule } from './finanzas/finanzas.module';
@@ -41,7 +42,7 @@ import { Magazine } from './entities/magazine.entity';
       Discounts,
       StockMovements,
       Transactions,
-      Magazine,
+      Magazine
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -71,7 +72,7 @@ import { Magazine } from './entities/magazine.entity';
     NodemailerModule,
     FileUploadModule,
     MagazineModule,
-    FinanzasModule,
+    FinanzasModule
   ],
   providers: [
     SeederService,

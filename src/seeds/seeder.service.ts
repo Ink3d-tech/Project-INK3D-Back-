@@ -56,10 +56,14 @@ export class SeederService {
     /** 🔹 2️⃣ Crear Usuarios */
     const usersData = [
       {
-        name: 'Juan Pérez', email: 'juan@example.com', password: '1HulkSmash2025#',
+        name: 'Juan Pérez',
+        email: 'juan@example.com',
+        password: '1HulkSmash2025#',
       },
       {
-        name: 'Ana Gómez', email: 'ana@example.com', password: 'Mjolnir2025#'
+        name: 'Ana Gómez',
+        email: 'ana@example.com',
+        password: 'Mjolnir2025#'
       },
       {
         name: 'Admin',
@@ -453,6 +457,7 @@ export class SeederService {
           reason: "Stock inicial",
         });
       }
+
       /** 🔹 4️⃣ Crear Órdenes */
       const existingOrders = await this.orderRepository.find();
       if (existingOrders.length === 0) {
@@ -527,128 +532,93 @@ export class SeederService {
       const existingPosts = await this.magazineRepository.find();
       if (existingPosts.length === 0) {
         const posts: Partial<Magazine>[] = [
-            {
-              category: 'MUNDO ASIAN',
-              title: '¿Por qué es tan cool  Asian Style?',
-              content:
-                ' El Asian Style no sigue tendencias, las crea. Mientras en otros lugares la moda tarda en evolucionar, en Asia las calles son pasarelas vivas donde cada prenda tiene actitud. Se trata de jugar con texturas, siluetas oversized y prendas funcionales que te hacen ver como salido de una película cyberpunk.Las piezas clave para dominar el look:Cortavientos techwear  Ligero, futurista y perfecto para el caos urbano.Pantalones cargo ultra cómodos Bolsillos estratégicos para guardar desde el celular hasta los snacks.Sneakers chunky o minimalistas  Todo depende de qué tan "extra" quieras ser.Camisetas oversized con tipografías asiáticas – Porque un buen print siempre dice algo, aunque no entiendas qué.Tip de INK3D:El truco del Asian Style está en mezclar sin miedo: prueba un pantalón ancho con un top ajustado o una chaqueta oversized con sneakers futuristas. Recuerda, más que un outfit, es una actitud.',
-              image:
-                'https://i.pinimg.com/736x/44/60/d7/4460d73f5184e3ef7a5ba50180e93f56.jpg',
-              author: 'Emma Blue',
-            },
-            {
-              category: 'MUNDO ASIAN',
-              title: 'De las Calles de Tokio a Tu Clóset',
-              content:
-                'De las Calles de Tokio a Tu Clóset Si hay algo que define al Asian Style, es su capacidad de mezclar tradición con modernidad sin perder flow. En ciudades como Tokio y Seúl, la moda es un laboratorio donde cada persona es su propio diseñador. ¿El resultado? Looks únicos que combinan funcionalidad, minimalismo y un toque futurista que parece sacado de un videojuego¿Qué hace diferente al Asian Style?Este estilo no se basa en seguir tendencias, sino en crear una estética personal. Desde prendas oversized hasta techwear de alto rendimiento, cada outfit es una declaración de identidad. En Japón, el street style se divide entre la estética vanguardista de Harajuku y el futurismo del techwear. En Corea, la moda apuesta por siluetas limpias y elegantes, mientras que en China, los estampados gráficos y las tipografías juegan un papel clave Tip de INK3D:Si quieres adoptar el Asian Style, piensa en capas. Un cortavientos ligero sobre una hoodie oversized y unos pantalones cargo pueden transformar un look básico en algo digno de un desfile de moda en Shibuya. Atrévete a jugar con texturas y cortes, porque aquí las reglas las pones tú..',
-              image:
-                'https://i.pinimg.com/736x/ac/45/88/ac45887662236b9bd4c469e6b57908bf.jpg',
-              author: 'Emma Blue',
-            },
-            {
-              category: 'MUNDO ASIAN',
-              title: 'Raíces Tradicionales',
-              content:
-                'Antes de que el K-fashion y el J-fashion tomaran las pasarelas, la vestimenta en Asia estaba marcada por siglos de tradiciones:Kimono (Japón): Prenda icónica con estampados detallados y siluetas fluidas. Hanbok (Corea del Sur): Vestido tradicional con colores vibrantes y líneas elegantes. Cheongsam o Qipao (China): Vestido ajustado con cortes sensuales y patrones sofisticados.A pesar de su antigüedad, estos estilos siguen influyendo en la moda contemporánea, desde reinterpretaciones en pasarelas hasta adaptaciones en el streetwear.El Boom del Asian Street StyleEn los últimos años, el streetwear asiático ha redefinido la moda global. Ciudades como Tokio, Seúl y Shanghái se han convertido en epicentros de tendencias.Japón y el Harajuku Style:Tokio es la cuna de estilos extravagantes como el Lolita, Visual Kei y Gyaru, donde la individualidad es clave. Marcas como Comme des Garçons y BAPE combinan lo excéntrico con lo vanguardista.Corea del Sur y la Moda K-pop:El auge del K-pop ha impulsado un estilo fresco y juvenil con prendas oversized, chaquetas bomber, sneakers chunky y accesorios llamativos. Marcas como Stylenanda y Ader Error han popularizado esta estética. China y el Techwear:El estilo futurista y cyberpunk ha tomado fuerza en ciudades como Shanghái, con prendas funcionales, tonos oscuros y accesorios inspirados en la ciencia ficción.La Influencia en la Moda GlobalLa cultura asiática no solo ha impactado el street style, sino que también ha llegado a las grandes marcas de lujo. Diseñadores asiáticos como Yohji Yamamoto, Rei Kawakubo y Alexander Wang han dejado huella en la industria con su visión única..',
-              image:
-                'https://i.pinimg.com/736x/5a/7e/b3/5a7eb3cce604b58ffb0a068e2c1d66e2.jpg',
-              author: 'Emma Blue',
-            },
-            {
-              category: 'MUNDO ASIAN',
-              title: 'La escena JMD y las icónicas carreras',
-              content:
-                'Japón ha sido pionero en fusionar la cultura automovilística con el streetwear. La escena JDM y las icónicas carreras callejeras han influenciado marcas que incorporan colores vibrantes, logos de escuderías y tipografías técnicas en sus diseños.',
-              image:
-                'https://i.pinimg.com/736x/f6/ef/06/f6ef0659cf6339d50dec08070c5bdd94.jpg',
-              author: 'Emma Blue',
-            },
-            {
-              category: 'STREETWEAR',
-              title: 'Del K-Fashion al Harajuku: Explora el Estilo Asiático',
-              content:
-                'En Tokio, el techwear domina las calles con prendas de inspiración militar y tejidos técnicos. En Seúl, la moda se inclina por cortes limpios y siluetas estructuradas, mientras que en Shanghái, la experimentación con estampados, tipografías y colores crea looks atrevidos.Prendas Clave:Chaquetas bomber y cortavientos con acabados técnicos Pantalones cargo de inspiración utilitaria.Camisetas oversized con gráficos sutiles.Sneakers chunky o minimalistas, dependiendo del enfoque del look Tip de INK3D:Para lograr un look Asian Style, juega con las capas y los contrastes. Mezcla un cortavientos con un pantalón de sastrería relajado y sneakers con suela gruesa. Menos es más, pero siempre con intención..',
-              image:
-                'https://i.pinimg.com/736x/73/ca/d8/73cad83cba5eff4254c0f842afebe448.jpg',
-              author: 'Emma blue',
-            },
-            {
-            category: 'STREETWEAR',
-            title: '¿Joggers: De Pantalón de Gym a Rey del Streetwear',
-            content:
-              ' Hubo un tiempo en el que los joggers eran solo para hacer ejercicio o para quedarse en casa viendo series. Pero en algún punto, alguien decidió que no solo eran cómodos, sino que también podían ser estilosos. Y así nació una revolución en la moda urbana.¿Qué son los joggers?Los joggers son pantalones con un corte más ajustado en la parte inferior, usualmente con puños elásticos en los tobillos. Se diferencian de los pantalones deportivos clásicos porque tienen un diseño más entallado y moderno, lo que los hace perfectos para combinarlos con zapatillas llamativas y sudaderas oversize.¿Cómo usarlos sin parecer recién salido de la cama?Casual pero cool: Combínalos con una camiseta básica y zapatillas blancas. Fácil y sin fallos.Elegancia relajada: Un jogger negro con una chaqueta bomber y una gorra te da un look más sofisticado.Streetwear total: Súmale una sudadera oversized y unas sneakers chunky. Parecerás una estrella del hip-hop.¿Por qué todo el mundo los ama? Comodidad nivel "quiero vivir con ellos"  Versatilidad para cualquier ocasión casual Son un must en la moda urbana actualLos joggers ya no son solo para correr o hacer mandados. Se han convertido en un básico del streetwear, combinando comodidad y estilo sin esfuerzo. Así que si aún no tienes un par,¿qué estás esperando?.',
-            image:
-              'https://i.pinimg.com/736x/eb/72/3a/eb723aa037b758a6677fc2ca184716d3.jpg',
-            author: 'Emma Blue',
-            
-          },
-  
           {
-            category: 'STREETWEAR',
-            title: 'Street Style: La Revolución de la Moda en las Calles',
+            category: 'MOTORSPORT',
+            title: 'Influencia del Automovilismo en la Moda',
             content:
-              'El street style no nació en las pasarelas, sino en los barrios donde la cultura y la identidad se expresaban a través de la ropa. En Nueva York, el Bronx y Harlem fueron cuna del hip-hop, donde los hoodies oversized y los sneakers llamativos se convirtieron en insignias de la calle. En Los Ángeles, South Central y Compton popularizaron los baggy jeans y las camisetas deportivas dentro del cholo style. En Tokio, Harajuku revolucionó la moda con combinaciones audaces, mientras que en Londres, Brixton y Camden mezclaron la rebeldía del punk con la funcionalidad del sportswear.Hoy, esta estética ha evolucionado en una fusión de prendas amplias, sneakers statement y detalles funcionales que reflejan la actitud de la ciudad.Prendas Clave:Hoodies anchos con gráficos  Una pieza esencial del streetwear, combinando comodidad y mensaje visual.Sneakers icónicos como las Air Jordan 1De las canchas de baloncesto a las calles, representan estatus y cultura.Pantalones cargo o baggy jeans  Inspirados en la ropa de trabajo, ofrecen movilidad y un look relajado pero imponente.Gorras y beanies Complementos clave que aportan un toque effortless y refuerzan la identidad del outfitTip de INK3D:Para dominar el street style, el truco está en la proporción. Si llevas un hoodie oversized, equilibra con pantalones más ajustados o viceversa. Añade sneakers llamativos para definir tu personalidad y deja que los accesorios hablen de tu actitud..',
+              'El auge de la Fórmula 1, el drifting y el tuning en Asia ha impulsado una moda que mezcla tecnología y adrenalina. Equipos y marcas han colaborado para crear prendas que capturan la esencia del motorsport, desde chaquetas inspiradas en los pits hasta camisetas con gráficos de alto octanaje.',
             image:
-              'https://i.pinimg.com/736x/dc/ee/ca/dceecac414e7db42837cae73a85cb611.jpg',
-            author: 'Emma Blue',
+              'https://i.pinimg.com/736x/bf/1e/d1/bf1ed18b0380e3624f294b07e818e622.jpg',
+            author: 'Liam Devereux',
+          },
+          {
+            category: 'MUNDO ASIAN',
+            title: 'El Legado Japonés y la Cultura JDM',
+            content:
+              'Japón ha sido pionero en fusionar la cultura automovilística con el streetwear. La escena JDM y las icónicas carreras callejeras han influenciado marcas que incorporan colores vibrantes, logos de escuderías y tipografías técnicas en sus diseños.',
+            image:
+              'https://i.pinimg.com/736x/f2/ff/b2/f2ffb25e1c23e2887642683567c8408b.jpg',
+            author: 'Kenji Takahashi',
           },
           {
             category: 'STREETWEAR',
-            title: ' Juega con las Siluetas: Oversized, Pero con Flow',
+            title: 'Tendencia en China y Corea del Sur',
             content:
-              'En el streetwear, la clave no está en la marca, sino en la forma en que usas las prendas. Aquí, el volumen manda y las reglas las pones tú.¿Cómo combinar bien las siluetas?Hoodie oversized + joggers ajustados → Cómodo y con forma.Camiseta fit + pantalón baggy → Relajado pero con intención.Cortavientos voluminoso + jeans slim → Sporty con un toque limpio.Full oversized → Si lo haces bien, es puro fuego.Tip INK3D: Usa capas. Hoodie bajo cortavientos, camiseta larga con chaqueta... mezcla texturas y volúmenes hasta encontrar TU estilo.',
+              'Tendencia en China y Corea del SurCon la creciente popularidad de los deportes de motor, las marcas asiáticas han llevado la moda motorsport al siguiente nivel. Colaboraciones exclusivas entre diseñadores y fabricantes de automóviles han generado colecciones limitadas que combinan innovación, estilo y funcionalidad.',
             image:
-              'https://i.pinimg.com/736x/bb/78/73/bb78733ed77920fd3cb16f2497b67778.jpg',
-            author: 'Emma Blue',
-          },
-          {
-            category: 'STREETWEAR',
-            title: 'Celebs Que Llevan el Streetwear a Otro Nivel',
-            content:
-              'El streetwear dejó de ser solo un estilo de la calle y ahora domina alfombras rojas, front rows y feeds de Instagram. Estas celebridades no solo lo usan, lo elevan.1. Travis Scott: El Rey del HypeSi hay alguien que define el streetwear actual, es Travis Scott. Sus colaboraciones con Nike y Jordan han creado algunas de las sneakers más codiciadas del mundo. Su sello: oversized hoodies, pantalones cargo y dunks hypeadas.Clave de su estilo: Siluetas relajadas y colores tierra.2. Rihanna: Reina del Oversized Rihanna mezcla el streetwear con el high fashion como nadie. Desde hoodies XXL hasta sneakers chunky, siempre añade un toque sofisticado con accesorios.+ Clave de su estilo: Juega con proporciones, usando piezas masculinas con detalles femeninos.3. A$AP Rocky: El Fashion KillaA$AP Rocky es la definición de lujo urbano. Mezcla Supreme con Raf Simons, Balenciaga con Nike y siempre está un paso adelante en tendencias. Clave de su estilo: Arriesga con colores y prints sin perder la esencia street. 4. Hailey Bieber: Minimalismo con Actitud Hailey combina básicos del streetwear con piezas más pulidas. Piensa en hoodies cropped, sneakers limpios y gafas futuristas.Clave de su estilo: Menos es más. Looks relajados pero siempre impecables.Tip INK3D: El streetwear es personalidad. No se trata solo de marcas caras, sino de cómo combinas piezas y las haces tuyas..',
-            image:
-              'https://i.pinimg.com/736x/c9/a6/3e/c9a63ef1bf8ce25f87c0fc92a0b4c937.jpg',
-            author: 'Emma Blue',
+              'https://i.pinimg.com/736x/73/ca/d8/73cad83cba5eff4254c0f842afebe448.jpg',
+            author: 'Valentina Roche',
           },
           {
             category: 'MOTORSPORT',
-            title: 'Lewis Hamilton: La Fórmula 1 del Estilo',
+            title: 'El Impacto de la F1 en la Cultura Urbana',
             content:
-              'Lewis Hamilton no solo domina la pista, también la industria de la moda. Su estilo arriesgado, lleno de colores vibrantes, siluetas oversized y marcas de lujo, lo ha convertido en un referente del streetwear y la moda deportiva. De los Pits a las PasarelasHamilton ha trabajado con Tommy Hilfiger en colecciones que mezclan su amor por la velocidad con el street style. También ha sido visto en piezas de Off-White, Balenciaga y Rick Owens, probando que la moda y el motorsport pueden ir de la mano. Su Fórmula GanadoraHoodies y chaquetas oversized  Cómodo, pero con presencia.Colores llamativos y estampados Nada de pasar desapercibido.Sneakers chunky y botas futuristas Siempre con actitud.Accesorios atrevidos – Gafas de sol llamativas y cadenas statement.Tip INK3D: Atrévete a jugar con la moda como Hamilton. Mezcla prendas deportivas con piezas de lujo y usa los accesorios para elevar el look..',
-            image:
-              'https://i.pinimg.com/736x/13/1b/8b/131b8b541996cfdc18d6833dce1465b7.jpg',
-            author: 'Emma Blue',
+              'La Fórmula 1 no solo es velocidad, sino también un fenómeno cultural. Pilotos y escuderías han inspirado colaboraciones con marcas de lujo y streetwear, dando lugar a una estética única en la moda urbana.',
+            image: 'https://i.pinimg.com/736x/97/0a/b7/970ab74e95afee80b732f5987d132c4e.jpg',
+            author: 'Liam Devereux',
           },
           {
-            category: 'MOTORSPORT',
-            title: 'El Mundo de la F1: Más Que Autos Rápidos',
+            category: 'MUNDO ASIAN',
+            title: 'El Boom del Bosozoku en la Moda',
             content:
-              'La Fórmula 1 no es solo un deporte, es un universo de velocidad, lujo y estilo. Desde los monos de carrera icónicos hasta las colaboraciones con grandes marcas, la F1 ha influenciado el streetwear de formas inesperadas Moda y Motorsport: Un Romance en Aceleración Chaquetas racing  Inspiradas en los uniformes de pilotos, marcas como INK3D han reinventado esta pieza.Sneakers de alto rendimiento  Puma y Nike han lanzado zapatillas con tecnología inspirada en la F1. Gorras y accesorios con branding Ferrari, Mercedes y McLaren tienen colecciones que van más allá del merchandising. De la Pista a la CallePilotos como Lewis Hamilton y Charles Leclerc han llevado el estilo F1 fuera del paddock, combinando piezas deportivas con elementos de lujo y streetwear.Tip INK3D: Una chaqueta racing es una pieza clave para cualquier outfit urbano. Combínala con jeans baggy y sneakers para un look con actitud..',
-            image:
-              'https://i.pinimg.com/736x/d5/60/1a/d5601a9ec2debf8f514694b5b5416a44.jpg',
-            author: 'Emma Blue',
+              'La subcultura japonesa Bosozoku, conocida por sus motocicletas modificadas y su actitud rebelde, ha dejado una huella en la moda. Chaquetas con bordados agresivos, pantalones holgados y botas altas se han convertido en un ícono del estilo underground asiático.',
+            image: 'https://i.pinimg.com/736x/09/b1/fb/09b1fb045ced7e02c970f8fbb32c2fc2.jpg',
+            author: 'Aiko Nakamura',
           },
           {
-            category: 'MOTORSPORT',
-            title: ' Biker Core: La Rebeldía de la Pista a las Calles"',
+            category: 'STREETWEAR',
+            title: 'La Estética Cyberpunk y el Automovilismo',
             content:
-              'El Biker Core es la moda inspirada en los motociclistas, con una estética ruda, funcional y llena de actitud. Nacida en la cultura de los corredores de motos y el rock, esta tendencia se fusiona con el motorsport al compartir el amor por la velocidad y la adrenalina ¿Por qué el Biker Core sigue dominando?Prendas diseñadas para resistir – Cuero grueso, textiles reforzados y detalles metálicos. Estética atemporal  No pasa de moda, solo evoluciona con nuevas siluetas. Influencias en el streetwear  Marcas como Balenciaga y Supreme han reinventado este estilo.Piezas clave del Biker Core: Chaquetas de cuero con parches o estampados – Una pieza infaltable.Pantalones de cuero o denim desgastado – Ajustados o holgados, pero siempre con actitud.Botas o sneakers robustos – Listos para la acción. Guantes y gafas deportivas – Pequeños detalles que completan el look. Tip INK3D: Para un Biker Core moderno, mezcla una chaqueta de cuero con jeans baggy y sneakers de suela gruesa..',
-            image:
-              'https://i.pinimg.com/736x/f5/4d/60/f54d609cdfe7bc88b636145936d0145d.jpg',
-            author: 'Emma Blue',
+              'Las luces de neón, los autos modificados y el espíritu cyberpunk han influenciado una tendencia futurista en la moda. Sudaderas con gráficos digitales, chaquetas reflectantes y materiales tecnológicos marcan esta evolución del streetwear.',
+            image: 'https://i.pinimg.com/736x/94/7b/91/947b91038d76c2ade299303aa3e2dddc.jpg',
+            author: 'Sienna Varela',
           },
           {
             category: 'MOTORSPORT',
             title: 'Las Chaquetas de Pits: De las Carreras a la Calle',
             content:
-              'pasado de ser una prenda exclusiva del automovilismo a convertirse en un icono del streetwear. Con colores llamativos, logos de patrocinadores y un aire retro que grita velocidad, estas chaquetas han tomado las calles con un estilo audaz y rebelde.¿Qué son las chaquetas de pits Originalmente diseñadas para los mecánicos y pilotos en los pits de las carreras de Fórmula 1, NASCAR y MotoGP, estas chaquetas se caracterizan por:Material resistente, ideal para protegerse del frío y el viento. Diseños llamativos, con parches y estampados de marcas famosas. Ajuste oversized, perfecto para un look relajado pero poderoso .De la pista a la moda urbanaDesde los años 90, las chaquetas de pits empezaron a aparecer en el hip-hop, gracias a artistas que las usaban en videoclips y eventos. Hoy en día, han vuelto con fuerza, combinándose con joggers, jeans anchos y zapatillas deportivas para un look retro-futurista.¿Cómo usarlas sin parecer mecánico de carrera?Casual pero con onda: Combínala con jeans y una camiseta básica.Estilo vintage: Unos pantalones cargo y unas sneakers retro serán tu mejor apuesta.Full streetwear: Úsala con joggers, gorra y unas gafas estilo aviador. ¿Dónde conseguirlas?Las marcas de lujo y el fast fashion han adoptado esta tendencia. Puedes encontrarlas en tiendas como INK3D o¿ incluso en tiendas vintage para un toque más auténtico.Las chaquetas de pits han demostrado que no necesitas ser piloto para vestirte como uno. Velocidad, estilo y actitud en una sola prenda. ¿Te unes a la carrera?.',
-            image:
-              'https://i.pinimg.com/736x/90/ab/b7/90abb79f15ac59502173f0bc5d3663fe.jpg',
-            author: 'Emma Blue',
+              'Las chaquetas utilizadas en los pits de las competiciones automovilísticas han sido adoptadas por marcas de moda, convirtiéndolas en piezas clave del estilo urbano. Detalles como parches, cierres metálicos y estampados inspirados en escuderías son la clave.',
+            image: 'https://i.pinimg.com/736x/56/77/70/56777061570be734e2ff26dda703dc61.jpg',
+            author: 'Liam Devereux',
           },
+            {
+              category: 'MOTORSPORT',
+              title: 'La Influencia del Drifting en la Moda Juvenil',
+              content:
+                'El drifting ha trascendido como un deporte de nicho para convertirse en una tendencia global. Las chaquetas oversized, las zapatillas de edición limitada y los pantalones rotos se han convertido en la firma de quienes siguen esta cultura de velocidad y rebeldía.',
+              image: 'https://i.pinimg.com/736x/1a/98/1c/1a981c6a16036ef14b42ab78315d12a1.jpg',
+              author: 'Maximiliano Ferretti',
+            },
+            {
+              category: 'MUNDO ASIAN',
+              title: 'Estilo JDM: De los Autos a la Pasarela',
+              content:
+                'El movimiento JDM ha marcado un antes y un después en el streetwear asiático. La moda inspirada en el tuning japonés se fusiona con el estilo urbano, incorporando elementos como parches, gráficos agresivos y materiales de alta tecnología en prendas que hablan de velocidad y precisión.',
+              image: 'https://i.pinimg.com/736x/04/1e/df/041edf2351cce6810b73bd23622deaf8.jpg',
+              author: 'Yuki Sato',
+            },
+            {
+              category: 'MUNDO ASIAN',
+              title: 'La Moda del Tuning Japonés y su Expansión Global',
+              content:
+                'El tuning japonés ha evolucionado de un hobby de coches a una influencia global que afecta a la moda. Estampados con gráficos de autos personalizados, accesorios inspirados en el mundo del motor y una mezcla de cultura japonesa han invadido las tiendas de streetwear.',
+              image: 'https://i.pinimg.com/736x/e6/53/68/e653683b04769ebe088bfcfa31a671cb.jpg',
+              author: 'Haruto Mori',
+            }
         ];
         await this.magazineRepository.save(posts);
       }
+
       console.log(
         '✅ Seed de categorías, productos, usuarios, órdenes, movimientos de stock y posts en magazine completado.',
       );
