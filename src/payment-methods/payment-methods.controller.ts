@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, Param, Get } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
 import { PaymentMethodsService } from './payment-methods.service';
 import { Product } from '../entities/product.entity';
 import { Request } from 'express';
@@ -63,22 +63,18 @@ export class PaymentMethodsController {
   @Post('webhook')
   async handleWebhook(@Req() req: Request) {
     try {
+      console.log(' Webhook recibido en el backend:', req.body);
       const paymentData = req.body;
-      await this.paymentMethodsService.processPaymentNotification(paymentData);
+      console.log('PAYYMENTADATA', paymentData);
+      const res =
+        await this.paymentMethodsService.processPaymentNotification(
+          paymentData,
+        );
+      console.log('RESPUESTAAAA', res);
       return { message: 'Webhook recibido correctamente' };
     } catch (error) {
       console.error('Error al procesar el Webhook de Mercado Pago:', error);
       return { message: 'Error procesando el Webhook' };
     }
   }
-
-
-  @Get('status/:paymentId')
-  async getPaymentStatus(@Param('paymentId') paymentId: string) {
-    return this.paymentMethodsService.getPaymentStatus(paymentId);
-  }
 }
-
-
-
-

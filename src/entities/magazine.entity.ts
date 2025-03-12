@@ -11,7 +11,7 @@ export class Magazine {
   id: string;
 
   @Column()
-  category: string; 
+  category: string;
 
   @Column()
   title: string;
@@ -27,8 +27,6 @@ export class Magazine {
 
   @Column({ default: true })
   isActive: boolean;
-
- 
 
   @CreateDateColumn()
   createdAt: Date;

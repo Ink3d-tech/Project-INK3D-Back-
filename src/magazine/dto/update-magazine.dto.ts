@@ -1,7 +1,7 @@
 import { IsString, IsOptional } from 'class-validator';
 
 export class UpdateMagazineDto {
- @IsString()
+  @IsString()
   @IsOptional()
   category?: string;
 
@@ -19,5 +19,5 @@ export class UpdateMagazineDto {
 
   @IsString()
   @IsOptional()
-  author?: string; 
+  author?: string;
 }

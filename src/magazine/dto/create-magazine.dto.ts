@@ -28,6 +28,4 @@ export class CreateMagazineDto {
   @IsString()
   @IsNotEmpty()
   author: string;
-
-
 }

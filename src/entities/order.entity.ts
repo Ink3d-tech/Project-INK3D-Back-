@@ -46,4 +46,7 @@ export class Order {
 
   @Column({ nullable: true })
   discountCode: string;
+
+  @Column({ nullable: true })
+  externalReference: string;
 }

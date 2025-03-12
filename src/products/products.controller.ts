@@ -58,6 +58,12 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+
+  @Get('style/:style')
+  async getByStyle(@Param('style') style: string): Promise<Product[]> {
+    return this.productsService.findByStyle(style);
+  }
+
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
@@ -164,3 +170,4 @@ export class ProductsController {
     return this.productsService.activateProduct(id);
   }
 }
+

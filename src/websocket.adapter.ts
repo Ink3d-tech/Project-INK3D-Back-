@@ -1,24 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IoAdapter } from '@nestjs/platform-socket.io';
+import { INestApplication, Injectable } from '@nestjs/common';
 import { ServerOptions } from 'socket.io';
 import { ConfigService } from '@nestjs/config';
 
+@Injectable()
 export class WebSocketAdapter extends IoAdapter {
-  private readonly configService: ConfigService;
-
-  constructor(configService: ConfigService) {
-    super();
-    this.configService = configService;
+  constructor(private app: INestApplication, private readonly configService: ConfigService) {
+    super(app);
   }
 
   createIOServer(port: number, options?: ServerOptions): any {
-    const clientUrl = this.configService.get<string>(
-      'CLIENT_URL',
-      'http://localhost:3000',
-    );
-    const wsPort = this.configService.get<number>('WS_PORT', 3003);
+    const clientUrl = this.configService.get<string>('CLIENT_URL', 'http://localhost:3000');
 
-    const server = super.createIOServer(wsPort, {
+    const server = super.createIOServer(port, {
       cors: {
         origin: clientUrl,
         methods: ['GET', 'POST'],
@@ -27,9 +21,7 @@ export class WebSocketAdapter extends IoAdapter {
       },
     });
 
-    console.log(
-      `WebSocket server running on port ${wsPort}, allowing connections from ${clientUrl}`,
-    );
+    console.log(`WebSocket server running on same port as NestJS: ${port}`);
     return server;
   }
 }
