@@ -450,9 +450,9 @@ export class SeederService {
       for (const product of savedProducts) {
         await this.stockMovementRepository.insert({
           product,
-          quantity: product.stock, // Stock inicial
-          previousStock: 0, // No había stock antes
-          newStock: product.stock, // Nuevo stock después del movimiento
+          quantity: product.stock, 
+          previousStock: 0, 
+          newStock: product.stock,
           type: "initial_stock",
           reason: "Stock inicial",
         });
