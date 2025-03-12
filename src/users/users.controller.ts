@@ -18,7 +18,6 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Role } from 'src/roles.enum';
 import { ChangePasswordDto } from 'src/auth/dto/change-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -26,7 +25,7 @@ import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 import { AllowOwnerOrRole } from 'src/decorators/allow-owner-or-role.decorator';
 
 @Controller('users')
-@UseGuards(AuthGuard, RolesGuard)
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

@@ -1,11 +1,44 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  UseGuards,
-} from '@nestjs/common';
+// import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+// import { StockMovementsService } from './stock-movements.service';
+// import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
+// import { ApiBearerAuth } from '@nestjs/swagger';
+// import { AuthGuard } from 'src/auth/guards/auth.guard';
+// import { RolesGuard } from 'src/auth/guards/roles.guard';
+// import { Role } from 'src/roles.enum';
+// import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
+
+// @Controller('stock-movements')
+// export class StockMovementsController {
+//   constructor(private readonly stockMovementsService: StockMovementsService) {}
+
+//   @ApiBearerAuth()
+//   @UseGuards(AuthGuard, RolesGuard)
+//   @AllowOnlyRole(Role.Admin)
+//   @Get()
+//   async getAllStockMovements() {
+//     return this.stockMovementsService.find();
+//   }
+
+//   @ApiBearerAuth()
+//   @UseGuards(AuthGuard, RolesGuard)
+//   @AllowOnlyRole(Role.Admin)
+//   @Get(':productId')
+//   async getStockMovements(@Param('productId') productId: string) {
+//     return this.stockMovementsService.getStockMovements(productId);
+//   }
+
+//   @ApiBearerAuth()
+//   @UseGuards(AuthGuard, RolesGuard)
+//   @AllowOnlyRole(Role.Admin)
+//   @Post()
+//   async createStockMovement(@Body() dto: CreateStockMovementDto) {
+//     return this.stockMovementsService.createStockMovement(dto);
+//   }
+// }
+
+
+
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { StockMovementsService } from './stock-movements.service';
 import { CreateStockMovementDto } from './dto/create-stock-movement.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -19,30 +52,21 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 export class StockMovementsController {
   constructor(private readonly stockMovementsService: StockMovementsService) {}
 
+  // Obtener todos los movimientos de stock
   @Get()
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
-  @ApiOperation({ summary: 'Get all stock movements (Admin only)' })
-  async getAllStockMovements() {
-    return this.stockMovementsService.getStockMovements();
+  async findAll() {
+    return await this.stockMovementsService.find();
   }
 
-  @Get(':productId?')
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
-  @ApiOperation({ summary: 'Get stock movements by product ID (Admin only)' })
-  async getStockMovements(@Param('productId') productId?: string) {
-    return this.stockMovementsService.getStockMovements(productId);
+  // Obtener movimientos de stock de un producto específico
+  @Get(':productId')
+  async getByProduct(@Param('productId') productId: string) {
+    return await this.stockMovementsService.getStockMovements(productId);
   }
 
+  // Crear un nuevo movimiento de stock manualmente
   @Post()
-  @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
-  @ApiOperation({ summary: 'Create a stock movement (Admin only)' })
-  async createStockMovement(@Body() dto: CreateStockMovementDto) {
-    return this.stockMovementsService.createStockMovement(dto);
+  async create(@Body() dto: CreateStockMovementDto) {
+    return await this.stockMovementsService.createStockMovement(dto);
   }
 }

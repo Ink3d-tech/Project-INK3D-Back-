@@ -10,7 +10,6 @@ import {
   IsInt,
   IsNotEmpty,
 } from 'class-validator';
-import { Category } from 'src/entities/category.entity';
 
 enum Sizes {
   XS = 'XS',
@@ -22,6 +21,17 @@ enum Sizes {
 }
 
 export class CreateProductDto {
+
+  @ApiProperty({
+    example: 'ASIAN',
+    description: 'Product style (e.g., Asian, MotorSport, Formal)',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  @Length(1, 100)
+  style?: string;
+
   @ApiProperty({ example: 'Camiseta Negra', description: 'Product name' })
   @IsNotEmpty()
   @IsString()
@@ -52,7 +62,7 @@ export class CreateProductDto {
     example: 'https://imagen.com/camiseta.jpg',
     description: 'Image URL',
   })
-  @IsNotEmpty()
+  @IsOptional()
   image: string[];
 
   @ApiProperty({ example: 5, description: 'Discount' })
@@ -66,8 +76,7 @@ export class CreateProductDto {
     description: 'Category ID of the product',
   })
   @IsNotEmpty()
-  @IsNotEmpty()
-  category: Category;
+  category: { id: string };
 
   @ApiProperty({
     example: 'M',

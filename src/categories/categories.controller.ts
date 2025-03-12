@@ -24,8 +24,8 @@ import {
 } from '@nestjs/swagger';
 import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 import { Role } from 'src/roles.enum';
-import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('categories')
 @UseGuards(AuthGuard, RolesGuard)
@@ -77,6 +77,9 @@ export class CategoriesController {
     return this.categoriesService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @Post()
    @ApiBearerAuth()
     @AllowOnlyRole(Role.Admin)
@@ -136,6 +139,10 @@ export class CategoriesController {
     return this.categoriesService.update(id, categoryData);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
+  @Delete(':id')
   @ApiHideProperty()
   @ApiOperation({ summary: 'Delete a category' })
   @ApiParam({
@@ -144,7 +151,6 @@ export class CategoriesController {
     required: true,
     example: '79062eed-7d51-431a-828c-db47feb9e3f7',
   })
-  @Delete(':id')
   delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoriesService.delete(id);
   }

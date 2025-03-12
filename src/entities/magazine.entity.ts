@@ -7,8 +7,11 @@ import {
 
 @Entity()
 export class Magazine {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  category: string;
 
   @Column()
   title: string;
@@ -21,6 +24,9 @@ export class Magazine {
 
   @Column()
   author: string;
+
+  @Column({ default: true })
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -11,7 +11,3 @@ import { Magazine } from 'src/entities/magazine.entity';
   providers: [MagazineService, MagazineGateway],
 })
 export class MagazineModule {}
-
-
-
-

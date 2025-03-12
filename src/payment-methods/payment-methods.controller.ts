@@ -26,7 +26,7 @@ export class PaymentMethodsController {
       'payment-method.create': {
         value: {
           orderId: 'cdaf3d44-8b81-4b41-8b3a-8c5e171d737c',
-          currency: 'USD',
+          currency: 'ARS',
           products: [
             {
               id: 'a52a1076-e7ff-46af-9e92-c4300a8028bf',
@@ -70,8 +70,14 @@ export class PaymentMethodsController {
   @Post('webhook')
   async handleWebhook(@Req() req: Request) {
     try {
+      console.log(' Webhook recibido en el backend:', req.body);
       const paymentData = req.body;
-      await this.paymentMethodsService.processPaymentNotification(paymentData);
+      console.log('PAYYMENTADATA', paymentData);
+      const res =
+        await this.paymentMethodsService.processPaymentNotification(
+          paymentData,
+        );
+      console.log('RESPUESTAAAA', res);
       return { message: 'Webhook recibido correctamente' };
     } catch (error) {
       console.error('Error al procesar el Webhook de Mercado Pago:', error);

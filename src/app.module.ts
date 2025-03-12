@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { MiddlewareConsumer, Module, OnModuleInit } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
@@ -26,6 +26,11 @@ import { CloudinaryConfig } from './config/cloudinary';
 import { Chatbot } from './chatbot/chatbot';
 import { WebSocketAdapter } from './websocket.adapter';
 import { MagazineModule } from './magazine/magazine.module';
+import { LoggerMiddleware } from './middleware/logger.middleware';
+import { FinanzasModule } from './finanzas/finanzas.module';
+import { Transactions } from './entities/transaction.entity';
+import { Magazine } from './entities/magazine.entity';
+
 
 @Module({
   imports: [
@@ -36,6 +41,8 @@ import { MagazineModule } from './magazine/magazine.module';
       Order,
       Discounts,
       StockMovements,
+      Transactions,
+      Magazine
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -65,24 +72,22 @@ import { MagazineModule } from './magazine/magazine.module';
     NodemailerModule,
     FileUploadModule,
     MagazineModule,
+    FinanzasModule
   ],
   providers: [
     SeederService,
     CloudinaryConfig,
     Chatbot,
-    {
-      provide: WebSocketAdapter,
-      useFactory: (configService: ConfigService) =>
-        new WebSocketAdapter(configService),
-      inject: [ConfigService],
-    },
   ],
-  exports: [WebSocketAdapter],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
 
   async onModuleInit() {
     await this.seederService.seed();
+  }
+  configure(consumer: MiddlewareConsumer) {
+    // Aquí aplicamos el middleware a todas las rutas
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

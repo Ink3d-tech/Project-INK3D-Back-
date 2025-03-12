@@ -2,7 +2,7 @@ import { IsIn, IsString } from 'class-validator';
 
 export class UpdateOrderDto {
   @IsString()
-  @IsIn(['pending', 'shipped', 'delivered', 'cancelled'])
+  @IsIn(['pending', 'shipped', 'delivered', 'cancelled','completed'])
   status: string;
 }
 

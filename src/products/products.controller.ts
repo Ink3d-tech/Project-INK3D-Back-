@@ -58,6 +58,12 @@ export class ProductsController {
     return this.productsService.findOne(id);
   }
 
+
+  @Get('style/:style')
+  async getByStyle(@Param('style') style: string): Promise<Product[]> {
+    return this.productsService.findByStyle(style);
+  }
+
   @Post()
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
@@ -91,10 +97,10 @@ export class ProductsController {
           stock: 10,
           image: 'https://imagen.com/laptop.jpg',
           discount: 5,
-          categoryId: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
+          category: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
         },
       },
-      'product.update.categoryId': {
+      'product.update.category.id': {
         value: '1fe09b55-d8af-4f82-ac8d-b82489af2d70',
       },
     },
@@ -164,3 +170,4 @@ export class ProductsController {
     return this.productsService.activateProduct(id);
   }
 }
+

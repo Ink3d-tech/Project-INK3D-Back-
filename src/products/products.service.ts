@@ -36,14 +36,19 @@ export class ProductsService {
 
   async search(query: string): Promise<Product[]> {
     return this.productRepository.find({
-      where: [{ name: Like(`%${query}%`) }, { category: Like(`%${query}%`) }],
+      where: [
+        { name: Like(`%${query}%`) },
+        { category: { name: Like(`%${query}%`) } },
+        { style: Like(`%${query}%`) },
+      ],
       relations: ['category'],
     });
   }
 
   async create(productData: CreateProductDto): Promise<Product> {
     const category = await this.categoryRepository.findOne({
-      where: { id: productData.category[0].id },
+      where: { id: productData.category.id },
+      relations: ['products'],
     });
 
     if (!category) {
@@ -53,9 +58,39 @@ export class ProductsService {
     const newProduct = this.productRepository.create({
       ...productData,
       category,
+      style: productData.style ?? 'Motorsport',
     });
 
-    return this.productRepository.save(newProduct);
+    const savedProduct = await this.productRepository.save(newProduct);
+
+    // Registrar el movimiento de stock para el stock inicial
+    if (savedProduct.stock > 0) {
+      // await this.stockMovementsService.createStockMovement({
+      //   productId: savedProduct.id,
+      //   quantity: savedProduct.stock, // Ingreso inicial de stock
+      //   type: 'manual_adjustment',
+      //   reason: 'Initial stock',
+      // });
+
+      await this.stockMovementsService.createStockMovement({
+        productId: savedProduct.id,
+        quantity: savedProduct.stock,
+        previousStock: 0, 
+        newStock: savedProduct.stock, 
+        type: 'initial_stock', 
+        reason: 'Initial stock entry',
+      });
+      
+    }
+
+    return savedProduct;
+  }
+
+  async findByStyle(style: string): Promise<Product[]> {
+    return this.productRepository.find({
+      where: { style: Like(`%${style}%`) },
+      relations: ['category'],
+    });
   }
 
   async updateProduct(
@@ -70,10 +105,9 @@ export class ProductsService {
 
     let stockChange = 0;
 
-    // Validar y asignar nueva categoría si es necesario
     if (productData.category) {
       const category = await this.categoryRepository.findOne({
-        where: { id: productData.category[0].id },
+        where: { id: productData.category.id },
       });
 
       if (!category) {
@@ -91,19 +125,33 @@ export class ProductsService {
       stockChange = productData.stock - product.stock;
     }
 
-    Object.assign(product, productData);
+    // Asignar nuevos valores sin sobrescribir valores no definidos
+    Object.assign(product, productData, {
+      style: productData.style ?? product.style, // ✅ Mantener el estilo si no se proporciona
+    });
 
     const updatedProduct = await this.productRepository.save(product);
 
     // Registrar movimiento de stock si hubo un cambio
+    // if (stockChange !== 0) {
+    //   await this.stockMovementsService.createStockMovement({
+    //     productId: updatedProduct.id,
+    //     quantity: Math.abs(stockChange),
+    //     type: 'manual_adjustment',
+    //     reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
+    //   });
+    // }
     if (stockChange !== 0) {
       await this.stockMovementsService.createStockMovement({
         productId: updatedProduct.id,
-        quantity: Math.abs(stockChange), // Siempre positivo
-        type: 'manual_adjustment', // Ajuste manual de stock
+        quantity: Math.abs(stockChange),
+        previousStock: product.stock,  // 👈 Agregar el stock antes del cambio
+        newStock: updatedProduct.stock, // 👈 Agregar el stock después del cambio
+        type: 'manual_adjustment',
         reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
       });
     }
+    
 
     return updatedProduct;
   }
@@ -114,6 +162,7 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
+
     product.isActive = false;
     return this.productRepository.save(product);
   }
@@ -124,6 +173,7 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
+
     product.isActive = true;
     return this.productRepository.save(product);
   }

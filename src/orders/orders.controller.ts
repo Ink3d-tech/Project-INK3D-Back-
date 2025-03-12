@@ -8,27 +8,79 @@ import {
   Delete,
   NotFoundException,
   ForbiddenException,
-  BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { Order } from '../entities/order.entity';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiOperation,
   ApiParam,
   ApiResponse,
 } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Role } from 'src/roles.enum';
+import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
+import { AllowOwnerOrRole } from 'src/decorators/allow-owner-or-role.decorator';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOwnerOrRole(Role.Admin)
   @Post()
   @ApiOperation({ summary: 'Create a new order' })
-  @ApiBody({ type: CreateOrderDto })
-  @ApiResponse({ status: 201, type: Order })
+  @ApiBody({
+    type: CreateOrderDto,
+    examples: {
+      'order.create': {
+        value: {
+          userId: '474d16b7-9e50-447b-9702-7a58d25e8196',
+          discountCode: 'c6b7f845-d2ea-4a06-8f8b-28d18f48abb3',
+          products: [
+            {
+              id: 'b8e0e24d-d2d5-47c8-b454-bd3baf25af21',
+              quantity: 1,
+            },
+            {
+              id: 'b4234348-2fb8-45dd-951e-bd9d6d74c20b',
+              quantity: 2,
+            },
+          ],
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    type: Order,
+    example: {
+      id: '79062eed-7d51-431a-828c-db47feb9e3f7',
+      userId: '79062eed-7d51-431a-828c-db47feb9e3f7',
+      status: 'pending',
+      totalPrice: 10,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      productDetails: [
+        {
+          productId: '79062eed-7d51-431a-828c-db47feb9e3f7',
+          quantity: 1,
+          priceAtPurchase: 10,
+        },
+        {
+          productId: '79062eed-7d51-431a-828c-db47feb9e3f7',
+          quantity: 2,
+          priceAtPurchase: 10,
+        },
+      ],
+    },
+  })
   async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
     if (!createOrderDto.userId || !createOrderDto.products?.length) {
       throw new BadRequestException('Invalid order data');
@@ -36,6 +88,9 @@ export class OrdersController {
     return this.ordersService.addOrder(createOrderDto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @Get()
   @ApiOperation({ summary: 'Get all orders' })
   @ApiResponse({ status: 200, type: [Order] })
@@ -43,6 +98,9 @@ export class OrdersController {
     return this.ordersService.getAllOrders();
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOwnerOrRole(Role.Admin)
   @Get(':id')
   @ApiOperation({ summary: 'Get an order by ID' })
   @ApiParam({ name: 'id', type: 'string', required: true })
@@ -55,6 +113,9 @@ export class OrdersController {
     return order;
   }
 
+  // @ApiBearerAuth()
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @AllowOnlyRole(Role.Admin)
   @Patch(':id/status')
   @ApiOperation({ summary: 'Update order status' })
   @ApiParam({ name: 'id', type: 'string', required: true })
@@ -74,10 +135,41 @@ export class OrdersController {
     return order;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOwnerOrRole(Role.Admin)
   @Patch(':id/cancel')
   @ApiOperation({ summary: 'Cancel an order' })
-  @ApiParam({ name: 'id', type: 'string', required: true })
-  @ApiResponse({ status: 200, type: Order })
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    required: true,
+    example: '79062eed-7d51-431a-828c-db47feb9e3f7',
+  })
+  @ApiResponse({
+    status: 200,
+    type: Order,
+    example: {
+      id: '79062eed-7d51-431a-828c-db47feb9e3f7',
+      userId: '79062eed-7d51-431a-828c-db47feb9e3f7',
+      status: 'cancelled',
+      totalPrice: 10,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      productDetails: [
+        {
+          productId: '79062eed-7d51-431a-828c-db47feb9e3f7',
+          quantity: 1,
+          priceAtPurchase: 10,
+        },
+        { 
+          productId: '79062eed-7d51-431a-828c-db47feb9e3f7',
+          quantity: 2,
+          priceAtPurchase: 10,
+        },
+      ],
+    },
+  })
   async cancelOrder(@Param('id') id: string): Promise<Order> {
     const order = await this.ordersService.cancelOrder(id);
     if (!order) {
@@ -86,12 +178,15 @@ export class OrdersController {
     return order;
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard, RolesGuard)
+  @AllowOnlyRole(Role.Admin)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete an order' })
   @ApiParam({ name: 'id', type: 'string', required: true })
   @ApiResponse({ status: 200, type: Order })
   async deleteOrder(@Param('id') id: string): Promise<Order> {
-    const order = await this.ordersService.deleteOrder(id);
+    const order =  this.ordersService.deleteOrder(id);
     if (!order) {
       throw new NotFoundException(`Order with ID ${id} not found.`);
     }
