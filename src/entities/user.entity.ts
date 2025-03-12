@@ -30,7 +30,7 @@ export class User {
   @Column()
   name: string;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   phone: number;
 
   @Column({ nullable: true })
