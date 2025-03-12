@@ -7,7 +7,6 @@ import {
   Matches,
   MinLength,
   Validate,
-
 } from 'class-validator';
 import { MatchPassword } from 'src/decorators/match-password.decorator';
 
@@ -57,6 +56,10 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   bio?: string;
+
+  @IsOptional()
+  @IsString()
+  resetToken?: string;
 
   @IsOptional()
   @IsString()

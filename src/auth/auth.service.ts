@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { NodeMailerService } from 'src/nodemailer/nodemailer.service';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,11 @@ export class AuthService {
     }
 
     const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUser = { ...user, password: hashedPassword, confirmPassword: undefined};
+    const newUser = {
+      ...user,
+      password: hashedPassword,
+      confirmPassword: undefined,
+    };
 
     if (!newUser) {
       throw new NotFoundException('User not found');
@@ -99,5 +104,44 @@ export class AuthService {
     const access_token = this.jwtService.sign(payload);
 
     return { access_token };
+  }
+
+  async requestPasswordReset(email: string) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Generar token único y guardarlo en la DB
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.resetToken = resetToken;
+    await this.userRepository.save(user);
+
+    // Enviar email con el token (o un link con el token como parámetro)
+    const resetLink = `https://tu-frontend.com/reset-password?token=${resetToken}`;
+    await this.nodemailerService.sendEmail(
+      user.email,
+      'Recuperación de Contraseña',
+      `Haz clic en el siguiente enlace para restablecer tu contraseña: ${resetLink}`,
+    );
+
+    return { message: 'Password reset link sent to your email' };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const user = await this.userRepository.findOne({
+      where: { resetToken: token },
+    });
+    if (!user) {
+      throw new BadRequestException('Invalid or expired token');
+    }
+
+    // Hashear la nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetToken = null; // Eliminar el token después de usarlo
+    await this.userRepository.save(user);
+
+    return { message: 'Password successfully reset' };
   }
 }
