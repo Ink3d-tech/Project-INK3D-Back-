@@ -78,14 +78,7 @@ import { Magazine } from './entities/magazine.entity';
     SeederService,
     CloudinaryConfig,
     Chatbot,
-    {
-      provide: WebSocketAdapter,
-      useFactory: (configService: ConfigService) =>
-        new WebSocketAdapter(configService),
-      inject: [ConfigService],
-    },
   ],
-  exports: [WebSocketAdapter],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}

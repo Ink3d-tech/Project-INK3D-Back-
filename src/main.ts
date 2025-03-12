@@ -39,7 +39,6 @@
 
 
 
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -55,8 +54,8 @@ async function bootstrap() {
   // Obtener ConfigService manualmente
   const configService = app.get(ConfigService);
   
-  // Crear una instancia de WebSocketAdapter con el ConfigService
-  const webSocketAdapter = new WebSocketAdapter(configService);
+  // PASAR `app` COMO PARÁMETRO AL ADAPTADOR DE WEBSOCKET
+  const webSocketAdapter = new WebSocketAdapter(app, configService);
   app.useWebSocketAdapter(webSocketAdapter);
 
   app.enableCors({
@@ -78,11 +77,7 @@ async function bootstrap() {
 
   const PORT = configService.get<number>('PORT', 3000);
   await app.listen(PORT);
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-
-
-
-
+  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 }
 
 bootstrap();
