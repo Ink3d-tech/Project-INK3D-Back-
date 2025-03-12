@@ -118,7 +118,7 @@ export class AuthService {
     await this.userRepository.save(user);
 
     // Enviar email con el token (o un link con el token como parámetro)
-    const resetLink = `https://tu-frontend.com/reset-password?token=${resetToken}`;
+    const resetLink = `https://ink3d-tech-2-0.vercel.app/reset-password?token=${resetToken}`;
     await this.nodemailerService.sendEmail(
       user.email,
       'Recuperación de Contraseña',
