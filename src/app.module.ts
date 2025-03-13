@@ -29,6 +29,8 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { FinanzasModule } from './finanzas/finanzas.module';
 import { Transactions } from './entities/transaction.entity';
 import { Magazine } from './entities/magazine.entity';
+import { CommentModule } from './comment/comment.module';
+import { WebSocketAdapter } from './websocket.adapter';
 
 
 @Module({
@@ -72,11 +74,13 @@ import { Magazine } from './entities/magazine.entity';
     FileUploadModule,
     MagazineModule,
     FinanzasModule,
+    CommentModule
   ],
   providers: [
     SeederService,
     CloudinaryConfig,
     Chatbot,
+    WebSocketAdapter,
   ],
 })
 export class AppModule implements OnModuleInit {
@@ -90,3 +94,4 @@ export class AppModule implements OnModuleInit {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }
+
