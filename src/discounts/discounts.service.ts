@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Discounts } from 'src/entities/discounts.entity';
@@ -67,7 +71,7 @@ export class DiscountsService {
     });
 
     if (existingDiscount) {
-      throw new Error('Ya tienes un descuento activo.');
+      throw new BadRequestException('Ya tienes un descuento activo.');
     }
 
     // Crear un nuevo descuento del 15%
