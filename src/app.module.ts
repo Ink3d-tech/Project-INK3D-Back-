@@ -31,6 +31,7 @@ import { Transactions } from './entities/transaction.entity';
 import { Magazine } from './entities/magazine.entity';
 import { CommentModule } from './comment/comment.module';
 import { Comment } from './entities/comment.entity';
+import { PerspectiveModule } from './perspective/perspective.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { Comment } from './entities/comment.entity';
     MagazineModule,
     FinanzasModule,
     CommentModule,
+    PerspectiveModule
   ],
   providers: [SeederService, CloudinaryConfig, Chatbot],
 })
