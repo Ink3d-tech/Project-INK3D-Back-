@@ -63,7 +63,7 @@ export class DiscountsService {
   async createTriviaDiscount(userId: string): Promise<Discounts> {
     // Verificar si el usuario ya tiene un descuento activo
     const existingDiscount = await this.discountsRepository.findOne({
-      where: { userId: { id: userId }, status: 'active' },
+      where: { user: { id: userId }, status: 'active' },
     });
 
     if (existingDiscount) {
@@ -75,7 +75,7 @@ export class DiscountsService {
       amount: 15, // 15% de descuento
       status: 'active',
       expiresAt: new Date(new Date().setDate(new Date().getDate() + 7)), // Expira en 7 días
-      userId: { id: userId },
+      user: { id: userId },
     });
 
     return await this.discountsRepository.save(discount);
