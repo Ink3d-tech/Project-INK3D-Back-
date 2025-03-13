@@ -69,8 +69,7 @@ export class DiscountsController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
+  @UseGuards(AuthGuard)
   @Get()
   @ApiOperation({ summary: 'Get all discounts' })
   findAll() {
