@@ -1,61 +1,60 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
+// import { Injectable, CanActivate, ExecutionContext, Logger } from '@nestjs/common';
+// import { JwtService } from '@nestjs/jwt';
 
+// @Injectable()
+// export class AuthGuard implements CanActivate {
+//   private readonly logger = new Logger(AuthGuard.name);
+
+//   constructor(private jwtService: JwtService) {}
+
+//   canActivate(context: ExecutionContext): boolean {
+//     const request = context.switchToHttp().getRequest();
+//     const authHeader = request.headers.authorization;
+
+//     this.logger.debug(`🛂 Analizando autorización: ${authHeader}`);
+
+//     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+//       this.logger.warn('❌ Falta el token o formato incorrecto');
+//       return false;
+//     }
+
+//     const token = authHeader.split(' ')[1];
+
+//     try {
+//       const payload = this.jwtService.verify(token);
+//       this.logger.debug(`✅ Token válido: ${JSON.stringify(payload)}`);
+//       request.user = payload; // 🔹 Aquí se asigna `req.user`
+//       return true;
+//     } catch (error) {
+//       this.logger.error(`❌ Error al verificar el token: ${error.message}`);
+//       return false;
+//     }
+//   }
+// }
+
+
+
+import { Injectable, CanActivate, ExecutionContext, Logger } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private readonly logger = new Logger(AuthGuard.name);
   constructor(private jwtService: JwtService) {}
-
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-
     const authHeader = request.headers.authorization;
-    if (!authHeader) {
-      throw new UnauthorizedException('No token provided');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      this.logger.warn('Falta el token o formato incorrecto');
+      return false;
     }
-
     const token = authHeader.split(' ')[1];
-    if (!token) {
-      throw new UnauthorizedException('Invalid authorization format');
-    }
-
-    const secret = process.env.JWT_SECRET;
-
     try {
-      const user = this.jwtService.verify(token, { secret });
-
-      user.exp = new Date(user.exp * 1000);
-      user.iat = new Date(user.iat * 1000);
-
-      if (user.role === 'admin') {
-        user.role = ['admin'];
-      } else if (user.role === 'mod') {
-        user.role = ['mod'];
-      } else {
-        user.role = ['user'];
-      }
-
-      if (user.exp < new Date()) {
-        throw new UnauthorizedException('Token expired');
-      }
-
-      request.user = user;
+      const payload = this.jwtService.verify(token);
+      request.user = payload; 
       return true;
     } catch (error) {
-      if (error.name === 'TokenExpiredError') {
-        throw new UnauthorizedException('Token expired');
-      }
-      if (error.name === 'JsonWebTokenError') {
-        throw new UnauthorizedException('Invalid token');
-      }
-      throw new UnauthorizedException('Unexpected error: ' + error.message);
+      this.logger.error(`Error al verificar el token: ${error.message}`);
+      return false;
     }
   }
 }
