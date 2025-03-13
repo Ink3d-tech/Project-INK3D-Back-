@@ -4,6 +4,7 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { AllowOnlyRole } from 'src/decorators/allow-only-role.decorator';
 import { Role } from 'src/roles.enum';
+import { AllowOwnerOrRole } from 'src/decorators/allow-owner-or-role.decorator';
 
 
 @Controller('comments')
@@ -13,7 +14,7 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
    @UseGuards(AuthGuard, RolesGuard)
-   @AllowOnlyRole(Role.User)
+   @AllowOwnerOrRole(Role.User)
   @Post(':magazineId')
   async addComment(
     @Param('magazineId') magazineId: string,
