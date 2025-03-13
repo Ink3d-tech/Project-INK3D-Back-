@@ -72,10 +72,7 @@ export class User {
   @JoinTable({
     name: 'favorites',
   })
-  @OneToMany(() => Discounts, (discount) => discount.userId)
-  @JoinTable({
-    name: 'discounts',
-  })
+  @OneToMany(() => Discounts, (discount) => discount.user)
   discounts: Discounts[];
 
   @ManyToMany(() => Product, (product) => product.favoritedBy)
