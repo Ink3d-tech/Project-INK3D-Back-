@@ -85,6 +85,6 @@ export class User {
   @Column({ nullable: true })
   image: string;
 
-  @OneToMany(() => Comment, (comment) => comment.user)
-comments: Comment[];
+  @OneToMany(() => Comment, (comment) => comment.username)
+  comments: Comment[];
 }

@@ -21,8 +21,12 @@ export class PerspectiveController {
     description: 'Error al analizar el texto',
   })
   @Post('analyze')
-  async analyze(@Body() createTextDto: CreateTextDto): Promise<AnalyzeResponseDto> {
-    const result = await this.perspectiveService.analyzeText(createTextDto.text);
+  async analyze(
+    @Body() createTextDto: CreateTextDto,
+  ): Promise<AnalyzeResponseDto> {
+    const result = await this.perspectiveService.analyzeText(
+      createTextDto.text,
+    );
     return result;
   }
 }
