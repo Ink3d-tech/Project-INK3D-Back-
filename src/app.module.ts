@@ -30,7 +30,8 @@ import { FinanzasModule } from './finanzas/finanzas.module';
 import { Transactions } from './entities/transaction.entity';
 import { Magazine } from './entities/magazine.entity';
 import { CommentModule } from './comment/comment.module';
-import { WebSocketAdapter } from './websocket.adapter';
+import { Comment } from './entities/comment.entity';
+
 
 
 @Module({
@@ -44,6 +45,7 @@ import { WebSocketAdapter } from './websocket.adapter';
       StockMovements,
       Transactions,
       Magazine,
+      Comment
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -80,7 +82,6 @@ import { WebSocketAdapter } from './websocket.adapter';
     SeederService,
     CloudinaryConfig,
     Chatbot,
-    WebSocketAdapter,
   ],
 })
 export class AppModule implements OnModuleInit {
@@ -94,4 +95,3 @@ export class AppModule implements OnModuleInit {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }
-

@@ -26,5 +26,3 @@ export class WebSocketAdapter extends IoAdapter {
   }
 }
 
-
-
