@@ -35,10 +35,6 @@ export class User {
     type: 'varchar',
     length: 15, // Permite hasta 15 dígitos
     nullable: true,
-    transformer: {
-      to: (value: string) => value.replace(/\D/g, ''), // Elimina caracteres no numéricos
-      from: (value: string) => value,
-    },
   })
   phone: string;
 
