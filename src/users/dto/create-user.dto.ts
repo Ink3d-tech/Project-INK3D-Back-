@@ -3,6 +3,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Length,
   Matches,
   MinLength,
   Validate,
@@ -38,8 +39,11 @@ export class CreateUserDto {
 
   @IsOptional()
   @IsString()
-  @Matches(/^\d{10,15}$/, {
-    message: 'Phone number must be between 10 and 15 digits',
+  @Matches(/^\d+$/, {
+    message: 'El número de teléfono solo puede contener dígitos',
+  })
+  @Length(10, 15, {
+    message: 'El número de teléfono debe tener entre 10 y 15 dígitos',
   })
   phone: string;
 
