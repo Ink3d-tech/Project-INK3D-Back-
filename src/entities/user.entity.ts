@@ -15,6 +15,7 @@ import { Reviews } from './reviews.entity';
 import { Discounts } from './discounts.entity';
 import {  Transactions } from './transaction.entity';
 import { Invoice } from './invoice.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class User {
@@ -86,4 +87,7 @@ export class User {
 
   @Column({ nullable: true })
   image: string;
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+comments: Comment[];
 }

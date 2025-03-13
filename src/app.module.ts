@@ -29,6 +29,8 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { FinanzasModule } from './finanzas/finanzas.module';
 import { Transactions } from './entities/transaction.entity';
 import { Magazine } from './entities/magazine.entity';
+import { CommentsModule } from './comments/comments.module';
+import { Comment } from './entities/comment.entity';
 
 
 @Module({
@@ -42,6 +44,7 @@ import { Magazine } from './entities/magazine.entity';
       StockMovements,
       Transactions,
       Magazine,
+      Comment,
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -72,6 +75,7 @@ import { Magazine } from './entities/magazine.entity';
     FileUploadModule,
     MagazineModule,
     FinanzasModule,
+    CommentsModule,
   ],
   providers: [
     SeederService,
