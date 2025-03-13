@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import { Magazine } from './magazine.entity';
 
 @Entity()
@@ -12,7 +18,9 @@ export class Comment {
   @Column()
   username: string;
 
-  @ManyToOne(() => Magazine, (magazine) => magazine.comments, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Magazine, (magazine) => magazine.comments, {
+    onDelete: 'CASCADE',
+  })
   magazine: Magazine;
 
   @CreateDateColumn()

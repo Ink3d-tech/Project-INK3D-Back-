@@ -3,7 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  OneToMany
+  OneToMany,
 } from 'typeorm';
 import { Comment } from './comment.entity';
 
@@ -34,5 +34,5 @@ export class Magazine {
   createdAt: Date;
 
   @OneToMany(() => Comment, (comment) => comment.magazine, { cascade: true })
-comments: Comment[];
+  comments: Comment[];
 }

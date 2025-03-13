@@ -32,8 +32,6 @@ import { Magazine } from './entities/magazine.entity';
 import { CommentModule } from './comment/comment.module';
 import { Comment } from './entities/comment.entity';
 
-
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -45,7 +43,7 @@ import { Comment } from './entities/comment.entity';
       StockMovements,
       Transactions,
       Magazine,
-      Comment
+      Comment,
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -76,13 +74,9 @@ import { Comment } from './entities/comment.entity';
     FileUploadModule,
     MagazineModule,
     FinanzasModule,
-    CommentModule
+    CommentModule,
   ],
-  providers: [
-    SeederService,
-    CloudinaryConfig,
-    Chatbot,
-  ],
+  providers: [SeederService, CloudinaryConfig, Chatbot],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
