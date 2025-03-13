@@ -59,4 +59,25 @@ export class DiscountsService {
     const discount = await this.findOne(id); // Verifica que el descuento exista
     await this.discountsRepository.remove(discount); // Elimina el descuento
   }
+
+  async createTriviaDiscount(userId: string): Promise<Discounts> {
+    // Verificar si el usuario ya tiene un descuento activo
+    const existingDiscount = await this.discountsRepository.findOne({
+      where: { userId: { id: userId }, status: 'active' },
+    });
+
+    if (existingDiscount) {
+      throw new Error('Ya tienes un descuento activo.');
+    }
+
+    // Crear un nuevo descuento del 15%
+    const discount = this.discountsRepository.create({
+      amount: 15, // 15% de descuento
+      status: 'active',
+      expiresAt: new Date(new Date().setDate(new Date().getDate() + 7)), // Expira en 7 días
+      userId: { id: userId },
+    });
+
+    return await this.discountsRepository.save(discount);
+  }
 }

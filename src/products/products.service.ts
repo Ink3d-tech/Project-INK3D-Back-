@@ -6,6 +6,7 @@ import { Category } from 'src/entities/category.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { StockMovementsService } from 'src/stock-movements/stock-movements.service';
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -65,9 +66,9 @@ export class ProductsService {
       await this.stockMovementsService.createStockMovement({
         productId: savedProduct.id,
         quantity: savedProduct.stock,
-        previousStock: 0, 
-        newStock: savedProduct.stock, 
-        type: 'initial_stock', 
+        previousStock: 0,
+        newStock: savedProduct.stock,
+        type: 'initial_stock',
         reason: 'Initial stock entry',
       });
     }
@@ -106,15 +107,15 @@ export class ProductsService {
     }
     // Asignar nuevos valores sin sobrescribir valores no definidos
     Object.assign(product, productData, {
-      style: productData.style ?? product.style, 
+      style: productData.style ?? product.style,
     });
     const updatedProduct = await this.productRepository.save(product);
     if (stockChange !== 0) {
       await this.stockMovementsService.createStockMovement({
         productId: updatedProduct.id,
         quantity: Math.abs(stockChange),
-        previousStock: product.stock,  
-        newStock: updatedProduct.stock, 
+        previousStock: product.stock,
+        newStock: updatedProduct.stock,
         type: 'manual_adjustment',
         reason: `Stock updated via product edit: ${stockChange > 0 ? 'increase' : 'decrease'}`,
       });
