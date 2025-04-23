@@ -155,7 +155,7 @@ export class Chatbot {
       location: process.env.GOOGLE_CLOUD_REGION,
     });
 
-    this.model = vertexAI.getGenerativeModel({ model: 'gemini-pro' });
+    this.model = vertexAI.getGenerativeModel({ model: 'gemini-2.0-flash-001' });
   }
 
   private readonly systemContext = `
