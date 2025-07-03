@@ -86,8 +86,8 @@ export class AppModule implements OnModuleInit {
   async onModuleInit() {
     await this.seederService.seed();
   }
-  configure(consumer: MiddlewareConsumer) {
-    // Aquí aplicamos el middleware a todas las rutas
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   // Aquí aplicamos el middleware a todas las rutas
+  //   consumer.apply(LoggerMiddleware).forRoutes('*');
+  // }
 }

@@ -14,7 +14,7 @@ export class CategoriesService {
 
   async findAll(): Promise<Category[]> {
     const categories = await this.categoryRepository.find();
-    console.log(categories);
+    // console.log(categories);
     return categories;
   }
 

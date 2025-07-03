@@ -456,39 +456,40 @@ export class SeederService {
       /** 🔹 4️⃣ Crear Órdenes */
       const existingOrders = await this.orderRepository.find();
       if (existingOrders.length === 0) {
-        const orders = [
-          {
-            user: userMap.get('juan'),
-            status: 'pending',
-            currency: 'USD',
-            totalPrice: 79.97,
-            orderDetails: [
-              {
-                productId: existingProducts[0]?.id,
-                quantity: 2,
-                price: existingProducts[0]?.price,
-              },
-              {
-                productId: existingProducts[1]?.id,
-                quantity: 1,
-                price: existingProducts[1]?.price,
-              },
-            ],
-          },
-          {
-            user: userMap.get('ana'),
-            status: 'completed',
-            currency: 'ARS',
-            totalPrice: 59.99,
-            orderDetails: [
-              {
-                productId: existingProducts[2]?.id,
-                quantity: 1,
-                price: existingProducts[2]?.price,
-              },
-            ],
-          },
-        ];
+        const orders = []
+        // COMENTADO PARA EVITAR ERROR
+        //   {
+        //     user: userMap.get('juan'),
+        //     status: 'pending',
+        //     currency: 'USD',
+        //     totalPrice: 79.97,
+        //     orderDetails: [
+        //       {
+        //         productId: existingProducts[0]?.id,
+        //         quantity: 2,
+        //         price: existingProducts[0]?.price,
+        //       },
+        //       {
+        //         productId: existingProducts[1]?.id,
+        //         quantity: 1,
+        //         price: existingProducts[1]?.price,
+        //       },
+        //     ],
+        //   },
+        //   {
+        //     user: userMap.get('ana'),
+        //     status: 'completed',
+        //     currency: 'ARS',
+        //     totalPrice: 59.99,
+        //     orderDetails: [
+        //       {
+        //         productId: existingProducts[2]?.id,
+        //         quantity: 1,
+        //         price: existingProducts[2]?.price,
+        //       },
+        //     ],
+        //   },
+        // ];
         await this.orderRepository.save(orders);
       }
 
