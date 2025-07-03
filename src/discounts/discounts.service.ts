@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Discounts } from 'src/entities/discounts.entity';
@@ -58,5 +62,26 @@ export class DiscountsService {
   async remove(id: string): Promise<void> {
     const discount = await this.findOne(id); // Verifica que el descuento exista
     await this.discountsRepository.remove(discount); // Elimina el descuento
+  }
+
+  async createTriviaDiscount(userId: string): Promise<Discounts> {
+    // Verificar si el usuario ya tiene un descuento activo
+    const existingDiscount = await this.discountsRepository.findOne({
+      where: { user: { id: userId }, status: 'active' },
+    });
+
+    if (existingDiscount) {
+      throw new BadRequestException('Ya tienes un descuento activo.');
+    }
+
+    // Crear un nuevo descuento del 15%
+    const discount = this.discountsRepository.create({
+      amount: 15, // 15% de descuento
+      status: 'active',
+      expiresAt: new Date(new Date().setDate(new Date().getDate() + 7)), // Expira en 7 días
+      user: { id: userId },
+    });
+
+    return await this.discountsRepository.save(discount);
   }
 }

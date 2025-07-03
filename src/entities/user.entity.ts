@@ -13,8 +13,9 @@ import { Order } from './order.entity';
 import { Product } from './product.entity';
 import { Reviews } from './reviews.entity';
 import { Discounts } from './discounts.entity';
-import {  Transactions } from './transaction.entity';
+import { Transactions } from './transaction.entity';
 import { Invoice } from './invoice.entity';
+import { Comment } from './comment.entity';
 
 @Entity()
 export class User {
@@ -30,8 +31,12 @@ export class User {
   @Column()
   name: string;
 
-  @Column({ type: 'int', nullable: true })
-  phone: number;
+  @Column({
+    type: 'varchar',
+    length: 15, // Permite hasta 15 dígitos
+    nullable: true,
+  })
+  phone: string;
 
   @Column({ nullable: true })
   address: string;
@@ -47,8 +52,8 @@ export class User {
 
   @OneToMany(() => Transactions, (transaction) => transaction.user)
   transactions: Transactions[];
-    @OneToMany(() => User, (user) => user.invoices)
-    invoices: Invoice[];
+  @OneToMany(() => User, (user) => user.invoices)
+  invoices: Invoice[];
 
   @Column({ type: 'enum', enum: ['admin', 'user', 'mod'], default: 'user' })
   role: string;
@@ -72,10 +77,7 @@ export class User {
   @JoinTable({
     name: 'favorites',
   })
-  @OneToMany(() => Discounts, (discount) => discount.userId)
-  @JoinTable({
-    name: 'discounts',
-  })
+  @OneToMany(() => Discounts, (discount) => discount.user)
   discounts: Discounts[];
 
   @ManyToMany(() => Product, (product) => product.favoritedBy)
@@ -86,4 +88,7 @@ export class User {
 
   @Column({ nullable: true })
   image: string;
+
+  @OneToMany(() => Comment, (comment) => comment.username)
+  comments: Comment[];
 }

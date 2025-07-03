@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { DiscountsService } from './discounts.service';
 import { CreateDiscountDto } from './dto/create-discount.dto';
@@ -21,6 +22,29 @@ import { AllowOwnerOrRole } from 'src/decorators/allow-owner-or-role.decorator';
 @Controller('discounts')
 export class DiscountsController {
   constructor(private readonly discountsService: DiscountsService) {}
+
+  @ApiOperation({ summary: 'Claim a trivia discount' })
+  @ApiBody({
+    type: CreateDiscountDto,
+    examples: {
+      'discount.create': {
+        value: {
+          amount: 15,
+          status: 'active',
+          expiresAt: new Date(),
+          userId: '',
+        },
+      },
+    },
+    description: 'Claim a trivia discount',
+  })
+  @ApiBearerAuth() // Asegura que solo usuarios autenticados accedan
+  @UseGuards(AuthGuard) // Asegura que solo usuarios autenticados accedan
+  @Post('trivia')
+  async claimTriviaDiscount(@Req() req) {
+    const userId = req.user.userId; // Obtener el ID del usuario autenticado
+    return await this.discountsService.createTriviaDiscount(userId);
+  }
 
   @ApiBearerAuth()
   @UseGuards(AuthGuard, RolesGuard)
@@ -45,8 +69,7 @@ export class DiscountsController {
   }
 
   @ApiBearerAuth()
-  @UseGuards(AuthGuard, RolesGuard)
-  @AllowOnlyRole(Role.Admin)
+  @UseGuards(AuthGuard)
   @Get()
   @ApiOperation({ summary: 'Get all discounts' })
   findAll() {

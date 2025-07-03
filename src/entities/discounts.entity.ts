@@ -32,5 +32,5 @@ export class Discounts {
   status: 'active' | 'expired' | 'used' | 'inactive'; // Estado del descuento
 
   @ManyToOne(() => User, (user) => user.discounts, { nullable: true })
-  userId: User | null;
+  user: User | null;
 }

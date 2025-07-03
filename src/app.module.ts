@@ -29,7 +29,9 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { FinanzasModule } from './finanzas/finanzas.module';
 import { Transactions } from './entities/transaction.entity';
 import { Magazine } from './entities/magazine.entity';
-
+import { CommentModule } from './comment/comment.module';
+import { Comment } from './entities/comment.entity';
+import { PerspectiveModule } from './perspective/perspective.module';
 
 @Module({
   imports: [
@@ -42,6 +44,7 @@ import { Magazine } from './entities/magazine.entity';
       StockMovements,
       Transactions,
       Magazine,
+      Comment,
     ]),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -72,12 +75,10 @@ import { Magazine } from './entities/magazine.entity';
     FileUploadModule,
     MagazineModule,
     FinanzasModule,
+    CommentModule,
+    PerspectiveModule
   ],
-  providers: [
-    SeederService,
-    CloudinaryConfig,
-    Chatbot,
-  ],
+  providers: [SeederService, CloudinaryConfig, Chatbot],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly seederService: SeederService) {}
@@ -85,8 +86,8 @@ export class AppModule implements OnModuleInit {
   async onModuleInit() {
     await this.seederService.seed();
   }
-  configure(consumer: MiddlewareConsumer) {
-    // Aquí aplicamos el middleware a todas las rutas
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
+  // configure(consumer: MiddlewareConsumer) {
+  //   // Aquí aplicamos el middleware a todas las rutas
+  //   consumer.apply(LoggerMiddleware).forRoutes('*');
+  // }
 }

@@ -1,13 +1,12 @@
 import {
   IsEmail,
-  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
+  Length,
   Matches,
   MinLength,
   Validate,
-
 } from 'class-validator';
 import { MatchPassword } from 'src/decorators/match-password.decorator';
 
@@ -39,8 +38,14 @@ export class CreateUserDto {
   name: string;
 
   @IsOptional()
-  @IsInt()
-  phone?: number;
+  @IsString()
+  @Matches(/^\d+$/, {
+    message: 'El número de teléfono solo puede contener dígitos',
+  })
+  @Length(10, 15, {
+    message: 'El número de teléfono debe tener entre 10 y 15 dígitos',
+  })
+  phone: string;
 
   @IsOptional()
   @IsString()
